@@ -189,6 +189,9 @@ public final class Players extends JavaPlugin {
         motd.reload();
         spawn.reload();
         warps.reload();
+        database.resetTabList();
+    }
+    public void reloadPlayerFiles() {
         for (OfflinePlayer offlinePlayer : getServer().getOfflinePlayers()) {
             if (database.exist(offlinePlayer)) {
                 File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
@@ -201,6 +204,5 @@ public final class Players extends JavaPlugin {
                 }
             }
         }
-        database.resetTabList();
     }
 }

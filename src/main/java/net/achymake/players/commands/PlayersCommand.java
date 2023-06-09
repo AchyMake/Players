@@ -21,11 +21,19 @@ public class PlayersCommand implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("reload")) {
                 Players.getInstance().reload();
-                message.send(sender, "&6Players reloaded");
+                message.send(sender, "&6Players:&f config files reloaded");
             }
             if (args[0].equalsIgnoreCase("discord")) {
                 message.send(sender, "&9Developers Discord");
                 message.send(sender, "https://discord.com/invite/aMtQFeJKyB");
+            }
+        }
+        if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("reload")) {
+                if (args[1].equalsIgnoreCase("players")) {
+                    Players.getInstance().reloadPlayerFiles();
+                    message.send(sender, "&6Players:&f player files reloaded");
+                }
             }
         }
         return true;
@@ -37,6 +45,11 @@ public class PlayersCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 commands.add("reload");
                 commands.add("discord");
+            }
+            if (args.length == 2) {
+                if (args[0].equalsIgnoreCase("reload")) {
+                    commands.add("players");
+                }
             }
         }
         return commands;
