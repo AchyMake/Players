@@ -190,6 +190,7 @@ public final class Players extends JavaPlugin {
         spawn.reload();
         warps.reload();
         database.resetTabList();
+        database.getCommandCooldown().clear();
     }
     public void reloadPlayerFiles() {
         for (OfflinePlayer offlinePlayer : getServer().getOfflinePlayers()) {
