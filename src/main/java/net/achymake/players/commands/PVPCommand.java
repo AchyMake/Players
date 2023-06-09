@@ -60,6 +60,8 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
                             } else {
                                 message.send(sender, "&6You disabled pvp for&f " + offlinePlayer.getName());
                             }
+                        } else {
+                            message.send(sender, offlinePlayer.getName() + "&c has never joined");
                         }
                     }
                 }

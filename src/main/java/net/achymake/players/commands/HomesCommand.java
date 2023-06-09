@@ -44,7 +44,7 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                                 message.send(player, args[1] + "&c doesn't have&f " + args[2]);
                             }
                         } else {
-                            message.send(player, args[1] + "&c has never joined");
+                            message.send(sender, offlinePlayer.getName() + "&c has never joined");
                         }
                     }
                 }
@@ -67,7 +67,7 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                                 }
                             }
                         } else {
-                            message.send(player, args[1] + "&c has never joined");
+                            message.send(sender, offlinePlayer.getName() + "&c has never joined");
                         }
                     }
                 }

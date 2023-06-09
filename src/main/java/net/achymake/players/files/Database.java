@@ -174,6 +174,14 @@ public class Database {
         setFloat(player, "locations." + locationName + ".yaw", player.getLocation().getYaw());
         setFloat(player, "locations." + locationName + ".pitch", player.getLocation().getPitch());
     }
+    public void setLocation(OfflinePlayer offlinePlayer, String locationName, Location location) {
+        setString(offlinePlayer, "locations." + locationName + ".world", location.getWorld().getName());
+        setDouble(offlinePlayer, "locations." + locationName + ".x", location.getX());
+        setDouble(offlinePlayer, "locations." + locationName + ".y", location.getY());
+        setDouble(offlinePlayer, "locations." + locationName + ".z", location.getZ());
+        setFloat(offlinePlayer, "locations." + locationName + ".yaw", location.getYaw());
+        setFloat(offlinePlayer, "locations." + locationName + ".pitch", location.getPitch());
+    }
     public Location getLocation(OfflinePlayer offlinePlayer, String locationName) {
         String worldName = getConfig(offlinePlayer).getString("locations." + locationName + ".world");
         double x = getConfig(offlinePlayer).getDouble("locations." + locationName + ".x");
