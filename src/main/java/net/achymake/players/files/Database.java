@@ -266,7 +266,7 @@ public class Database {
     public void resetTabList() {
         if (plugin.getConfig().getBoolean("tablist.enable")) {
             for (Player players : plugin.getServer().getOnlinePlayers()) {
-                players.setPlayerListHeader(addColor(Players.getInstance().getConfig().getString("tablist.header")));
+                players.setPlayerListHeader(addColor(plugin.getConfig().getString("tablist.header")));
                 players.setPlayerListName(addColor(prefix(players) + players.getName() + suffix(players)));
                 players.setPlayerListFooter(addColor(MessageFormat.format(plugin.getConfig().getString("tablist.footer"), players.getServer().getOnlinePlayers().size() - vanished.size(), players.getServer().getMaxPlayers())));
             }

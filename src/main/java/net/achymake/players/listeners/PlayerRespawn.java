@@ -3,6 +3,7 @@ package net.achymake.players.listeners;
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
 import net.achymake.players.files.Message;
+import net.achymake.players.files.Spawn;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -30,6 +31,13 @@ public class PlayerRespawn implements Listener {
         database.setBoolean(event.getPlayer(), "settings.dead", false);
         if (event.isAnchorSpawn())return;
         if (event.isBedSpawn())return;
-        event.setRespawnLocation(database.getLocation(event.getPlayer(), "spawn"));
+        if (database.locationExist(event.getPlayer(), "spawn")) {
+            event.setRespawnLocation(database.getLocation(event.getPlayer(), "spawn"));
+        } else {
+            Spawn spawn = Players.getSpawn();
+            if (spawn.spawnExist()) {
+                event.setRespawnLocation(spawn.getSpawn());
+            }
+        }
     }
 }
