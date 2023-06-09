@@ -1,0 +1,86 @@
+notify-update:
+  # Notifies Plugin Updates
+  enable: true
+tablist:
+  enable: false
+  header: '&e--&6--&d--&9--&7[&b&lplay.achymake.net&7]&9--&d--&6--&e--'
+  footer: '&e--&6--&d--&9--&7[&6{0}&7/&6{1}&7]&9--&d--&6--&e--'
+economy:
+  currency: $
+  format: '#,##0.00'
+  starting-balance: 0.0
+homes:
+  # default max homes on file setup
+  default: 1
+  # per home cost
+  cost: 750.0
+deaths:
+  drop-player-head:
+    # enable drop player heads
+    enable: true
+    # chance of the drop
+    chance: 30
+connection:
+  join:
+    # if false permission: players.join-message
+    enable: true
+    message: '{0}&e has joined the server [&a+&e]'
+    sound:
+      enable: true
+      type: ENTITY_FOX_AMBIENT
+      volume: 0.75F
+      pitch: 1.0F
+  quit:
+    # if false permission: players.quit-message
+    enable: true
+    message: '{0}&e has left the server [&c-&e]'
+    sound:
+      enable: true
+      type: ENTITY_FOX_AMBIENT
+      volume: 0.75F
+      pitch: 1.0F
+commands:
+  rtp:
+    world: world
+    spread: 1250
+  cooldown:
+    # cooldown for rank commands
+    # these are the only ones which are able to get cooldown
+    feed: 120
+    heal: 120
+    repair: 3600
+    rtp: 3600
+  disable:
+    - icanhasbukkit
+    - version
+    - about
+    - me
+    - stop
+    - reload
+notification:
+  # Permissions
+  # players.notify.block-break
+  # players.notify.bucket-empty
+  # players.notify.block-place
+  #
+  # Placeholders
+  # {0} Player, {1} Material
+  # {2} World, {3} X, {4} Y, {5} Z
+  enable: true
+  block-break:
+    - DIAMOND_ORE
+    - DEEPSLATE_DIAMOND_ORE
+    - EMERALD_ORE
+    - DEEPSLATE_EMERALD_ORE
+    - ANCIENT_DEBRIS
+  bucket-empty:
+    - LAVA_BUCKET
+  block-place:
+    - TNT
+  message:
+    - '&7---------------'
+    - '&cDetected: &f{0}'
+    - '&cMaterial: &f{1}'
+    - '&cLocation:'
+    - '&cWorld:&f {2} &cX: &f{3} &cY: &f{4} &cZ: &f{5}'
+    - '&7---------------'
