@@ -89,7 +89,6 @@ public final class Players extends JavaPlugin {
         new DamageEntityWithSpectralArrow(this);
         new DamageEntityWithThrownPotion(this);
         new DamageEntityWithTrident(this);
-        new NotifyUpdate(this);
         new PlayerBucketEmpty(this);
         new PlayerBucketEntity(this);
         new PlayerBucketFill(this);
