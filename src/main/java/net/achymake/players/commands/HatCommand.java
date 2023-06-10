@@ -19,7 +19,7 @@ public class HatCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             if (args.length == 0) {
                 Player player = (Player) sender;
-                if (player.getInventory().getHelmet() != null) {
+                if (player.getInventory().getHelmet() == null) {
                     if (!player.getInventory().getItemInMainHand().getType().isAir()) {
                         ItemStack heldItem = player.getInventory().getItemInMainHand();
                         ItemStack itemStack = new ItemStack(heldItem.getType(), 1);
