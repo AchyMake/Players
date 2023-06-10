@@ -124,6 +124,7 @@ public final class Players extends JavaPlugin {
         getCommand("gmc").setExecutor(new GMCCommand());
         getCommand("gms").setExecutor(new GMSCommand());
         getCommand("gmsp").setExecutor(new GMSPCommand());
+        getCommand("hat").setExecutor(new HatCommand());
         getCommand("heal").setExecutor(new HealCommand());
         getCommand("help").setExecutor(new HelpCommand());
         getCommand("home").setExecutor(new HomeCommand());

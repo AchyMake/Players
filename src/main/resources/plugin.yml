@@ -97,6 +97,11 @@ commands:
     description: changes gamemode to spectator
     permission: players.command.gamemode.spectator
     permission-message: You do not have the permission to execute the command
+  hat:
+    usage: /hat
+    description: allows to wear held item as helmet
+    permission: players.command.hat
+    permission-message: You do not have the permission to execute the command
   heal:
     usage: /heal
     description: satisfy health by command
@@ -352,6 +357,9 @@ permissions:
     description: message
     default: op
   players.command.gamemode.exempt:
+    description: message
+    default: op
+  players.command.hat:
     description: message
     default: op
   players.command.heal:
