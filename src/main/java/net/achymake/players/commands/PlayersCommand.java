@@ -12,16 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayersCommand implements CommandExecutor, TabCompleter {
+    private final Players plugin = Players.getInstance();
     private final Message message = Players.getMessage();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            Players players = Players.getInstance();
-            message.send(sender, "&6" + players.getName() + " " + players.getDescription().getVersion());
+            message.send(sender, "&6" + plugin.getName() + " " + plugin.getDescription().getVersion());
         }
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("reload")) {
-                Players.getInstance().reload();
+                plugin.reload();
                 message.send(sender, "&6Players:&f config files reloaded");
             }
             if (args[0].equalsIgnoreCase("discord")) {
@@ -32,7 +32,7 @@ public class PlayersCommand implements CommandExecutor, TabCompleter {
         if (args.length == 2) {
             if (args[0].equalsIgnoreCase("reload")) {
                 if (args[1].equalsIgnoreCase("players")) {
-                    Players.getInstance().reloadPlayerFiles();
+                    plugin.reloadPlayerFiles();
                     message.send(sender, "&6Players:&f player files reloaded");
                 }
             }
