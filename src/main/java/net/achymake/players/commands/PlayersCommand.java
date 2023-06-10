@@ -16,7 +16,8 @@ public class PlayersCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            message.send(sender, "&6" + Players.getInstance().getName() + " " + Players.getInstance().getDescription().getVersion());
+            Players players = Players.getInstance();
+            message.send(sender, "&6" + players.getName() + " " + players.getDescription().getVersion());
         }
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("reload")) {
