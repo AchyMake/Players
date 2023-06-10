@@ -21,14 +21,14 @@ public class BalanceCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             if (args.length == 0) {
                 Player player = (Player) sender;
-                message.send(player, "&6Balance: " + economyProvider.currencyNameSingular() + economyProvider.format(database.getEconomy(player)));
+                message.send(player, "&6Balance:&a " + economyProvider.currencyNameSingular() + economyProvider.format(database.getEconomy(player)));
             }
             if (args.length == 1) {
                 Player player = (Player) sender;
                 if (player.hasPermission("players.command.balance.others")) {
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
                     if (database.exist(offlinePlayer)) {
-                        message.send(player, offlinePlayer.getName() + " &6balance: " + economyProvider.currencyNameSingular() + economyProvider.format(database.getEconomy(offlinePlayer)));
+                        message.send(player, offlinePlayer.getName() + " &6balance:&a " + economyProvider.currencyNameSingular() + economyProvider.format(database.getEconomy(offlinePlayer)));
                     } else {
                         message.send(player, offlinePlayer.getName() + "&c has never joined");
                     }
@@ -39,7 +39,7 @@ public class BalanceCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
                 if (database.exist(offlinePlayer)) {
-                    message.send(sender, offlinePlayer.getName() + " &6balance: " + economyProvider.currencyNameSingular() + economyProvider.format(database.getEconomy(offlinePlayer)));
+                    message.send(sender, offlinePlayer.getName() + " &6balance:&a " + economyProvider.currencyNameSingular() + economyProvider.format(database.getEconomy(offlinePlayer)));
                 } else {
                     message.send(sender, offlinePlayer.getName() + "&c has never joined");
                 }

@@ -6,7 +6,7 @@ tablist:
   header: '&e--&6--&d--&9--&7[&b&lplay.achymake.net&7]&9--&d--&6--&e--'
   footer: '&e--&6--&d--&9--&7[&6{0}&7/&6{1}&7]&9--&d--&6--&e--'
 economy:
-  currency: '&a$'
+  currency: $
   format: '#,##0.00'
   starting-balance: 0.0
 homes:
