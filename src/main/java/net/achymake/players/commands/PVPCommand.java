@@ -23,13 +23,14 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
-            if (sender instanceof Player) {
-                getDatabase().setBoolean((Player) sender, "settings.pvp", !getDatabase().isPVP((Player) sender));
-                if (getDatabase().isPVP((Player) sender)) {
-                    getMessage().send(sender, "&6You enabled pvp");
+        if (sender instanceof Player) {
+            if (args.length == 0) {
+                Player player = (Player) sender;
+                getDatabase().setBoolean(player, "settings.pvp", !getDatabase().isPVP(player));
+                if (getDatabase().isPVP(player)) {
+                    getMessage().sendActionBar(player, "&6&lPVP:&a Enabled");
                 } else {
-                    getMessage().send(sender, "&6You disabled pvp");
+                    getMessage().sendActionBar(player, "&6&lPVP:&c Disabled");
                 }
             }
         }
@@ -39,9 +40,9 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
                 if (target == sender) {
                     getDatabase().setBoolean(target, "settings.pvp", !getDatabase().isPVP(target));
                     if (getDatabase().isPVP(target)) {
-                        getMessage().send(sender, "&6You enabled pvp for your self");
+                        getMessage().sendActionBar(target, "&6&lPVP:&a Enabled");
                     } else {
-                        getMessage().send(sender, "&6You disabled pvp for your self");
+                        getMessage().sendActionBar(target, "&6&lPVP:&c Disabled");
                     }
                 } else {
                     if (target != null) {
@@ -49,9 +50,11 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
                             getDatabase().setBoolean(target, "settings.pvp", !getDatabase().isPVP(target));
                             if (getDatabase().isPVP(target)) {
                                 getMessage().send(target, sender.getName() + "&6 enabled pvp for you");
+                                getMessage().sendActionBar(target, "&6&lPVP:&a Enabled");
                                 getMessage().send(sender, "&6You enabled pvp for&f " + target.getName());
                             } else {
                                 getMessage().send(target, sender.getName() + "&6 disabled pvp for you");
+                                getMessage().sendActionBar(target, "&6&lPVP:&c Disabled");
                                 getMessage().send(sender, "&6You disabled pvp for&f " + target.getName());
                             }
                         }
