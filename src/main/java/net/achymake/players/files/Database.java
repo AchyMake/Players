@@ -209,6 +209,9 @@ public class Database {
             if (offlinePlayer.isOnline()) {
                 Player player = offlinePlayer.getPlayer();
                 vanished.add(player);
+                if (getConfig(player).getBoolean("settings.coordinates")) {
+                    setBoolean(player, "settings.coordinates", false);
+                }
                 for (Player onlinePlayers : getPlugin().getServer().getOnlinePlayers()) {
                     onlinePlayers.hidePlayer(getPlugin(), player);
                 }
