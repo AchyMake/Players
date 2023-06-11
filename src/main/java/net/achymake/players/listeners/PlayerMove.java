@@ -26,5 +26,8 @@ public class PlayerMove implements Listener {
         if (getDatabase().isVanished(event.getPlayer())) {
             getMessage().sendActionBar(event.getPlayer(), "&6&lVanish:&a Enabled");
         }
+        if (getDatabase().getConfig(event.getPlayer()).getBoolean("settings.coordinates")) {
+            getMessage().sendActionBar(event.getPlayer(), "&6&lY:&f " + event.getPlayer().getLocation().getBlockY());
+        }
     }
 }

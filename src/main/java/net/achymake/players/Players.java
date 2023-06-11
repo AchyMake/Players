@@ -90,6 +90,7 @@ public final class Players extends JavaPlugin {
         getCommand("back").setExecutor(new BackCommand());
         getCommand("balance").setExecutor(new BalanceCommand());
         getCommand("color").setExecutor(new ColorCommand());
+        getCommand("coordinates").setExecutor(new CoordinatesCommand());
         getCommand("delhome").setExecutor(new DelHomeCommand());
         getCommand("delwarp").setExecutor(new DelWarpCommand());
         getCommand("eco").setExecutor(new EcoCommand());

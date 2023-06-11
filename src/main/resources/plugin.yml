@@ -32,6 +32,13 @@ commands:
     description: check minecraft colors
     permission: players.command.color
     permission-message: You do not have the permission to execute the command
+  coordinates:
+    usage: /coordinates
+    description: check minecraft colors
+    permission: players.command.color
+    permission-message: You do not have the permission to execute the command
+    aliases:
+      - coords
   delhome:
     usage: /delhome home
     description: delete home
@@ -282,6 +289,9 @@ permissions:
     description: message
     default: op
   players.command.color:
+    description: message
+    default: op
+  players.command.coordinates:
     description: message
     default: op
   players.command.delhome:
