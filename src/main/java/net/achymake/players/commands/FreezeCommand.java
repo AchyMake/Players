@@ -15,44 +15,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FreezeCommand implements CommandExecutor, TabCompleter {
-    private final Database database = Players.getDatabase();
-    private final Message message = Players.getMessage();
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            message.send(sender, "&cUsage:&f /freeze target");
+            getMessage().send(sender, "&cUsage:&f /freeze target");
         }
         if (args.length == 1) {
             Player player = (Player) sender;
             Player target = player.getServer().getPlayerExact(args[0]);
             if (target == sender) {
-                database.setBoolean(target, "settings.frozen", !database.isFrozen(target));
-                if (database.isFrozen(target)) {
-                    message.send(sender, "&6You froze&f " + target.getName());
+                getDatabase().setBoolean(target, "settings.frozen", !getDatabase().isFrozen(target));
+                if (getDatabase().isFrozen(target)) {
+                    getMessage().send(sender, "&6You froze&f " + target.getName());
                 } else {
-                    message.send(sender, "&6You unfroze&f " + target.getName());
+                    getMessage().send(sender, "&6You unfroze&f " + target.getName());
                 }
             } else {
                 if (target != null) {
                     if (!target.hasPermission("players.command.freeze.exempt")) {
-                        database.setBoolean(target, "settings.frozen", !database.isFrozen(target));
-                        if (database.isFrozen(target)) {
-                            message.send(sender, "&6You froze&f " + target.getName());
+                        getDatabase().setBoolean(target, "settings.frozen", !getDatabase().isFrozen(target));
+                        if (getDatabase().isFrozen(target)) {
+                            getMessage().send(sender, "&6You froze&f " + target.getName());
                         } else {
-                            message.send(sender, "&6You unfroze&f " + target.getName());
+                            getMessage().send(sender, "&6You unfroze&f " + target.getName());
                         }
                     }
                 } else {
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                    if (database.exist(offlinePlayer)) {
-                        database.setBoolean(offlinePlayer, "settings.frozen", !database.isFrozen(offlinePlayer));
-                        if (database.isFrozen(offlinePlayer)) {
-                            message.send(sender, "&6You froze&f " + offlinePlayer.getName());
+                    if (getDatabase().exist(offlinePlayer)) {
+                        getDatabase().setBoolean(offlinePlayer, "settings.frozen", !getDatabase().isFrozen(offlinePlayer));
+                        if (getDatabase().isFrozen(offlinePlayer)) {
+                            getMessage().send(sender, "&6You froze&f " + offlinePlayer.getName());
                         } else {
-                            message.send(sender, "&6You unfroze&f " + offlinePlayer.getName());
+                            getMessage().send(sender, "&6You unfroze&f " + offlinePlayer.getName());
                         }
                     } else {
-                        message.send(player, offlinePlayer.getName() + "&c has never joined");
+                        getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
                     }
                 }
             }

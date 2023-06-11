@@ -16,31 +16,35 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import java.text.MessageFormat;
 
 public class PlayerJoin implements Listener {
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     public PlayerJoin(Players players) {
         players.getServer().getPluginManager().registerEvents(this, players);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Database database = Players.getDatabase();
-        Message message = Players.getMessage();
         if (event.getPlayer().hasPermission("players.command.reload")) {
             new UpdateChecker(Players.getInstance(), 110266).sendMessage(event.getPlayer());
         }
-        if (database.isVanished(event.getPlayer())) {
-            database.setVanish(event.getPlayer(), true);
+        if (getDatabase().isVanished(event.getPlayer())) {
+            getDatabase().setVanish(event.getPlayer(), true);
             event.setJoinMessage(null);
-            message.send(event.getPlayer(), "&6You joined back vanished");
+            getMessage().send(event.getPlayer(), "&6You joined back vanished");
         } else {
-            database.hideVanished(event.getPlayer());
+            getDatabase().hideVanished(event.getPlayer());
             FileConfiguration config = Players.getInstance().getConfig();
             if (config.getBoolean("connection.join.enable")) {
-                event.setJoinMessage(message.addColor(MessageFormat.format(config.getString("connection.join.message"), event.getPlayer().getName())));
+                event.setJoinMessage(getMessage().addColor(MessageFormat.format(config.getString("connection.join.message"), event.getPlayer().getName())));
                 for (Player players : event.getPlayer().getServer().getOnlinePlayers()) {
                     players.playSound(players, Sound.valueOf(config.getString("connection.join.sound.type")), Float.valueOf(config.getString("connection.join.sound.volume")), Float.valueOf(config.getString("connection.join.sound.pitch")));
                 }
             } else {
                 if (event.getPlayer().hasPermission("players.join-message")) {
-                    event.setJoinMessage(message.addColor(MessageFormat.format(config.getString("connection.join.message"), event.getPlayer().getName())));
+                    event.setJoinMessage(getMessage().addColor(MessageFormat.format(config.getString("connection.join.message"), event.getPlayer().getName())));
                     if (config.getBoolean("connection.join.sound.enable")) {
                         for (Player players : event.getPlayer().getServer().getOnlinePlayers()) {
                             players.playSound(players, Sound.valueOf(config.getString("connection.join.sound.type")), Float.valueOf(config.getString("connection.join.sound.volume")), Float.valueOf(config.getString("connection.join.sound.pitch")));
@@ -51,7 +55,7 @@ public class PlayerJoin implements Listener {
                 }
             }
         }
-        database.resetTabList();
+        getDatabase().resetTabList();
         sendMotd(event.getPlayer());
     }
     private void sendMotd(Player player) {

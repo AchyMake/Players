@@ -14,28 +14,32 @@ import java.util.List;
 import java.util.UUID;
 
 public class TPAcceptCommand implements CommandExecutor, TabCompleter {
-    private final Database database = Players.getDatabase();
-    private final Message message = Players.getMessage();
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
                 Player player = (Player) sender;
-                if (database.getConfig(player).isString("tpa.from")) {
-                    Player target = player.getServer().getPlayer(UUID.fromString(database.getConfig(player).getString("tpa.from")));
+                if (getDatabase().getConfig(player).isString("tpa.from")) {
+                    Player target = player.getServer().getPlayer(UUID.fromString(getDatabase().getConfig(player).getString("tpa.from")));
                     if (target != null) {
-                        if (player.getServer().getScheduler().isQueued(database.getConfig(target).getInt("task.tpa"))) {
-                            player.getServer().getScheduler().cancelTask(database.getConfig(target).getInt("task.tpa"));
+                        if (player.getServer().getScheduler().isQueued(getDatabase().getConfig(target).getInt("task.tpa"))) {
+                            player.getServer().getScheduler().cancelTask(getDatabase().getConfig(target).getInt("task.tpa"));
                             target.teleport(player);
-                            message.sendActionBar(target, "&6Teleporting to&f " + player.getName());
-                            message.send(player, "&6You accepted&f " + target.getName() + "&6 tpa request");
-                            database.setString(target, "tpa.sent", null);
-                            database.setString(target, "task.tpa", null);
-                            database.setString(player, "tpa.from", null);
+                            getMessage().sendActionBar(target, "&6Teleporting to&f " + player.getName());
+                            getMessage().send(player, "&6You accepted&f " + target.getName() + "&6 tpa request");
+                            getDatabase().setString(target, "tpa.sent", null);
+                            getDatabase().setString(target, "task.tpa", null);
+                            getDatabase().setString(player, "tpa.from", null);
                         }
                     }
                 } else {
-                    message.send(player, "&cYou don't have any tpa request");
+                    getMessage().send(player, "&cYou don't have any tpa request");
                 }
             }
         }

@@ -60,18 +60,18 @@ public final class Players extends JavaPlugin {
         message = new Message(this);
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             getServer().getPluginManager().disablePlugin(this);
-            message.sendLog(Level.WARNING, "You have to install 'Vault'");
+            getMessage().sendLog(Level.WARNING, "You have to install 'Vault'");
         } else {
             economyProvider = new EconomyProvider(this);
-            getServer().getServicesManager().register(Economy.class, economyProvider, this, ServicePriority.Normal);
-            message.sendLog(Level.FINE, "Hooked to 'Vault'");
+            getServer().getServicesManager().register(Economy.class, getEconomyProvider(), this, ServicePriority.Normal);
+            getMessage().sendLog(Level.INFO, "Hooked to 'Vault'");
         }
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") == null) {
             getServer().getPluginManager().disablePlugin(this);
-            message.sendLog(Level.WARNING, "You have to install 'PlaceholderAPI'");
+            getMessage().sendLog(Level.WARNING, "You have to install 'PlaceholderAPI'");
         } else {
             new PlaceholderProvider().register();
-            message.sendLog(Level.FINE, "Hooked to 'PlaceholderAPI'");
+            getMessage().sendLog(Level.INFO, "Hooked to 'PlaceholderAPI'");
         }
         database = new Database(getDataFolder());
         jail = new Jail(getDataFolder());
@@ -79,40 +79,19 @@ public final class Players extends JavaPlugin {
         motd = new Motd(getDataFolder());
         spawn = new Spawn(getDataFolder());
         warps = new Warps(getDataFolder());
-        new AsyncPlayerChat(this);
-        new BlockBreak(this);
-        new BlockFertilize(this);
-        new BlockPlace(this);
-        new DamageEntity(this);
-        new DamageEntityWithArrow(this);
-        new DamageEntityWithSnowball(this);
-        new DamageEntityWithSpectralArrow(this);
-        new DamageEntityWithThrownPotion(this);
-        new DamageEntityWithTrident(this);
-        new PlayerBucketEmpty(this);
-        new PlayerBucketEntity(this);
-        new PlayerBucketFill(this);
-        new PlayerCommandPreprocess(this);
-        new PlayerDeath(this);
-        new PlayerHarvestBlock(this);
-        new PlayerInteractPhysical(this);
-        new PlayerJoin(this);
-        new PlayerLeashEntity(this);
-        new PlayerLogin(this);
-        new PlayerMount(this);
-        new PlayerMove(this);
-        new PlayerQuit(this);
-        new PlayerRespawn(this);
-        new PlayerShearEntity(this);
-        new PlayerSpawnLocation(this);
-        new PlayerTeleport(this);
-        new PrepareAnvil(this);
-        new SignChange(this);
+        reload();
+        getCommands();
+        getEvents();
+        message.sendLog(Level.INFO, "Enabled " + getName() + " " + getDescription().getVersion());
+        new UpdateChecker(this, 110266).getUpdate();
+    }
+    private void getCommands() {
         getCommand("announcement").setExecutor(new AnnouncementCommand());
         getCommand("back").setExecutor(new BackCommand());
         getCommand("balance").setExecutor(new BalanceCommand());
         getCommand("color").setExecutor(new ColorCommand());
         getCommand("delhome").setExecutor(new DelHomeCommand());
+        getCommand("delwarp").setExecutor(new DelWarpCommand());
         getCommand("eco").setExecutor(new EcoCommand());
         getCommand("enchant").setExecutor(new EnchantCommand());
         getCommand("enderchest").setExecutor(new EnderChestCommand());
@@ -157,9 +136,37 @@ public final class Players extends JavaPlugin {
         getCommand("warp").setExecutor(new WarpCommand());
         getCommand("whisper").setExecutor(new WhisperCommand());
         getCommand("workbench").setExecutor(new WorkbenchCommand());
-        reload();
-        message.sendLog(Level.FINE, "Enabled " + getName() + " " + getDescription().getVersion());
-        new UpdateChecker(this, 110266).getUpdate();
+    }
+    private void getEvents() {
+        new AsyncPlayerChat(this);
+        new BlockBreak(this);
+        new BlockFertilize(this);
+        new BlockPlace(this);
+        new DamageEntity(this);
+        new DamageEntityWithArrow(this);
+        new DamageEntityWithSnowball(this);
+        new DamageEntityWithSpectralArrow(this);
+        new DamageEntityWithThrownPotion(this);
+        new DamageEntityWithTrident(this);
+        new PlayerBucketEmpty(this);
+        new PlayerBucketEntity(this);
+        new PlayerBucketFill(this);
+        new PlayerCommandPreprocess(this);
+        new PlayerDeath(this);
+        new PlayerHarvestBlock(this);
+        new PlayerInteractPhysical(this);
+        new PlayerJoin(this);
+        new PlayerLeashEntity(this);
+        new PlayerLogin(this);
+        new PlayerMount(this);
+        new PlayerMove(this);
+        new PlayerQuit(this);
+        new PlayerRespawn(this);
+        new PlayerShearEntity(this);
+        new PlayerSpawnLocation(this);
+        new PlayerTeleport(this);
+        new PrepareAnvil(this);
+        new SignChange(this);
     }
     @Override
     public void onDisable() {
@@ -170,7 +177,7 @@ public final class Players extends JavaPlugin {
             new PlaceholderProvider().unregister();
         }
         getServer().getServicesManager().unregisterAll(this);
-        message.sendLog(Level.FINE, "Disabled " + getName() + " " + getDescription().getVersion());
+        message.sendLog(Level.INFO, "Disabled " + getName() + " " + getDescription().getVersion());
     }
     public void reload() {
         if (new File(getDataFolder(), "config.yml").exists()) {

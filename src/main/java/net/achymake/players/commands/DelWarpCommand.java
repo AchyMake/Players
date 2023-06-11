@@ -13,17 +13,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DelWarpCommand implements CommandExecutor, TabCompleter {
-    private final Warps warps = Players.getWarps();
-    private final Message message = Players.getMessage();
+    private Warps getWarps() {
+        return Players.getWarps();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            message.send(sender, "&cUsage:&f /delwarp warpName");
+            getMessage().send(sender, "&cUsage:&f /delwarp warpName");
         }
         if (args.length == 1) {
-            if (warps.warpExist(args[0])) {
-                warps.delWarp(args[0]);
-                message.send(sender, args[0] + "&6 has been deleted");
+            if (getWarps().warpExist(args[0])) {
+                getWarps().delWarp(args[0]);
+                getMessage().send(sender, args[0] + "&6 has been deleted");
             }
         }
         return true;
@@ -33,7 +37,7 @@ public class DelWarpCommand implements CommandExecutor, TabCompleter {
         List<String> commands = new ArrayList<>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                commands.addAll(warps.getWarps());
+                commands.addAll(getWarps().getWarps());
             }
         }
         return commands;

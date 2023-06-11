@@ -12,28 +12,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayersCommand implements CommandExecutor, TabCompleter {
-    private final Players plugin = Players.getInstance();
-    private final Message message = Players.getMessage();
+    private Players plugin() {
+        return Players.getInstance();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            message.send(sender, "&6" + plugin.getName() + " " + plugin.getDescription().getVersion());
+            getMessage().send(sender, "&6" + plugin().getName() + " " + plugin().getDescription().getVersion());
         }
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("reload")) {
-                plugin.reload();
-                message.send(sender, "&6Players:&f config files reloaded");
+                plugin().reload();
+                getMessage().send(sender, "&6Players:&f config files reloaded");
             }
             if (args[0].equalsIgnoreCase("discord")) {
-                message.send(sender, "&9Developers Discord");
-                message.send(sender, "https://discord.com/invite/aMtQFeJKyB");
+                getMessage().send(sender, "&9Developers Discord");
+                getMessage().send(sender, "https://discord.com/invite/aMtQFeJKyB");
             }
         }
         if (args.length == 2) {
             if (args[0].equalsIgnoreCase("reload")) {
                 if (args[1].equalsIgnoreCase("players")) {
-                    plugin.reloadPlayerFiles();
-                    message.send(sender, "&6Players:&f player files reloaded");
+                    plugin().reloadPlayerFiles();
+                    getMessage().send(sender, "&6Players:&f player files reloaded");
                 }
             }
         }

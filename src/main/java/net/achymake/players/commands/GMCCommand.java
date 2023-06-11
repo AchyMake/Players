@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GMCCommand implements CommandExecutor, TabCompleter {
-    private final Message message = Players.getMessage();
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
@@ -21,7 +23,7 @@ public class GMCCommand implements CommandExecutor, TabCompleter {
                 Player player = (Player) sender;
                 if (!player.getGameMode().equals(GameMode.CREATIVE)) {
                     player.setGameMode(GameMode.CREATIVE);
-                    message.send(player, "&6You changed gamemode to&f creative");
+                    getMessage().send(player, "&6You changed gamemode to&f creative");
                 }
             }
         }
@@ -31,16 +33,16 @@ public class GMCCommand implements CommandExecutor, TabCompleter {
                 if (target == sender) {
                     if (!target.getGameMode().equals(GameMode.CREATIVE)) {
                         target.setGameMode(GameMode.CREATIVE);
-                        message.send(target, sender.getName() + "&6 changed your gamemode to&f creative");
-                        message.send(sender, "&6You changed&f " + target.getName() + "&6 gamemode to&f creative");
+                        getMessage().send(target, sender.getName() + "&6 changed your gamemode to&f creative");
+                        getMessage().send(sender, "&6You changed&f " + target.getName() + "&6 gamemode to&f creative");
                     }
                 } else {
                     if (target != null) {
                         if (!target.hasPermission("players.command.gamemode.exempt")) {
                             if (!target.getGameMode().equals(GameMode.CREATIVE)) {
                                 target.setGameMode(GameMode.CREATIVE);
-                                message.send(target, sender.getName() + "&6 changed your gamemode to&f creative");
-                                message.send(sender, "&6You changed&f " + target.getName() + "&6 gamemode to&f creative");
+                                getMessage().send(target, sender.getName() + "&6 changed your gamemode to&f creative");
+                                getMessage().send(sender, "&6You changed&f " + target.getName() + "&6 gamemode to&f creative");
                             }
                         }
                     }

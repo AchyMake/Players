@@ -13,19 +13,23 @@ import java.util.Collections;
 import java.util.List;
 
 public class SetJailCommand implements CommandExecutor, TabCompleter {
-    private final Jail jail = Players.getJail();
-    private final Message message = Players.getMessage();
+    private Jail getJail() {
+        return Players.getJail();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
                 Player player = (Player) sender;
-                if (jail.jailExist()) {
-                    jail.setJail(player.getLocation());
-                    message.send(sender, "&6Jail relocated");
+                if (getJail().jailExist()) {
+                    getJail().setJail(player.getLocation());
+                    getMessage().send(sender, "&6Jail relocated");
                 } else {
-                    jail.setJail(player.getLocation());
-                    message.send(sender, "&6Jail has been set");
+                    getJail().setJail(player.getLocation());
+                    getMessage().send(sender, "&6Jail has been set");
                 }
             }
         }

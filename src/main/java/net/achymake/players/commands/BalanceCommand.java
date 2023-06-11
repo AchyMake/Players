@@ -13,24 +13,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BalanceCommand implements CommandExecutor, TabCompleter {
-    private final Database database = Players.getDatabase();
-    private final EconomyProvider economyProvider = Players.getEconomyProvider();
-    private final Message message = Players.getMessage();
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private EconomyProvider getEconomyProvider() {
+        return Players.getEconomyProvider();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
-                Player player = (Player) sender;
-                message.send(player, "&6Balance:&a " + economyProvider.currencyNameSingular() + economyProvider.format(database.getEconomy(player)));
+                getMessage().send(sender, "&6Balance:&a " + getEconomyProvider().currencyNameSingular() + getEconomyProvider().format(getDatabase().getEconomy((Player) sender)));
             }
             if (args.length == 1) {
                 Player player = (Player) sender;
                 if (player.hasPermission("players.command.balance.others")) {
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                    if (database.exist(offlinePlayer)) {
-                        message.send(player, offlinePlayer.getName() + " &6balance:&a " + economyProvider.currencyNameSingular() + economyProvider.format(database.getEconomy(offlinePlayer)));
+                    if (getDatabase().exist(offlinePlayer)) {
+                        getMessage().send(player, offlinePlayer.getName() + " &6balance:&a " + getEconomyProvider().currencyNameSingular() + getEconomyProvider().format(getDatabase().getEconomy(offlinePlayer)));
                     } else {
-                        message.send(player, offlinePlayer.getName() + "&c has never joined");
+                        getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
                     }
                 }
             }
@@ -38,10 +43,10 @@ public class BalanceCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof ConsoleCommandSender) {
             if (args.length == 1) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                if (database.exist(offlinePlayer)) {
-                    message.send(sender, offlinePlayer.getName() + " &6balance:&a " + economyProvider.currencyNameSingular() + economyProvider.format(database.getEconomy(offlinePlayer)));
+                if (getDatabase().exist(offlinePlayer)) {
+                    getMessage().send(sender, offlinePlayer.getName() + " &6balance:&a " + getEconomyProvider().currencyNameSingular() + getEconomyProvider().format(getDatabase().getEconomy(offlinePlayer)));
                 } else {
-                    message.send(sender, offlinePlayer.getName() + "&c has never joined");
+                    getMessage().send(sender, offlinePlayer.getName() + "&c has never joined");
                 }
             }
         }

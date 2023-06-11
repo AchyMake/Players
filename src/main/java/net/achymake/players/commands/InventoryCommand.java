@@ -12,13 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryCommand implements CommandExecutor, TabCompleter {
-    private final Message message = Players.getMessage();
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
                 Player player = (Player) sender;
-                message.send(player, "&cUsage:&f /inventory target");
+                getMessage().send(player, "&cUsage:&f /inventory target");
             }
             if (args.length == 1) {
                 Player player = (Player) sender;
@@ -27,7 +29,7 @@ public class InventoryCommand implements CommandExecutor, TabCompleter {
                     if (target != player) {
                         if (!target.hasPermission("players.command.inventory.exempt")) {
                             player.openInventory(target.getInventory());
-                            message.send(sender, "&6Opened inventory of " + target.getName());
+                            getMessage().send(sender, "&6Opened inventory of " + target.getName());
                         }
                     }
                 }

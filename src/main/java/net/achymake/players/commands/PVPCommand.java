@@ -15,17 +15,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PVPCommand implements CommandExecutor, TabCompleter {
-    private final Database database = Players.getDatabase();
-    private final Message message = Players.getMessage();
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
             if (sender instanceof Player) {
-                database.setBoolean((Player) sender, "settings.pvp", !database.isPVP((Player) sender));
-                if (database.isPVP((Player) sender)) {
-                    message.send(sender, "&6You enabled pvp");
+                getDatabase().setBoolean((Player) sender, "settings.pvp", !getDatabase().isPVP((Player) sender));
+                if (getDatabase().isPVP((Player) sender)) {
+                    getMessage().send(sender, "&6You enabled pvp");
                 } else {
-                    message.send(sender, "&6You disabled pvp");
+                    getMessage().send(sender, "&6You disabled pvp");
                 }
             }
         }
@@ -33,35 +37,35 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
             if (sender.hasPermission("players.command.pvp.others")) {
                 Player target = sender.getServer().getPlayerExact(args[0]);
                 if (target == sender) {
-                    database.setBoolean(target, "settings.pvp", !database.isPVP(target));
-                    if (database.isPVP(target)) {
-                        message.send(sender, "&6You enabled pvp for your self");
+                    getDatabase().setBoolean(target, "settings.pvp", !getDatabase().isPVP(target));
+                    if (getDatabase().isPVP(target)) {
+                        getMessage().send(sender, "&6You enabled pvp for your self");
                     } else {
-                        message.send(sender, "&6You disabled pvp for your self");
+                        getMessage().send(sender, "&6You disabled pvp for your self");
                     }
                 } else {
                     if (target != null) {
                         if (!target.hasPermission("players.command.pvp.exempt")) {
-                            database.setBoolean(target, "settings.pvp", !database.isPVP(target));
-                            if (database.isPVP(target)) {
-                                message.send(target, sender.getName() + "&6 enabled pvp for you");
-                                message.send(sender, "&6You enabled pvp for&f " + target.getName());
+                            getDatabase().setBoolean(target, "settings.pvp", !getDatabase().isPVP(target));
+                            if (getDatabase().isPVP(target)) {
+                                getMessage().send(target, sender.getName() + "&6 enabled pvp for you");
+                                getMessage().send(sender, "&6You enabled pvp for&f " + target.getName());
                             } else {
-                                message.send(target, sender.getName() + "&6 disabled pvp for you");
-                                message.send(sender, "&6You disabled pvp for&f " + target.getName());
+                                getMessage().send(target, sender.getName() + "&6 disabled pvp for you");
+                                getMessage().send(sender, "&6You disabled pvp for&f " + target.getName());
                             }
                         }
                     } else {
                         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                        if (database.exist(offlinePlayer)) {
-                            database.setBoolean(offlinePlayer, "settings.pvp", !database.isPVP(offlinePlayer));
-                            if (database.isPVP(offlinePlayer)) {
-                                message.send(sender, "&6You enabled pvp for&f " + offlinePlayer.getName());
+                        if (getDatabase().exist(offlinePlayer)) {
+                            getDatabase().setBoolean(offlinePlayer, "settings.pvp", !getDatabase().isPVP(offlinePlayer));
+                            if (getDatabase().isPVP(offlinePlayer)) {
+                                getMessage().send(sender, "&6You enabled pvp for&f " + offlinePlayer.getName());
                             } else {
-                                message.send(sender, "&6You disabled pvp for&f " + offlinePlayer.getName());
+                                getMessage().send(sender, "&6You disabled pvp for&f " + offlinePlayer.getName());
                             }
                         } else {
-                            message.send(sender, offlinePlayer.getName() + "&c has never joined");
+                            getMessage().send(sender, offlinePlayer.getName() + "&c has never joined");
                         }
                     }
                 }

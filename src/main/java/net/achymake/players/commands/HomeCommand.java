@@ -16,24 +16,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeCommand implements CommandExecutor, TabCompleter {
-    private final Database database = Players.getDatabase();
-    private final EconomyProvider economyProvider = Players.getEconomyProvider();
-    private final FileConfiguration config = Players.getInstance().getConfig();
-    private final Message message = Players.getMessage();
+    private FileConfiguration getConfig() {
+        return Players.getInstance().getConfig();
+    }
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private EconomyProvider getEconomyProvider() {
+        return Players.getEconomyProvider();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (database.isFrozen(player) || database.isJailed(player)) {
+            if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                 return false;
             } else {
                 if (args.length == 0) {
-                    if (database.homeExist(player, "home")) {
-                        database.getHome(player, "home").getChunk().load();
-                        player.teleport(database.getHome(player, "home"));
-                        message.send(player, "&6Teleporting to&f home");
+                    if (getDatabase().homeExist(player, "home")) {
+                        getDatabase().getHome(player, "home").getChunk().load();
+                        player.teleport(getDatabase().getHome(player, "home"));
+                        getMessage().sendActionBar(player, "&6Teleporting to&f home");
                     } else {
-                        message.send(player, "home&c does not exist");
+                        getMessage().send(player, "home&c does not exist");
                     }
                 }
                 if (args.length == 1) {
@@ -44,23 +52,23 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
                                 location.setPitch(player.getLocation().getPitch());
                                 location.setYaw(player.getLocation().getYaw());
                                 player.getBedSpawnLocation().getChunk().load();
-                                message.send(player, "&6Teleporting to&f " + args[0]);
+                                getMessage().sendActionBar(player, "&6Teleporting to&f " + args[0]);
                                 player.teleport(location);
                             } else {
-                                message.send(player, args[0] + "&c does not exist");
+                                getMessage().send(player, args[0] + "&c does not exist");
                             }
                         }
                     } else if (args[0].equalsIgnoreCase("buy")) {
                         if (player.hasPermission("players.command.home.buy")) {
-                            message.send(player, "&6Homes costs&a " + economyProvider.format(config.getDouble("homes.cost")));
+                            getMessage().send(player, "&6Homes costs&a " + getEconomyProvider().format(getConfig().getDouble("homes.cost")));
                         }
                     } else {
-                        if (database.homeExist(player, args[0])) {
-                            database.getHome(player, args[0]).getChunk().load();
-                            player.teleport(database.getHome(player, args[0]));
-                            message.send(player, "&6Teleporting to&f " + args[0]);
+                        if (getDatabase().homeExist(player, args[0])) {
+                            getDatabase().getHome(player, args[0]).getChunk().load();
+                            player.teleport(getDatabase().getHome(player, args[0]));
+                            getMessage().sendActionBar(player, "&6Teleporting to&f " + args[0]);
                         } else {
-                            message.send(player, args[0] + "&c does not exist");
+                            getMessage().send(player, args[0] + "&c does not exist");
                         }
                     }
                 }
@@ -68,12 +76,12 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
                     int amount = Integer.parseInt(args[1]);
                     if (args[0].equalsIgnoreCase("buy")) {
                         if (player.hasPermission("players.command.home.buy")) {
-                            if (database.getEconomy(player) >= config.getDouble("homes.cost") * amount) {
-                                database.setInt(player, "max-homes", amount);
-                                database.removeEconomy(player, config.getDouble("homes.cost") * amount);
-                                message.send(player, "&6You bought " + amount + " homes for&a " + economyProvider.format(config.getDouble("homes.cost") * amount));
+                            if (getDatabase().getEconomy(player) >= getConfig().getDouble("homes.cost") * amount) {
+                                getDatabase().setInt(player, "max-homes", amount);
+                                getDatabase().removeEconomy(player, getConfig().getDouble("homes.cost") * amount);
+                                getMessage().send(player, "&6You bought " + amount + " homes for&a " + getEconomyProvider().format(getConfig().getDouble("homes.cost") * amount));
                             } else {
-                                message.send(player, "&cYou don't have&a " + economyProvider.format(config.getDouble("homes.cost") * amount) + "&c to buy&f " + amount + "&c homes");
+                                getMessage().send(player, "&cYou don't have&a " + getEconomyProvider().format(getConfig().getDouble("homes.cost") * amount) + "&c to buy&f " + amount + "&c homes");
                             }
                         }
                     }
@@ -93,7 +101,7 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
                 if (sender.hasPermission("players.commands.home.bed")) {
                     commands.add("bed");
                 }
-                commands.addAll(database.getHomes((Player) sender));
+                commands.addAll(getDatabase().getHomes((Player) sender));
             }
             if (args.length == 2) {
                 if (args[1].equalsIgnoreCase("buy")) {

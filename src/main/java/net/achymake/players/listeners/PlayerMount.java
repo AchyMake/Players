@@ -10,6 +10,9 @@ import org.bukkit.event.Listener;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 public class PlayerMount implements Listener {
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
     public PlayerMount(Players players) {
         players.getServer().getPluginManager().registerEvents(this, players);
     }
@@ -17,9 +20,8 @@ public class PlayerMount implements Listener {
     public void onPlayerMount(EntityMountEvent event) {
         if (!event.getEntity().getType().equals(EntityType.PLAYER))return;
         if (event.getMount().getType().equals(EntityType.ARMOR_STAND))return;
-        Database database = Players.getDatabase();
         Player player = (Player) event.getEntity();
-        if (database.isFrozen(player) || database.isJailed(player)) {
+        if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
             event.setCancelled(true);
         }
     }

@@ -12,19 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TPCommand implements CommandExecutor, TabCompleter {
-    private final Message message = Players.getMessage();
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
-                message.send(sender, "&cUsage:&f /tp target target");
+                getMessage().send(sender, "&cUsage:&f /tp target target");
             }
             if (args.length == 1) {
                 Player target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     Player player = (Player) sender;
                     player.teleport(target.getLocation());
-                    message.sendActionBar((Player) sender, "&6Teleporting to&f " + target.getName());
+                    getMessage().sendActionBar((Player) sender, "&6Teleporting to&f " + target.getName());
                 }
             }
         }

@@ -12,20 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HelpCommand implements CommandExecutor, TabCompleter {
-    private final Motd motd = Players.getMotd();
+    private Motd getMotd() {
+        return Players.getMotd();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            if (motd.motdExist("help")) {
-                motd.sendMotd(sender, "help");
+            if (getMotd().motdExist("help")) {
+                getMotd().sendMotd(sender, "help");
             }
         }
         if (args.length == 1) {
             if (sender.hasPermission("players.command.help.others")) {
                 Player target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    if (motd.motdExist("help")) {
-                        motd.sendMotd(target, "help");
+                    if (getMotd().motdExist("help")) {
+                        getMotd().sendMotd(target, "help");
                     }
                 }
             }

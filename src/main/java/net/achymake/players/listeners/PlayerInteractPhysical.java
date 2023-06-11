@@ -9,6 +9,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class PlayerInteractPhysical implements Listener {
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
     public PlayerInteractPhysical(Players players) {
         players.getServer().getPluginManager().registerEvents(this, players);
     }
@@ -16,8 +19,7 @@ public class PlayerInteractPhysical implements Listener {
     public void onPlayerInteractPhysical(PlayerInteractEvent event) {
         if (!event.getAction().equals(Action.PHYSICAL))return;
         if (event.getClickedBlock() == null)return;
-        Database database = Players.getDatabase();
-        if (database.isFrozen(event.getPlayer()) || database.isJailed(event.getPlayer()) || database.isVanished(event.getPlayer())) {
+        if (getDatabase().isFrozen(event.getPlayer()) || getDatabase().isJailed(event.getPlayer()) || getDatabase().isVanished(event.getPlayer())) {
             event.setCancelled(true);
         }
     }

@@ -15,43 +15,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MuteCommand implements CommandExecutor, TabCompleter {
-    private final Database database = Players.getDatabase();
-    private final Message message = Players.getMessage();
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            message.send(sender, "&cUsage:&f /mute target");
+            Players.getMessage().send(sender, "&cUsage:&f /mute target");
         }
         if (args.length == 1) {
             Player target = sender.getServer().getPlayerExact(args[0]);
             if (target == sender) {
-                database.setBoolean(target, "settings.muted", !database.isMuted(target));
-                if (database.isMuted(target)) {
-                    message.send(sender, "&6You muted&f " + target.getName());
+                getDatabase().setBoolean(target, "settings.muted", !getDatabase().isMuted(target));
+                if (getDatabase().isMuted(target)) {
+                    getMessage().send(sender, "&6You muted&f " + target.getName());
                 } else {
-                    message.send(sender, "&6You unmuted&f " + target.getName());
+                    getMessage().send(sender, "&6You unmuted&f " + target.getName());
                 }
             } else {
                 if (target != null) {
                     if (!target.hasPermission("players.command.mute.exempt")) {
-                        database.setBoolean(target, "settings.muted", !database.isMuted(target));
-                        if (database.isMuted(target)) {
-                            message.send(sender, "&6You muted&f " + target.getName());
+                        getDatabase().setBoolean(target, "settings.muted", !getDatabase().isMuted(target));
+                        if (getDatabase().isMuted(target)) {
+                            getMessage().send(sender, "&6You muted&f " + target.getName());
                         } else {
-                            message.send(sender, "&6You unmuted&f " + target.getName());
+                            getMessage().send(sender, "&6You unmuted&f " + target.getName());
                         }
                     }
                 } else {
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                    if (database.exist(offlinePlayer)) {
-                        database.setBoolean(offlinePlayer, "settings.muted", !database.isMuted(offlinePlayer));
-                        if (database.isMuted(offlinePlayer)) {
-                            message.send(sender, "&6You muted&f " + offlinePlayer.getName());
+                    if (getDatabase().exist(offlinePlayer)) {
+                        getDatabase().setBoolean(offlinePlayer, "settings.muted", !getDatabase().isMuted(offlinePlayer));
+                        if (getDatabase().isMuted(offlinePlayer)) {
+                            getMessage().send(sender, "&6You muted&f " + offlinePlayer.getName());
                         } else {
-                            message.send(sender, "&6You unmuted&f " + offlinePlayer.getName());
+                            getMessage().send(sender, "&6You unmuted&f " + offlinePlayer.getName());
                         }
-                    }else {
-                        message.send(sender,offlinePlayer.getName() + "&c has never joined");
+                    } else {
+                        getMessage().send(sender,offlinePlayer.getName() + "&c has never joined");
                     }
                 }
             }

@@ -10,6 +10,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class PrepareAnvil implements Listener {
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     public PrepareAnvil(Players players) {
         players.getServer().getPluginManager().registerEvents(this, players);
     }
@@ -20,8 +23,7 @@ public class PrepareAnvil implements Listener {
         if (itemStack == null)return;
         if (!itemStack.hasItemMeta())return;
         ItemMeta resultMeta = itemStack.getItemMeta();
-        Message message = Players.getMessage();
-        resultMeta.setDisplayName(message.addColor(event.getInventory().getRenameText()));
+        resultMeta.setDisplayName(getMessage().addColor(event.getInventory().getRenameText()));
         itemStack.setItemMeta(resultMeta);
     }
 }

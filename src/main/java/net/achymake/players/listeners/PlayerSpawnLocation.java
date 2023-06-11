@@ -9,19 +9,23 @@ import org.bukkit.event.Listener;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 public class PlayerSpawnLocation implements Listener {
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Spawn getSpawn() {
+        return Players.getSpawn();
+    }
     public PlayerSpawnLocation(Players players) {
         players.getServer().getPluginManager().registerEvents(this, players);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerSpawnLocation(PlayerSpawnLocationEvent event) {
-        Database database = Players.getDatabase();
-        if (!database.exist(event.getPlayer())) {
-            database.setup(event.getPlayer());
-            Spawn spawn = Players.getSpawn();
-            if (spawn.spawnExist()) {
-                event.setSpawnLocation(spawn.getSpawn());
+        if (!getDatabase().exist(event.getPlayer())) {
+            getDatabase().setup(event.getPlayer());
+            if (getSpawn().spawnExist()) {
+                event.setSpawnLocation(getSpawn().getSpawn());
             } else {
-                event.setSpawnLocation(database.getLocation(event.getPlayer(), "spawn"));
+                event.setSpawnLocation(getDatabase().getLocation(event.getPlayer(), "spawn"));
             }
         }
     }

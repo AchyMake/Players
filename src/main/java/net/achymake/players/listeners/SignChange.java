@@ -8,6 +8,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
 public class SignChange implements Listener {
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     public SignChange(Players players) {
         players.getServer().getPluginManager().registerEvents(this, players);
     }
@@ -16,8 +19,7 @@ public class SignChange implements Listener {
         for (int i = 0; i < event.getLines().length; i++) {
             if (!event.getLine(i).contains("&"))return;
             if (!event.getPlayer().hasPermission("players.chatcolor.sign"))return;
-            Message message = Players.getMessage();
-            event.setLine(i, message.addColor(event.getLine(i)));
+            event.setLine(i, getMessage().addColor(event.getLine(i)));
         }
     }
 }

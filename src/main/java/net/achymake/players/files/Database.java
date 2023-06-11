@@ -24,12 +24,17 @@ import java.util.logging.Level;
 
 public class Database {
     private final File dataFolder;
+    private final HashMap<String, Long> commandCooldown = new HashMap<>();
+    private final List<Player> vanished = new ArrayList<>();
     public Database(File dataFolder) {
         this.dataFolder = dataFolder;
     }
-    private final Players plugin = Players.getInstance();
-    private final HashMap<String, Long> commandCooldown = new HashMap<>();
-    private final List<Player> vanished = new ArrayList<>();
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
+    private FileConfiguration getConfig() {
+        return getPlugin().getConfig();
+    }
     public boolean exist(OfflinePlayer offlinePlayer) {
         return new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
     }
@@ -53,8 +58,8 @@ public class Database {
             FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(file);
             playerConfig.set("name", offlinePlayer.getName());
             playerConfig.set("display-name", offlinePlayer.getName());
-            playerConfig.set("account", plugin.getConfig().getDouble("economy.starting-balance"));
-            playerConfig.set("max-homes", plugin.getConfig().getInt("homes.default"));
+            playerConfig.set("account", getConfig().getDouble("economy.starting-balance"));
+            playerConfig.set("max-homes", getConfig().getInt("homes.default"));
             playerConfig.createSection("homes");
             playerConfig.set("settings.pvp", true);
             playerConfig.set("settings.frozen", false);
@@ -204,8 +209,8 @@ public class Database {
             if (offlinePlayer.isOnline()) {
                 Player player = offlinePlayer.getPlayer();
                 vanished.add(player);
-                for (Player onlinePlayers : plugin.getServer().getOnlinePlayers()) {
-                    onlinePlayers.hidePlayer(plugin, player);
+                for (Player onlinePlayers : getPlugin().getServer().getOnlinePlayers()) {
+                    onlinePlayers.hidePlayer(getPlugin(), player);
                 }
                 player.setAllowFlight(true);
                 player.setInvulnerable(true);
@@ -214,8 +219,8 @@ public class Database {
                 player.setSilent(true);
                 player.setCanPickupItems(false);
                 for (Player vanishedPlayers : vanished) {
-                    vanishedPlayers.showPlayer(plugin, player);
-                    player.showPlayer(plugin, vanishedPlayers);
+                    vanishedPlayers.showPlayer(getPlugin(), player);
+                    player.showPlayer(getPlugin(), vanishedPlayers);
                 }
                 resetTabList();
             }
@@ -224,8 +229,8 @@ public class Database {
             if (offlinePlayer.isOnline()) {
                 Player player = offlinePlayer.getPlayer();
                 vanished.remove(player);
-                for (Player onlinePlayers : plugin.getServer().getOnlinePlayers()) {
-                    onlinePlayers.showPlayer(plugin, player);
+                for (Player onlinePlayers : getPlugin().getServer().getOnlinePlayers()) {
+                    onlinePlayers.showPlayer(getPlugin(), player);
                 }
                 if (!player.hasPermission("players.command.fly")) {
                     player.setAllowFlight(false);
@@ -236,7 +241,7 @@ public class Database {
                 player.setSilent(false);
                 player.setCanPickupItems(true);
                 for (Player vanishedPlayers : vanished) {
-                    player.hidePlayer(plugin, vanishedPlayers);
+                    player.hidePlayer(getPlugin(), vanishedPlayers);
                 }
                 resetTabList();
             }
@@ -255,7 +260,7 @@ public class Database {
         setDouble(offlinePlayer, "account", value);
     }
     public void resetEconomy(OfflinePlayer offlinePlayer) {
-        setDouble(offlinePlayer, "account", plugin.getConfig().getDouble("economy.starting-balance"));
+        setDouble(offlinePlayer, "account", getConfig().getDouble("economy.starting-balance"));
     }
     public String prefix(Player player) {
         if (PlaceholderAPI.isRegistered("vault")) {
@@ -272,11 +277,11 @@ public class Database {
         }
     }
     public void resetTabList() {
-        if (plugin.getConfig().getBoolean("tablist.enable")) {
-            for (Player players : plugin.getServer().getOnlinePlayers()) {
-                players.setPlayerListHeader(addColor(plugin.getConfig().getString("tablist.header")));
+        if (getConfig().getBoolean("tablist.enable")) {
+            for (Player players : getPlugin().getServer().getOnlinePlayers()) {
+                players.setPlayerListHeader(addColor(getConfig().getString("tablist.header")));
                 players.setPlayerListName(addColor(prefix(players) + players.getName() + suffix(players)));
-                players.setPlayerListFooter(addColor(MessageFormat.format(plugin.getConfig().getString("tablist.footer"), players.getServer().getOnlinePlayers().size() - vanished.size(), players.getServer().getMaxPlayers())));
+                players.setPlayerListFooter(addColor(MessageFormat.format(getConfig().getString("tablist.footer"), players.getServer().getOnlinePlayers().size() - vanished.size(), players.getServer().getMaxPlayers())));
             }
         }
     }
@@ -295,9 +300,9 @@ public class Database {
         }
     }
     public Block highestRandomBlock() {
-        String worldName = plugin.getConfig().getString("commands.rtp.world");
-        int spread = plugin.getConfig().getInt("commands.rtp.spread");
-        return plugin.getServer().getWorld(worldName).getHighestBlockAt(new Random().nextInt(0, spread), new Random().nextInt(0, spread));
+        String worldName = getConfig().getString("commands.rtp.world");
+        int spread = getConfig().getInt("commands.rtp.spread");
+        return getPlugin().getServer().getWorld(worldName).getHighestBlockAt(new Random().nextInt(0, spread), new Random().nextInt(0, spread));
     }
     public Location randomLocation() {
         Block block = highestRandomBlock();

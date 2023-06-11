@@ -14,27 +14,31 @@ import java.util.List;
 import java.util.UUID;
 
 public class TPCancelCommand implements CommandExecutor, TabCompleter {
-    private final Database database = Players.getDatabase();
-    private final Message message = Players.getMessage();
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
                 Player player = (Player) sender;
-                if (database.getConfig(player).isString("tpa.sent")) {
-                    Player target = player.getServer().getPlayer(UUID.fromString(database.getConfig(player).getString("tpa.sent")));
+                if (getDatabase().getConfig(player).isString("tpa.sent")) {
+                    Player target = player.getServer().getPlayer(UUID.fromString(getDatabase().getConfig(player).getString("tpa.sent")));
                     if (target != null) {
-                        if (player.getServer().getScheduler().isQueued(database.getConfig(player).getInt("task.tpa"))) {
-                            player.getServer().getScheduler().cancelTask(database.getConfig(player).getInt("task.tpa"));
-                            message.send(target, player.getName() + "&6 cancelled tpa request");
-                            message.send(player, "&6You cancelled tpa request");
-                            database.setString(target, "tpa.from", null);
-                            database.setString(player, "task.tpa", null);
-                            database.setString(player, "tpa.sent", null);
+                        if (player.getServer().getScheduler().isQueued(getDatabase().getConfig(player).getInt("task.tpa"))) {
+                            player.getServer().getScheduler().cancelTask(getDatabase().getConfig(player).getInt("task.tpa"));
+                            getMessage().send(target, player.getName() + "&6 cancelled tpa request");
+                            getMessage().send(player, "&6You cancelled tpa request");
+                            getDatabase().setString(target, "tpa.from", null);
+                            getDatabase().setString(player, "task.tpa", null);
+                            getDatabase().setString(player, "tpa.sent", null);
                         }
                     }
                 } else {
-                    message.send(player, "&cYou haven't sent any tpa request");
+                    getMessage().send(player, "&cYou haven't sent any tpa request");
                 }
             }
         }

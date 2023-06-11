@@ -8,13 +8,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEntityEvent;
 
 public class PlayerBucketEntity implements Listener {
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
     public PlayerBucketEntity(Players players) {
         players.getServer().getPluginManager().registerEvents(this, players);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEntity(PlayerBucketEntityEvent event) {
-        Database database = Players.getDatabase();
-        if (database.isFrozen(event.getPlayer()) || database.isJailed(event.getPlayer())) {
+        if (getDatabase().isFrozen(event.getPlayer()) || getDatabase().isJailed(event.getPlayer())) {
             event.setCancelled(true);
         }
     }

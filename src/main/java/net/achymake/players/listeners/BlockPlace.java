@@ -8,13 +8,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 public class BlockPlace implements Listener {
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
     public BlockPlace(Players players) {
         players.getServer().getPluginManager().registerEvents(this, players);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPlace(BlockPlaceEvent event) {
-        Database database = Players.getDatabase();
-        if (database.isFrozen(event.getPlayer()) || database.isJailed(event.getPlayer())) {
+        if (getDatabase().isFrozen(event.getPlayer()) || getDatabase().isJailed(event.getPlayer())) {
             event.setCancelled(true);
         }
     }

@@ -16,27 +16,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PayCommand implements CommandExecutor, TabCompleter {
-    private final Database database = Players.getDatabase();
-    private final EconomyProvider economyProvider = Players.getEconomyProvider();
-    private final Message message = Players.getMessage();
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private EconomyProvider getEconomyProvider() {
+        return Players.getEconomyProvider();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0 || args.length == 1) {
-                message.send(sender, "&cUsage:&f /pay target amount");
+                Players.getMessage().send(sender, "&cUsage:&f /pay target amount");
             }
             if (args.length == 2) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                if (database.exist(offlinePlayer)) {
-                    if (economyProvider.has((Player) sender, Double.parseDouble(args[1]))) {
-                        economyProvider.withdrawPlayer((Player) sender, Double.parseDouble(args[1]));
-                        economyProvider.depositPlayer(offlinePlayer, Double.parseDouble(args[1]));
-                        message.send(sender, "&6You paid&f " + offlinePlayer.getName() + "&a " + economyProvider.currencyNameSingular() + economyProvider.format(Double.parseDouble(args[1])));
+                if (getDatabase().exist(offlinePlayer)) {
+                    if (getEconomyProvider().has((Player) sender, Double.parseDouble(args[1]))) {
+                        getEconomyProvider().withdrawPlayer((Player) sender, Double.parseDouble(args[1]));
+                        getEconomyProvider().depositPlayer(offlinePlayer, Double.parseDouble(args[1]));
+                        getMessage().send(sender, "&6You paid&f " + offlinePlayer.getName() + "&a " + getEconomyProvider().currencyNameSingular() + getEconomyProvider().format(Double.parseDouble(args[1])));
                     } else {
-                        message.send(sender, "&cYou don't have&a " + economyProvider.currencyNameSingular() + economyProvider.format(Double.parseDouble(args[1])) + "&c to pay&f " + offlinePlayer.getName());
+                        getMessage().send(sender, "&cYou don't have&a " + getEconomyProvider().currencyNameSingular() + getEconomyProvider().format(Double.parseDouble(args[1])) + "&c to pay&f " + offlinePlayer.getName());
                     }
                 } else {
-                    message.send(sender, offlinePlayer.getName() + "&c has never joined");
+                    getMessage().send(sender, offlinePlayer.getName() + "&c has never joined");
                 }
             }
         }

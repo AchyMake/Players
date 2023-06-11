@@ -13,11 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GamemodeCommand implements CommandExecutor, TabCompleter {
-    private final Message message = Players.getMessage();
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            message.send(sender, "&cUsage:&f /gamemode gamemodeName");
+            getMessage().send(sender, "&cUsage:&f /gamemode gamemodeName");
         }
         if (args.length == 1) {
             if (sender instanceof Player) {
@@ -25,25 +27,25 @@ public class GamemodeCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("adventure")) {
                     if (!player.getGameMode().equals(GameMode.ADVENTURE)) {
                         player.setGameMode(GameMode.ADVENTURE);
-                        message.send(player, "&6You changed gamemode to&f adventure");
+                        getMessage().send(player, "&6You changed gamemode to&f adventure");
                     }
                 }
                 if (args[0].equalsIgnoreCase("creative")) {
                     if (!player.getGameMode().equals(GameMode.CREATIVE)) {
                         player.setGameMode(GameMode.CREATIVE);
-                        message.send(player, "&6You changed gamemode to&f creative");
+                        getMessage().send(player, "&6You changed gamemode to&f creative");
                     }
                 }
                 if (args[0].equalsIgnoreCase("survival")) {
                     if (!player.getGameMode().equals(GameMode.SURVIVAL)) {
                         player.setGameMode(GameMode.SURVIVAL);
-                        message.send(player, "&6You changed gamemode to&f survival");
+                        getMessage().send(player, "&6You changed gamemode to&f survival");
                     }
                 }
                 if (args[0].equalsIgnoreCase("spectator")) {
                     if (!player.getGameMode().equals(GameMode.SPECTATOR)) {
                         player.setGameMode(GameMode.SPECTATOR);
-                        message.send(player, "&6You changed gamemode to&f spectator");
+                        getMessage().send(player, "&6You changed gamemode to&f spectator");
                     }
                 }
             }
@@ -55,25 +57,25 @@ public class GamemodeCommand implements CommandExecutor, TabCompleter {
                     if (args[0].equalsIgnoreCase("adventure")) {
                         if (!target.getGameMode().equals(GameMode.ADVENTURE)) {
                             target.setGameMode(GameMode.ADVENTURE);
-                            message.send(sender, "&6You changed gamemode to&f adventure");
+                            getMessage().send(sender, "&6You changed gamemode to&f adventure");
                         }
                     }
                     if (args[0].equalsIgnoreCase("creative")) {
                         if (!target.getGameMode().equals(GameMode.CREATIVE)) {
                             target.setGameMode(GameMode.CREATIVE);
-                            message.send(sender, "&6You changed gamemode to&f creative");
+                            getMessage().send(sender, "&6You changed gamemode to&f creative");
                         }
                     }
                     if (args[0].equalsIgnoreCase("survival")) {
                         if (!target.getGameMode().equals(GameMode.SURVIVAL)) {
                             target.setGameMode(GameMode.SURVIVAL);
-                            message.send(sender, "&6You changed gamemode to&f survival");
+                            getMessage().send(sender, "&6You changed gamemode to&f survival");
                         }
                     }
                     if (args[0].equalsIgnoreCase("spectator")) {
                         if (!target.getGameMode().equals(GameMode.SPECTATOR)) {
                             target.setGameMode(GameMode.SPECTATOR);
-                            message.send(sender, "&6You changed gamemode to&f spectator");
+                            getMessage().send(sender, "&6You changed gamemode to&f spectator");
                         }
                     }
                 } else {
@@ -82,29 +84,29 @@ public class GamemodeCommand implements CommandExecutor, TabCompleter {
                             if (args[0].equalsIgnoreCase("adventure")) {
                                 if (!target.getGameMode().equals(GameMode.ADVENTURE)) {
                                     target.setGameMode(GameMode.ADVENTURE);
-                                    message.send(target, sender.getName() + "&6 changed your gamemode to&f adventure");
-                                    message.send(sender, "&6You changed gamemode of&f " + target.getName() + "&6 to&f adventure");
+                                    getMessage().send(target, sender.getName() + "&6 changed your gamemode to&f adventure");
+                                    getMessage().send(sender, "&6You changed gamemode of&f " + target.getName() + "&6 to&f adventure");
                                 }
                             }
                             if (args[0].equalsIgnoreCase("creative")) {
                                 if (!target.getGameMode().equals(GameMode.CREATIVE)) {
                                     target.setGameMode(GameMode.CREATIVE);
-                                    message.send(target, sender.getName() + "&6 changed your gamemode to&f creative");
-                                    message.send(sender, "&6You changed gamemode of&f " + target.getName() + "&6 to&f creative");
+                                    getMessage().send(target, sender.getName() + "&6 changed your gamemode to&f creative");
+                                    getMessage().send(sender, "&6You changed gamemode of&f " + target.getName() + "&6 to&f creative");
                                 }
                             }
                             if (args[0].equalsIgnoreCase("survival")) {
                                 if (!target.getGameMode().equals(GameMode.SURVIVAL)) {
                                     target.setGameMode(GameMode.SURVIVAL);
-                                    message.send(target, sender.getName() + "&6 changed your gamemode to&f survival");
-                                    message.send(sender, "&6You changed gamemode of&f " + target.getName() + "&6 to&f survival");
+                                    getMessage().send(target, sender.getName() + "&6 changed your gamemode to&f survival");
+                                    getMessage().send(sender, "&6You changed gamemode of&f " + target.getName() + "&6 to&f survival");
                                 }
                             }
                             if (args[0].equalsIgnoreCase("spectator")) {
                                 if (!target.getGameMode().equals(GameMode.SPECTATOR)) {
                                     target.setGameMode(GameMode.SPECTATOR);
-                                    message.send(target, sender.getName() + "&6 changed your gamemode to&f spectator");
-                                    message.send(sender, "&6You changed gamemode of&f " + target.getName() + "&6 to&f spectator");
+                                    getMessage().send(target, sender.getName() + "&6 changed your gamemode to&f spectator");
+                                    getMessage().send(sender, "&6You changed gamemode of&f " + target.getName() + "&6 to&f spectator");
                                 }
                             }
                         }

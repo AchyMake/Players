@@ -9,24 +9,26 @@ import java.util.Collections;
 import java.util.List;
 
 public class AnnouncementCommand implements CommandExecutor, TabCompleter {
-    private final Message message = Players.getMessage();
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
-                message.send(sender, "&cUsage:&f /announcement message");
+                getMessage().send(sender, "&cUsage:&f /announcement message");
             } else {
                 for (Player players : sender.getServer().getOnlinePlayers()) {
-                    message.send(players, "&6Server:&f " + announcement(args));
+                    getMessage().send(players, "&6Server:&f " + announcement(args));
                 }
             }
         }
         if (sender instanceof ConsoleCommandSender) {
             if (args.length == 0) {
-                message.send(sender, "Usage: /announcement message");
+                getMessage().send(sender, "Usage: /announcement message");
             } else {
                 for (Player players : sender.getServer().getOnlinePlayers()) {
-                    message.send(players, "&6Server:&f " + announcement(args));
+                    getMessage().send(players, "&6Server:&f " + announcement(args));
                 }
             }
         }

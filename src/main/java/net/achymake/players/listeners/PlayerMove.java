@@ -9,18 +9,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 public class PlayerMove implements Listener {
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     public PlayerMove(Players players) {
         players.getServer().getPluginManager().registerEvents(this, players);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
-        Database database = Players.getDatabase();
-        if (database.isFrozen(event.getPlayer())) {
+        if (getDatabase().isFrozen(event.getPlayer())) {
             event.setCancelled(true);
         }
-        if (database.isVanished(event.getPlayer())) {
-            Message message = Players.getMessage();
-            message.sendActionBar(event.getPlayer(), "&6&lVanish:&a Enabled");
+        if (getDatabase().isVanished(event.getPlayer())) {
+            getMessage().sendActionBar(event.getPlayer(), "&6&lVanish:&a Enabled");
         }
     }
 }

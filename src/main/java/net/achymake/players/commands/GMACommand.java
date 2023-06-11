@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GMACommand implements CommandExecutor, TabCompleter {
-    private final Message message = Players.getMessage();
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
@@ -21,7 +23,7 @@ public class GMACommand implements CommandExecutor, TabCompleter {
                 Player player = (Player) sender;
                 if (!player.getGameMode().equals(GameMode.ADVENTURE)) {
                     player.setGameMode(GameMode.ADVENTURE);
-                    message.send(player, "&6You changed gamemode to&f adventure");
+                    getMessage().send(player, "&6You changed gamemode to&f adventure");
                 }
             }
         }
@@ -31,16 +33,16 @@ public class GMACommand implements CommandExecutor, TabCompleter {
                 if (target == sender) {
                     if (!target.getGameMode().equals(GameMode.ADVENTURE)) {
                         target.setGameMode(GameMode.ADVENTURE);
-                        message.send(target, sender.getName() + "&6 changed your gamemode to&f adventure");
-                        message.send(sender, "&6You changed&f " + target.getName() + "&6 gamemode to&f adventure");
+                        getMessage().send(target, sender.getName() + "&6 changed your gamemode to&f adventure");
+                        getMessage().send(sender, "&6You changed&f " + target.getName() + "&6 gamemode to&f adventure");
                     }
                 } else {
                     if (target != null) {
                         if (!target.hasPermission("players.command.gamemode.exempt")) {
                             if (!target.getGameMode().equals(GameMode.ADVENTURE)) {
                                 target.setGameMode(GameMode.ADVENTURE);
-                                message.send(target, sender.getName() + "&6 changed your gamemode to&f adventure");
-                                message.send(sender, "&6You changed&f " + target.getName() + "&6 gamemode to&f adventure");
+                                getMessage().send(target, sender.getName() + "&6 changed your gamemode to&f adventure");
+                                getMessage().send(sender, "&6You changed&f " + target.getName() + "&6 gamemode to&f adventure");
                             }
                         }
                     }

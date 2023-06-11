@@ -11,6 +11,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class DamageEntity implements Listener {
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     public DamageEntity(Players players) {
         players.getServer().getPluginManager().registerEvents(this, players);
     }
@@ -18,19 +24,17 @@ public class DamageEntity implements Listener {
     public void onDamageEntity(EntityDamageByEntityEvent event) {
         if (!event.getDamager().getType().equals(EntityType.PLAYER))return;
         Player player = (Player) event.getDamager();
-        Database database = Players.getDatabase();
-        Message message = Players.getMessage();
-        if (database.isFrozen(player) || database.isJailed(player)) {
+        if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
             event.setCancelled(true);
         } else {
             if (event.getEntity().getType().equals(EntityType.PLAYER)) {
                 Player target = (Player) event.getEntity();
-                if (!database.isPVP(player)) {
+                if (!getDatabase().isPVP(player)) {
                     event.setCancelled(true);
-                    message.sendActionBar(player,"&cError:&7 Your pvp is false");
-                } else if (!database.isPVP(target)) {
+                    getMessage().sendActionBar(player,"&cError:&7 Your pvp is false");
+                } else if (!getDatabase().isPVP(target)) {
                     event.setCancelled(true);
-                    message.sendActionBar(player,"&cError:&f " + target.getName() + "&7 pvp is false");
+                    getMessage().sendActionBar(player,"&cError:&f " + target.getName() + "&7 pvp is false");
                 }
             }
         }

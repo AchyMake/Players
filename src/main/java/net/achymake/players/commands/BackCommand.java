@@ -9,26 +9,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BackCommand implements CommandExecutor, TabCompleter {
-    private final Database database = Players.getDatabase();
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (database.isFrozen(player) || database.isJailed(player)) {
+            if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                 return false;
             }
             if (args.length == 0) {
-                database.teleportBack(player);
+                getDatabase().teleportBack(player);
             }
             if (args.length == 1) {
                 if (player.hasPermission("players.command.back.others")) {
                     Player target = player.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            database.teleportBack(target);
+                            getDatabase().teleportBack(target);
                         } else {
                             if (!target.hasPermission("players.command.back.exempt")) {
-                                database.teleportBack(target);
+                                getDatabase().teleportBack(target);
                             }
                         }
                     }
@@ -39,7 +41,7 @@ public class BackCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 Player target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    database.teleportBack(target);
+                    getDatabase().teleportBack(target);
                 }
             }
         }

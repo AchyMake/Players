@@ -15,20 +15,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomesCommand implements CommandExecutor, TabCompleter {
-    private final Database database = Players.getDatabase();
-    private final Message message = Players.getMessage();
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
                 Player player = (Player) sender;
-                if (database.getHomes(player).size() > 0) {
-                    message.send(player, "&6Homes:");
-                    for (String listedHomes : database.getHomes(player)) {
-                        message.send(player, "- " + listedHomes);
+                if (getDatabase().getHomes(player).size() > 0) {
+                    getMessage().send(player, "&6Homes:");
+                    for (String listedHomes : getDatabase().getHomes(player)) {
+                        getMessage().send(player, "- " + listedHomes);
                     }
                 } else {
-                    message.send(player, "&cYou haven't set any homes yet");
+                    getMessage().send(player, "&cYou haven't set any homes yet");
                 }
             }
             if (args.length == 3) {
@@ -36,38 +40,38 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("delete")) {
                     if (player.hasPermission("players.command.homes.delete")) {
                         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
-                        if (database.exist(offlinePlayer)) {
-                            if (database.getHomes(offlinePlayer).contains(args[2])) {
-                                database.setString(offlinePlayer, "homes." + args[2], null);
-                                message.send(player, "&6Deleted&f " + args[2] + "&6 of&f " + args[1]);
+                        if (getDatabase().exist(offlinePlayer)) {
+                            if (getDatabase().getHomes(offlinePlayer).contains(args[2])) {
+                                getDatabase().setString(offlinePlayer, "homes." + args[2], null);
+                                getMessage().send(player, "&6Deleted&f " + args[2] + "&6 of&f " + args[1]);
                             } else {
-                                message.send(player, args[1] + "&c doesn't have&f " + args[2]);
+                                getMessage().send(player, args[1] + "&c doesn't have&f " + args[2]);
                             }
                         } else {
-                            message.send(sender, offlinePlayer.getName() + "&c has never joined");
+                            getMessage().send(sender, offlinePlayer.getName() + "&c has never joined");
                         }
                     }
                 }
                 if (args[0].equalsIgnoreCase("teleport")) {
                     if (player.hasPermission("players.command.homes.teleport")) {
                         OfflinePlayer offlinePlayer = player.getServer().getOfflinePlayer(args[1]);
-                        if (database.exist(offlinePlayer)) {
+                        if (getDatabase().exist(offlinePlayer)) {
                             if (args[2].equalsIgnoreCase("bed")) {
                                 if (offlinePlayer.getBedSpawnLocation() != null) {
                                     player.teleport(offlinePlayer.getBedSpawnLocation());
-                                    message.send(player, "&6Teleporting&f " + args[2] + "&6 of&f " + args[1]);
+                                    getMessage().send(player, "&6Teleporting&f " + args[2] + "&6 of&f " + args[1]);
                                 }
                             } else {
-                                if (database.getHomes(offlinePlayer).contains(args[2])) {
-                                    database.getHome(offlinePlayer, args[2]).getChunk().load();
-                                    player.teleport(database.getHome(offlinePlayer, args[2]));
-                                    message.send(player, "&6Teleporting&f " + args[2] + "&6 of&f " + args[1]);
+                                if (getDatabase().getHomes(offlinePlayer).contains(args[2])) {
+                                    getDatabase().getHome(offlinePlayer, args[2]).getChunk().load();
+                                    player.teleport(getDatabase().getHome(offlinePlayer, args[2]));
+                                    getMessage().send(player, "&6Teleporting&f " + args[2] + "&6 of&f " + args[1]);
                                 } else {
-                                    message.send(player, args[1] + "&c doesn't have&f " + args[2]);
+                                    getMessage().send(player, args[1] + "&c doesn't have&f " + args[2]);
                                 }
                             }
                         } else {
-                            message.send(sender, offlinePlayer.getName() + "&c has never joined");
+                            getMessage().send(sender, offlinePlayer.getName() + "&c has never joined");
                         }
                     }
                 }
@@ -107,8 +111,8 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                 Player player = (Player) sender;
                 if (player.hasPermission("players.command.homes.teleport")) {
                     OfflinePlayer offlinePlayer = player.getServer().getOfflinePlayer(args[1]);
-                    if (database.exist(offlinePlayer)) {
-                        commands.addAll(database.getHomes(offlinePlayer));
+                    if (getDatabase().exist(offlinePlayer)) {
+                        commands.addAll(getDatabase().getHomes(offlinePlayer));
                     }
                 }
             }

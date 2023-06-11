@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FlyCommand implements CommandExecutor, TabCompleter {
-    private final Message message = Players.getMessage();
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
@@ -20,9 +22,9 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
                 Player player = (Player) sender;
                 player.setAllowFlight(!player.getAllowFlight());
                 if (player.getAllowFlight()) {
-                    message.sendActionBar((Player) sender, "&6Enabled fly");
+                    getMessage().sendActionBar((Player) sender, "&6Enabled fly");
                 } else {
-                    message.sendActionBar((Player) sender, "&6Disabled fly");
+                    getMessage().sendActionBar((Player) sender, "&6Disabled fly");
                 }
             }
         }
@@ -32,20 +34,20 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
                 if (target == sender) {
                     target.setAllowFlight(!target.getAllowFlight());
                     if (target.getAllowFlight()) {
-                        message.sendActionBar((Player) sender, "&6Enabled fly");
+                        getMessage().sendActionBar((Player) sender, "&6Enabled fly");
                     } else {
-                        message.sendActionBar((Player) sender, "&6Disabled fly");
+                        getMessage().sendActionBar((Player) sender, "&6Disabled fly");
                     }
                 } else {
                     if (target != null) {
                         if (!target.hasPermission("players.command.fly.exempt")) {
                             target.setAllowFlight(!target.getAllowFlight());
                             if (target.getAllowFlight()) {
-                                message.sendActionBar(target, "&6Enabled fly");
-                                message.send(sender, "&6You enabled fly for&f " + target.getName());
+                                getMessage().sendActionBar(target, "&6Enabled fly");
+                                getMessage().send(sender, "&6You enabled fly for&f " + target.getName());
                             } else {
-                                message.sendActionBar(target, "&6Disabled fly");
-                                message.send(sender, "&6You disabled fly for&f " + target.getName());
+                                getMessage().sendActionBar(target, "&6Disabled fly");
+                                getMessage().send(sender, "&6You disabled fly for&f " + target.getName());
                             }
                         }
                     }

@@ -13,15 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KitCommand implements CommandExecutor, TabCompleter {
-    private final Kits kits = Players.getKits();
-    private final Message message = Players.getMessage();
+    private Kits getKits() {
+        return Players.getKits();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            message.send(sender, "&6Kits:");
-            for (String kitNames : kits.getKits()) {
+            getMessage().send(sender, "&6Kits:");
+            for (String kitNames : getKits().getKits()) {
                 if (sender.hasPermission("players.command.kit." + kitNames)) {
-                    message.send(sender, "- " + kitNames);
+                    getMessage().send(sender, "- " + kitNames);
                 }
             }
         }
@@ -29,9 +33,9 @@ public class KitCommand implements CommandExecutor, TabCompleter {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
                 if (player.hasPermission("players.command.kit." + args[0])) {
-                    for (String kitNames : kits.getKits()) {
+                    for (String kitNames : getKits().getKits()) {
                         if (args[0].equals(kitNames)) {
-                            kits.giveKitWithCooldown(player, args[0]);
+                            getKits().giveKitWithCooldown(player, args[0]);
                         }
                     }
                 }
@@ -41,9 +45,9 @@ public class KitCommand implements CommandExecutor, TabCompleter {
             if (sender.hasPermission("players.command.kit.others")) {
                 Player target = sender.getServer().getPlayerExact(args[1]);
                 if (target != null) {
-                    kits.giveKit(target, args[0]);
-                    message.send(target, "&6You received&f " + args[0] + "&6 kit");
-                    message.send(sender, "&6You dropped&f " + args[0] + "&6 kit to&f " + target.getName());
+                    getKits().giveKit(target, args[0]);
+                    getMessage().send(target, "&6You received&f " + args[0] + "&6 kit");
+                    getMessage().send(sender, "&6You dropped&f " + args[0] + "&6 kit to&f " + target.getName());
                 }
             }
         }
@@ -54,7 +58,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
         List<String> commands = new ArrayList<>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                for (String kitName : kits.getKits()) {
+                for (String kitName : getKits().getKits()) {
                     if (sender.hasPermission("players.command.kit." + kitName)) {
                         commands.add(kitName);
                     }

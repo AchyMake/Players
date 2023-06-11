@@ -13,22 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DelHomeCommand implements CommandExecutor, TabCompleter {
-    private final Database database = Players.getDatabase();
-    private final Message message = Players.getMessage();
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
-                Player player = (Player) sender;
-                message.send(player, "&cUsage:&f /delhome homeName");
+                getMessage().send(sender, "&cUsage:&f /delhome homeName");
             }
             if (args.length == 1) {
-                Player player = (Player) sender;
-                if (database.homeExist(player, args[0])) {
-                    database.setString(player, "homes." + args[0], null);
-                    message.send(player, args[0] + "&6 has been deleted");
+                if (getDatabase().homeExist((Player) sender, args[0])) {
+                    getDatabase().setString((Player) sender, "homes." + args[0], null);
+                    getMessage().send(sender, args[0] + "&6 has been deleted");
                 } else {
-                    message.send(player, args[0] + "&c does not exist");
+                    getMessage().send(sender, args[0] + "&c does not exist");
                 }
             }
         }
@@ -39,8 +41,7 @@ public class DelHomeCommand implements CommandExecutor, TabCompleter {
         List<String> commands = new ArrayList<>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                Player player = (Player) sender;
-                commands.addAll(database.getHomes(player));
+                commands.addAll(getDatabase().getHomes((Player) sender));
             }
         }
         return commands;

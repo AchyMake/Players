@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkbenchCommand implements CommandExecutor, TabCompleter {
-    private final Message message = Players.getMessage();
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
@@ -25,8 +27,8 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
                     } else {
                         if (target != null) {
                             target.openWorkbench(target.getLocation(), true);
-                            message.send(target, sender.getName() + "&6 opened crafting table for you");
-                            message.send(sender, "&6You opened crafting table for " + target.getName());
+                            getMessage().send(target, sender.getName() + "&6 opened crafting table for you");
+                            getMessage().send(sender, "&6You opened crafting table for " + target.getName());
                         }
                     }
                 }
@@ -37,7 +39,7 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
                 Player target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     target.openWorkbench(target.getLocation(), true);
-                    message.send(sender, "You opened crafting table for " + target.getName());
+                    getMessage().send(sender, "You opened crafting table for " + target.getName());
                 }
             }
         }

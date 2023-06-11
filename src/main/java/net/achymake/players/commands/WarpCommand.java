@@ -14,25 +14,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WarpCommand implements CommandExecutor, TabCompleter {
-    private final Database database = Players.getDatabase();
-    private final Warps warps = Players.getWarps();
-    private final Message message = Players.getMessage();
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Warps getWarps() {
+        return Players.getWarps();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            message.send(sender, "&cUsage:&f /warp warpName");
+            getMessage().send(sender, "&cUsage:&f /warp warpName");
         }
         if (args.length == 1) {
             if (sender instanceof Player) {
-                if (database.isFrozen((Player) sender) || database.isJailed((Player) sender)) {
+                if (getDatabase().isFrozen((Player) sender) || getDatabase().isJailed((Player) sender)) {
                     return false;
                 } else {
                     Player player = (Player) sender;
                     if (player.hasPermission("players.command.warp." + args[0])) {
-                        if (warps.warpExist(args[0])) {
-                            warps.getWarp(args[0]).getChunk().load();
-                            message.sendActionBar(player, "&6Teleporting to&f "+ args[0]);
-                            player.teleport(warps.getWarp(args[0]));
+                        if (getWarps().warpExist(args[0])) {
+                            getWarps().getWarp(args[0]).getChunk().load();
+                            getMessage().sendActionBar(player, "&6Teleporting to&f "+ args[0]);
+                            player.teleport(getWarps().getWarp(args[0]));
                         }
                     }
                 }
@@ -43,13 +49,13 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                 if (sender.hasPermission("players.command.warp." + args[0])) {
                     Player target = sender.getServer().getPlayerExact(args[1]);
                     if (target != null) {
-                        if (database.isFrozen(target) || database.isJailed(target)) {
+                        if (getDatabase().isFrozen(target) || getDatabase().isJailed(target)) {
                             return false;
                         } else {
-                            if (warps.warpExist(args[0])) {
-                                warps.getWarp(args[0]).getChunk().load();
-                                message.send(target, "&6Teleporting to&f " + args[0]);
-                                target.teleport(warps.getWarp(args[0]));
+                            if (getWarps().warpExist(args[0])) {
+                                getWarps().getWarp(args[0]).getChunk().load();
+                                getMessage().send(target, "&6Teleporting to&f " + args[0]);
+                                target.teleport(getWarps().getWarp(args[0]));
                             }
                         }
                     }
@@ -64,7 +70,7 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             if (args.length == 1) {
                 Player player = (Player) sender;
-                for (String warps : warps.getWarps()) {
+                for (String warps : getWarps().getWarps()) {
                     if (player.hasPermission("players.command.warp." + warps)) {
                         commands.add(warps);
                     }

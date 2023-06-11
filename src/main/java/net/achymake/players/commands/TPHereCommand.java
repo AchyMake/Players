@@ -1,6 +1,7 @@
 package net.achymake.players.commands;
 
 import net.achymake.players.Players;
+import net.achymake.players.files.Database;
 import net.achymake.players.files.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,20 +13,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TPHereCommand implements CommandExecutor, TabCompleter {
-    private final Message message = Players.getMessage();
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
-                message.send(sender, "&cUsage:&f /tphere target");
+                getMessage().send(sender, "&cUsage:&f /tphere target");
             }
             if (args.length == 1) {
                 Player target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     Player player = (Player) sender;
                     target.teleport(player.getLocation());
-                    message.sendActionBar(target, "&6Teleporting to&f " + player.getName());
-                    message.sendActionBar((Player) sender, "&6Teleporting&f " + target.getName() + "&6 to you");
+                    getMessage().sendActionBar(target, "&6Teleporting to&f " + player.getName());
+                    getMessage().sendActionBar((Player) sender, "&6Teleporting&f " + target.getName() + "&6 to you");
                 }
             }
         }

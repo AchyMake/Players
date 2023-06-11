@@ -8,13 +8,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 
 public class PlayerShearEntity implements Listener {
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
     public PlayerShearEntity(Players players) {
         players.getServer().getPluginManager().registerEvents(this, players);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerShearEntity(PlayerShearEntityEvent event) {
-        Database database = Players.getDatabase();
-        if (database.isFrozen(event.getPlayer()) || database.isJailed(event.getPlayer())) {
+        if (getDatabase().isFrozen(event.getPlayer()) || getDatabase().isJailed(event.getPlayer())) {
             event.setCancelled(true);
         }
     }

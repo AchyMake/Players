@@ -9,20 +9,24 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class AsyncPlayerChat implements Listener {
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     public AsyncPlayerChat(Players players) {
         players.getServer().getPluginManager().registerEvents(this, players);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onAsyncPlayerChat (AsyncPlayerChatEvent event) {
-        Database database = Players.getDatabase();
-        Message message = Players.getMessage();
-        if (database.isMuted(event.getPlayer())) {
+        if (getDatabase().isMuted(event.getPlayer())) {
             event.setCancelled(true);
         } else {
             if (event.getPlayer().hasPermission("players.chatcolor.chat")) {
-                event.setMessage(message.addColor(event.getMessage()));
+                event.setMessage(getMessage().addColor(event.getMessage()));
             }
-            event.setFormat(message.addColor(database.prefix(event.getPlayer()) + event.getPlayer().getName() + "&r"  + database.suffix(event.getPlayer()) + "&r") + ": " + event.getMessage());
+            event.setFormat(getMessage().addColor(getDatabase().prefix(event.getPlayer()) + event.getPlayer().getName() + "&r"  + getDatabase().suffix(event.getPlayer()) + "&r") + ": " + event.getMessage());
         }
     }
 }

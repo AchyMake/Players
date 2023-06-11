@@ -18,13 +18,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SkullCommand implements CommandExecutor, TabCompleter {
-    private final Message message = Players.getMessage();
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 0) {
-                message.send(sender, "&cUsage:&f /skull offlinePlayer");
+                getMessage().send(sender, "&cUsage:&f /skull offlinePlayer");
             }
             if (args.length == 1) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
@@ -37,6 +39,7 @@ public class SkullCommand implements CommandExecutor, TabCompleter {
                 } else {
                     player.getWorld().dropItem(player.getLocation(), skullItem);
                 }
+                getMessage().send(player, "&6You received&f " + offlinePlayer.getName() + "&6's skull");
             }
         }
         return true;

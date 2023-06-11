@@ -8,14 +8,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerTeleport implements Listener {
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
     public PlayerTeleport(Players players) {
         players.getServer().getPluginManager().registerEvents(this, players);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.COMMAND) || event.getCause().equals(PlayerTeleportEvent.TeleportCause.PLUGIN)) {
-            Database database = Players.getDatabase();
-            database.setLocation(event.getPlayer(), "recent");
+            getDatabase().setLocation(event.getPlayer(), "recent");
         }
     }
 }

@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GMSPCommand implements CommandExecutor, TabCompleter {
-    private final Message message = Players.getMessage();
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
@@ -21,7 +23,7 @@ public class GMSPCommand implements CommandExecutor, TabCompleter {
                 Player player = (Player) sender;
                 if (!player.getGameMode().equals(GameMode.SPECTATOR)) {
                     player.setGameMode(GameMode.SPECTATOR);
-                    message.send(player, "&6You changed gamemode to&f spectator");
+                    getMessage().send(player, "&6You changed gamemode to&f spectator");
                 }
             }
         }
@@ -31,16 +33,16 @@ public class GMSPCommand implements CommandExecutor, TabCompleter {
                 if (target == sender) {
                     if (!target.getGameMode().equals(GameMode.SPECTATOR)) {
                         target.setGameMode(GameMode.SPECTATOR);
-                        message.send(target, sender.getName() + "&6 changed your gamemode to&f spectator");
-                        message.send(sender, "&6You changed&f " + target.getName() + "&6 gamemode to&f spectator");
+                        getMessage().send(target, sender.getName() + "&6 changed your gamemode to&f spectator");
+                        getMessage().send(sender, "&6You changed&f " + target.getName() + "&6 gamemode to&f spectator");
                     }
                 } else {
                     if (target != null) {
                         if (!target.hasPermission("players.command.gamemode.exempt")) {
                             if (!target.getGameMode().equals(GameMode.SPECTATOR)) {
                                 target.setGameMode(GameMode.SPECTATOR);
-                                message.send(target, sender.getName() + "&6 changed your gamemode to&f spectator");
-                                message.send(sender, "&6You changed&f " + target.getName() + "&6 gamemode to&f spectator");
+                                getMessage().send(target, sender.getName() + "&6 changed your gamemode to&f spectator");
+                                getMessage().send(sender, "&6You changed&f " + target.getName() + "&6 gamemode to&f spectator");
                             }
                         }
                     }

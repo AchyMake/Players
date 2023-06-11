@@ -15,15 +15,17 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.Random;
 
 public class PlayerDeath implements Listener {
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
     public PlayerDeath(Players players) {
         players.getServer().getPluginManager().registerEvents(this, players);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Database database = Players.getDatabase();
         Player player = event.getEntity();
-        database.setLocation(player, "death");
-        database.setBoolean(player, "settings.dead", true);
+        getDatabase().setLocation(player, "death");
+        getDatabase().setBoolean(player, "settings.dead", true);
         FileConfiguration config = Players.getInstance().getConfig();
         if (config.getBoolean("deaths.drop-player-head.enable")) {
             if (config.getInt("deaths.drop-player-head.chance") > new Random().nextInt(100)) {

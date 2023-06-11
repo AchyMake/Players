@@ -61,8 +61,8 @@ public class Jail {
             }
         } else {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            config.options().copyDefaults(true);
             try {
+                config.options().copyDefaults(true);
                 config.save(file);
             } catch (IOException e) {
                 throw new RuntimeException(e);

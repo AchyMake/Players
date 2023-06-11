@@ -13,17 +13,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WhisperCommand implements CommandExecutor, TabCompleter {
-    private final Database database = Players.getDatabase();
-    private final Message message = Players.getMessage();
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
-            if (database.isMuted((Player) sender) || database.isJailed((Player) sender)) {
+            if (getDatabase().isMuted((Player) sender) || getDatabase().isJailed((Player) sender)) {
                 return false;
             }
             if (args.length == 0) {
                 Player player = (Player) sender;
-                message.send(player, "&cUsage:&f /whisper target message");
+                getMessage().send(player, "&cUsage:&f /whisper target message");
             }
             if (args.length > 1) {
                 Player player = (Player) sender;
@@ -34,12 +38,12 @@ public class WhisperCommand implements CommandExecutor, TabCompleter {
                         stringBuilder.append(args[i]);
                         stringBuilder.append(" ");
                     }
-                    message.send(player, "&7You > " + target.getName() + ": " + stringBuilder.toString().strip());
-                    message.send(target, "&7" + player.getName() + " > You: " + stringBuilder.toString().strip());
-                    database.setString(target, "last-whisper", target.getUniqueId().toString());
+                    getMessage().send(player, "&7You > " + target.getName() + ": " + stringBuilder.toString().strip());
+                    getMessage().send(target, "&7" + player.getName() + " > You: " + stringBuilder.toString().strip());
+                    getDatabase().setString(target, "last-whisper", target.getUniqueId().toString());
                     for (Player players : sender.getServer().getOnlinePlayers()) {
                         if (players.hasPermission("players.notify.whispers")) {
-                            message.send(players, "&7" + player.getName() + " > " + target.getName() + ": " + stringBuilder.toString().strip());
+                            getMessage().send(players, "&7" + player.getName() + " > " + target.getName() + ": " + stringBuilder.toString().strip());
                         }
                     }
                 }

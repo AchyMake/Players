@@ -14,41 +14,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnchantCommand implements CommandExecutor, TabCompleter {
-    private final Message message = Players.getMessage();
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
-                message.send(sender, "&cUsage:&f /enchant enchantmentName amount");
+                getMessage().send(sender, "&cUsage:&f /enchant enchantmentName amount");
             }
             if (args.length == 1) {
                 Player player = (Player) sender;
                 if (player.getInventory().getItemInMainHand().getType().isAir()) {
-                    message.send(sender, "&cYou have to hold an item");
+                    getMessage().send(sender, "&cYou have to hold an item");
                 } else {
                     ItemMeta itemMeta = player.getInventory().getItemInMainHand().getItemMeta();
                     Enchantment enchantment = Enchantment.getByName(args[0].toUpperCase());
                     if (itemMeta.hasEnchant(enchantment)) {
                         player.getInventory().getItemInMainHand().removeEnchantment(enchantment);
-                        message.send(sender, "&6You removed&f " + enchantment.getName());
+                        getMessage().send(sender, "&6You removed&f " + enchantment.getName());
                     } else {
                         player.getInventory().getItemInMainHand().addUnsafeEnchantment(enchantment, 1);
-                        message.send(sender, "&6You added&f " + enchantment.getName() + "&6 with lvl&f 1");
+                        getMessage().send(sender, "&6You added&f " + enchantment.getName() + "&6 with lvl&f 1");
                     }
                 }
             }
             if (args.length == 2) {
                 Player player = (Player) sender;
                 if (player.getInventory().getItemInMainHand().getType().isAir()) {
-                    message.send(sender, "&cYou have to hold an item");
+                    getMessage().send(sender, "&cYou have to hold an item");
                 } else {
                     Enchantment enchantment = Enchantment.getByName(args[0].toUpperCase());
                     if (Integer.valueOf(args[1]) > 0) {
                         player.getInventory().getItemInMainHand().addUnsafeEnchantment(enchantment, Integer.valueOf(args[1]));
-                        message.send(sender, "&6You added&f " + enchantment.getName() + "&6 with lvl&f " + args[1]);
+                        getMessage().send(sender, "&6You added&f " + enchantment.getName() + "&6 with lvl&f " + args[1]);
                     } else {
                         player.getInventory().getItemInMainHand().removeEnchantment(enchantment);
-                        message.send(sender, "&6You removed&f " + enchantment.getName());
+                        getMessage().send(sender, "&6You removed&f " + enchantment.getName());
                     }
                 }
             }

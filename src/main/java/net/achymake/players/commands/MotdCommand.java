@@ -12,20 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MotdCommand implements CommandExecutor, TabCompleter {
-    private final Motd motd = Players.getMotd();
+    private Motd getMotd() {
+        return Players.getMotd();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            motd.sendMotd(sender, "message-of-the-day");
+            getMotd().sendMotd(sender, "message-of-the-day");
         }
         if (args.length == 1) {
-            motd.sendMotd(sender, args[0]);
+            getMotd().sendMotd(sender, args[0]);
         }
         if (args.length == 2) {
             if (sender.hasPermission("players.command.motd.others")) {
                 Player target = sender.getServer().getPlayerExact(args[1]);
                 if (target != null) {
-                    motd.sendMotd(target, args[0]);
+                    getMotd().sendMotd(target, args[0]);
                 }
             }
         }
@@ -36,7 +38,7 @@ public class MotdCommand implements CommandExecutor, TabCompleter {
         List<String> commands = new ArrayList<>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                commands.addAll(motd.getMotds());
+                commands.addAll(getMotd().getMotds());
             }
             if (args.length == 2) {
                 if (sender.hasPermission("players.command.motd.others")) {

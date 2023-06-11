@@ -13,46 +13,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TPACommand implements CommandExecutor, TabCompleter {
-    private final Database database = Players.getDatabase();
-    private final Message message = Players.getMessage();
+    private Database getDatabase() {
+        return Players.getDatabase();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
                 Player player = (Player) sender;
-                message.send(player, "&cUsage:&f /tpa target");
+                getMessage().send(player, "&cUsage:&f /tpa target");
             }
             if (args.length == 1) {
                 Player player = (Player) sender;
-                if (database.isFrozen(player) || database.isJailed(player)) {
+                if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                     return false;
                 } else {
                     Player target = sender.getServer().getPlayerExact(args[0]);
                     if (target == null) {
-                        message.send(player, args[0] + "&c is currently offline");
+                        getMessage().send(player, args[0] + "&c is currently offline");
                     } else if (target == player) {
-                        message.send(player, "&cYou can't send request to your self");
-                    } else if (database.getConfig(player).isString("tpa.sent")) {
-                        message.send(player, "&cYou already sent tpa request");
-                        message.send(player, "&cYou can type&f /tpcancel");
+                        getMessage().send(player, "&cYou can't send request to your self");
+                    } else if (getDatabase().getConfig(player).isString("tpa.sent")) {
+                        getMessage().send(player, "&cYou already sent tpa request");
+                        getMessage().send(player, "&cYou can type&f /tpcancel");
                     } else {
                         int taskID = player.getServer().getScheduler().runTaskLater(Players.getInstance(), new Runnable() {
                             @Override
                             public void run() {
-                                database.setString(target, "tpa.from", null);
-                                database.setString(player, "tpa.sent", null);
-                                database.setString(player, "task.tpa", null);
-                                message.send(player, "&cTeleport request has expired");
-                                message.send(target, "&cTeleport request has expired");
+                                getDatabase().setString(target, "tpa.from", null);
+                                getDatabase().setString(player, "tpa.sent", null);
+                                getDatabase().setString(player, "task.tpa", null);
+                                getMessage().send(player, "&cTeleport request has expired");
+                                getMessage().send(target, "&cTeleport request has expired");
                             }
                         }, 300).getTaskId();
-                        database.setString(target, "tpa.from", player.getUniqueId().toString());
-                        database.setString(player, "tpa.sent", target.getUniqueId().toString());
-                        database.setInt(player, "task.tpa", taskID);
-                        message.send(target, player.getName() + "&6 has sent you a tpa request");
-                        message.send(target, "&6You can type&a /tpaccept&6 or&c /tpdeny");
-                        message.send(player, "&6You have sent a tpa request to&f " + target.getName());
-                        message.send(player, "&6You can type&c /tpcancel");
+                        getDatabase().setString(target, "tpa.from", player.getUniqueId().toString());
+                        getDatabase().setString(player, "tpa.sent", target.getUniqueId().toString());
+                        getDatabase().setInt(player, "task.tpa", taskID);
+                        getMessage().send(target, player.getName() + "&6 has sent you a tpa request");
+                        getMessage().send(target, "&6You can type&a /tpaccept&6 or&c /tpdeny");
+                        getMessage().send(player, "&6You have sent a tpa request to&f " + target.getName());
+                        getMessage().send(player, "&6You can type&c /tpcancel");
                     }
                 }
             }

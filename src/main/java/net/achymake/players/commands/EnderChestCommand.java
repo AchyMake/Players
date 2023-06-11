@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnderChestCommand implements CommandExecutor, TabCompleter {
-    private final Message message = Players.getMessage();
+    private Message getMessage() {
+        return Players.getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
@@ -30,7 +32,7 @@ public class EnderChestCommand implements CommandExecutor, TabCompleter {
                         if (target != null) {
                             if (!target.hasPermission("players.command.enderchest.exempt")) {
                                 player.openInventory(target.getEnderChest());
-                                message.send(sender, "&6Opened enderchest of&f " + target.getName());
+                                getMessage().send(sender, "&6Opened enderchest of&f " + target.getName());
                             }
                         }
                     }
