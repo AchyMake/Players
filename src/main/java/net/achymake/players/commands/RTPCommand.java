@@ -47,6 +47,15 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
                     randomTeleport(player);
                 }
             }
+            if (args.length == 1) {
+                Player player = (Player) sender;
+                if (args[0].equalsIgnoreCase("force")) {
+                    if (player.hasPermission("players.command.rtp.force")) {
+                        getMessage().sendActionBar(player, "&6Finding safe locations...");
+                        randomTeleport(player);
+                    }
+                }
+            }
         }
         return true;
     }
@@ -64,6 +73,11 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> commands = new ArrayList<>();
+        if (args.length == 1) {
+            if (sender.hasPermission("players.command.rtp.force")) {
+                commands.add("force");
+            }
+        }
         return commands;
     }
 }

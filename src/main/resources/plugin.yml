@@ -470,6 +470,9 @@ permissions:
   players.command.rtp:
     description: message
     default: op
+  players.command.rtp.force:
+    description: message
+    default: op
   players.command.rules:
     description: message
     default: op
