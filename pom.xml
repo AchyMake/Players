@@ -6,7 +6,7 @@
 
     <groupId>net.achymake</groupId>
     <artifactId>Players</artifactId>
-    <version>spigot-1.19</version>
+    <version>1.19</version>
     <packaging>jar</packaging>
 
     <name>Players</name>
