@@ -39,7 +39,7 @@ public class NicknameCommand implements CommandExecutor, TabCompleter {
                     getDatabase().resetTabList();
                     getMessage().send(player, "&6You changed your nickname to&f " + args[0]);
                 } else {
-                    getMessage().send(player, "&cYou already have &f " + args[0] + " as nickname");
+                    getMessage().send(player, "&cYou already have&f " + args[0] + "&c as nickname");
                 }
             }
             if (args.length == 2) {
@@ -50,9 +50,9 @@ public class NicknameCommand implements CommandExecutor, TabCompleter {
                             getDatabase().setString(target, "display-name", args[0]);
                             target.setDisplayName(args[0]);
                             getDatabase().resetTabList();
-                            getMessage().send(target, "&6You changed your nickname to&f " + args[0]);
+                            getMessage().send(sender, "&6You changed " + target.getName() + " nickname to&f " + args[0]);
                         } else {
-                            getMessage().send(target, "&cYou already have &f " + args[0] + " as nickname");
+                            getMessage().send(sender, target.getName() + "&c already have&f " + args[0] + "&c as nickname");
                         }
                     } else {
                         getMessage().send(sender, args[1] + "&c is currently offline");
