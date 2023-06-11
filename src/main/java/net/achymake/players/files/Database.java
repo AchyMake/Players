@@ -269,14 +269,17 @@ public class Database {
     }
     public String prefix(Player player) {
         if (PlaceholderAPI.isRegistered("vault")) {
-            return PlaceholderAPI.setPlaceholders(player, "%vault_prefix%");
+            return addColor(PlaceholderAPI.setPlaceholders(player, "%vault_prefix%"));
         } else {
             return "";
         }
     }
+    public String nickname(Player player) {
+        return getConfig(player).getString("display-name");
+    }
     public String suffix(Player player) {
         if (PlaceholderAPI.isRegistered("vault")) {
-            return PlaceholderAPI.setPlaceholders(player, "%vault_suffix%");
+            return addColor(PlaceholderAPI.setPlaceholders(player, "%vault_suffix%"));
         } else {
             return "";
         }
@@ -285,7 +288,7 @@ public class Database {
         if (getConfig().getBoolean("tablist.enable")) {
             for (Player players : getPlugin().getServer().getOnlinePlayers()) {
                 players.setPlayerListHeader(addColor(getConfig().getString("tablist.header")));
-                players.setPlayerListName(addColor(prefix(players) + players.getName() + suffix(players)));
+                players.setPlayerListName(prefix(players) + nickname(players) + suffix(players));
                 players.setPlayerListFooter(addColor(MessageFormat.format(getConfig().getString("tablist.footer"), players.getServer().getOnlinePlayers().size() - vanished.size(), players.getServer().getMaxPlayers())));
             }
         }

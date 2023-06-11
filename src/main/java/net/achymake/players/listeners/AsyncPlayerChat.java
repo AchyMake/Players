@@ -3,6 +3,7 @@ package net.achymake.players.listeners;
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
 import net.achymake.players.files.Message;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -26,7 +27,7 @@ public class AsyncPlayerChat implements Listener {
             if (event.getPlayer().hasPermission("players.chatcolor.chat")) {
                 event.setMessage(getMessage().addColor(event.getMessage()));
             }
-            event.setFormat(getMessage().addColor(getDatabase().prefix(event.getPlayer()) + event.getPlayer().getName() + "&r"  + getDatabase().suffix(event.getPlayer()) + "&r") + ": " + event.getMessage());
+            event.setFormat(getDatabase().prefix(event.getPlayer()) + getDatabase().nickname(event.getPlayer()) + ChatColor.WHITE + getDatabase().suffix(event.getPlayer()) + ChatColor.WHITE + ": " + event.getMessage());
         }
     }
 }

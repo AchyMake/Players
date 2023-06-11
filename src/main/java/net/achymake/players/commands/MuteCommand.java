@@ -31,9 +31,9 @@ public class MuteCommand implements CommandExecutor, TabCompleter {
             if (target == sender) {
                 getDatabase().setBoolean(target, "settings.muted", !getDatabase().isMuted(target));
                 if (getDatabase().isMuted(target)) {
-                    getMessage().send(sender, "&6You muted&f " + target.getName());
+                    getMessage().send(sender, "&6You muted your self");
                 } else {
-                    getMessage().send(sender, "&6You unmuted&f " + target.getName());
+                    getMessage().send(sender, "&6You unmuted your self");
                 }
             } else {
                 if (target != null) {

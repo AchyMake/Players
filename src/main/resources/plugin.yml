@@ -154,6 +154,11 @@ commands:
     description: toggle mute
     permission: players.command.mute
     permission-message: You do not have the permission to execute the command
+  nickname:
+    usage: /nickname
+    description: changes nickname
+    permission: players.command.nickname
+    permission-message: You do not have the permission to execute the command
   pay:
     usage: /pay
     description: pay players
@@ -433,6 +438,12 @@ permissions:
     description: message
     default: op
   players.command.mute.exempt:
+    description: message
+    default: op
+  players.command.nickname:
+    description: message
+    default: op
+  players.command.nickname.others:
     description: message
     default: op
   players.command.pay:

@@ -114,6 +114,7 @@ public final class Players extends JavaPlugin {
         getCommand("kit").setExecutor(new KitCommand());
         getCommand("motd").setExecutor(new MotdCommand());
         getCommand("mute").setExecutor(new MuteCommand());
+        getCommand("nickname").setExecutor(new NicknameCommand());
         getCommand("pay").setExecutor(new PayCommand());
         getCommand("players").setExecutor(new PlayersCommand());
         getCommand("pvp").setExecutor(new PVPCommand());

@@ -32,13 +32,19 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
             if (sender.hasPermission("players.command.vanish.others")) {
                 Player target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    getDatabase().setVanish(target, !getDatabase().isVanished(target));
-                    if (getDatabase().isVanished(target)) {
-                        getMessage().send(target, sender.getName() + "&6 made you vanish");
-                        getMessage().send(sender, target.getName() + "&6 is now vanished");
+                    if (target == sender) {
+                        getDatabase().setVanish(target, !getDatabase().isVanished(target));
                     } else {
-                        getMessage().send(target, sender.getName() + "&6 made you no longer vanish");
-                        getMessage().send(sender, target.getName() + "&6 is no longer vanished");
+                        if (!target.hasPermission("players.command.vanish.exempt")) {
+                            getDatabase().setVanish(target, !getDatabase().isVanished(target));
+                            if (getDatabase().isVanished(target)) {
+                                getMessage().send(target, sender.getName() + "&6 made you vanish");
+                                getMessage().send(sender, target.getName() + "&6 is now vanished");
+                            } else {
+                                getMessage().send(target, sender.getName() + "&6 made you no longer vanish");
+                                getMessage().send(sender, target.getName() + "&6 is no longer vanished");
+                            }
+                        }
                     }
                 } else {
                     OfflinePlayer offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
@@ -61,9 +67,15 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
             if (value) {
                 if (target != null) {
                     if (!getDatabase().isVanished(target)) {
-                        getDatabase().setVanish(target, true);
-                        getMessage().send(target, sender.getName() + "&6 made you vanish");
-                        getMessage().send(sender, target.getName() + "&6 is now vanished");
+                        if (target == sender) {
+                            getDatabase().setVanish(target, true);
+                        } else {
+                            if (!target.hasPermission("players.command.vanish.exempt")) {
+                                getDatabase().setVanish(target, true);
+                                getMessage().send(target, sender.getName() + "&6 made you vanish");
+                                getMessage().send(sender, target.getName() + "&6 is now vanished");
+                            }
+                        }
                     }
                 } else {
                     OfflinePlayer offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
@@ -83,9 +95,15 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
             } else {
                 if (target != null) {
                     if (getDatabase().isVanished(target)) {
-                        getDatabase().setVanish(target, false);
-                        getMessage().send(target, sender.getName() + "&6 made you no longer vanish");
-                        getMessage().send(sender, target.getName() + "&6 is no longer vanished");
+                        if (target == sender) {
+                            getDatabase().setVanish(target, false);
+                        } else {
+                            if (!target.hasPermission("players.command.vanish.exempt")) {
+                                getDatabase().setVanish(target, false);
+                                getMessage().send(target, sender.getName() + "&6 made you no longer vanish");
+                                getMessage().send(sender, target.getName() + "&6 is no longer vanished");
+                            }
+                        }
                     }
                 } else {
                     OfflinePlayer offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
