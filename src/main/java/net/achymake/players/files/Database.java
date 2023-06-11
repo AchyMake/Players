@@ -226,6 +226,7 @@ public class Database {
                     player.showPlayer(getPlugin(), vanishedPlayers);
                 }
                 resetTabList();
+                sendActionBar(player, "&6&lVanish:&a Enabled");
             }
         } else {
             setBoolean(offlinePlayer,"settings.vanished", false);
@@ -247,6 +248,7 @@ public class Database {
                     player.hidePlayer(getPlugin(), vanishedPlayers);
                 }
                 resetTabList();
+                sendActionBar(player, "&6&lVanish:&c Disabled");
             }
         }
     }

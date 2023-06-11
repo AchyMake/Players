@@ -26,12 +26,6 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
                 getDatabase().setVanish(player, !getDatabase().isVanished(player));
-                if (getDatabase().isVanished(player)) {
-                    getMessage().send(player,"&6You are now vanished");
-                } else {
-                    getMessage().send(player, "&6You are no longer vanished");
-                    getMessage().sendActionBar(player, "&6&lVanish:&c Disabled");
-                }
             }
         }
         if (args.length == 1) {
