@@ -34,7 +34,6 @@ public class PlayerQuit implements Listener {
             getDatabase().getVanished().remove(event.getPlayer());
             event.setQuitMessage(null);
         } else {
-            getDatabase().resetTabList();
             if (getConfig().getBoolean("connection.quit.enable")) {
                 event.setQuitMessage(getMessage().addColor(MessageFormat.format(getConfig().getString("connection.quit.message"), event.getPlayer().getName())));
                 if (getConfig().getBoolean("connection.quit.sound.enable")) {
@@ -77,5 +76,11 @@ public class PlayerQuit implements Listener {
             }
             getDatabase().setString(event.getPlayer(), "tpa.sent", null);
         }
+        event.getPlayer().getServer().getScheduler().runTaskLater(Players.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                getDatabase().resetTabList();
+            }
+        }, 3);
     }
 }
