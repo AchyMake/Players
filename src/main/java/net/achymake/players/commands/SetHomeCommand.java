@@ -24,27 +24,17 @@ public class SetHomeCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 0) {
-                if (getDatabase().homeExist(player, "home")) {
-                    getDatabase().setHome(player, "home");
-                    getMessage().send(player, "home&6 has been set");
-                } else if (getDatabase().getConfig(player).getInt("max-homes") > getDatabase().getHomes(player).size()) {
-                    getDatabase().setHome(player, "home");
+                if (getDatabase().setHome(player, "home")) {
                     getMessage().send(player, "home&6 has been set");
                 } else {
                     getMessage().send(player, "&cYou have reach your limit of&f " + getDatabase().getHomes(player).size() + "&c homes");
                 }
             }
             if (args.length == 1) {
-                if (args[0].equalsIgnoreCase("buy")) {
-                    getMessage().send(player, "&cYou can't set home for&f " + args[0]);
-                } else if (args[0].equalsIgnoreCase("bed")) {
+                if (args[0].equalsIgnoreCase("bed")) {
                     getMessage().send(player, "&cYou can't set home for&f " + args[0]);
                 } else {
-                    if (getDatabase().homeExist(player, args[0])) {
-                        getDatabase().setHome(player, args[0]);
-                        getMessage().send(player, args[0] + "&6 has been set");
-                    } else if (Players.getDatabase().getConfig(player).getInt("max-homes") > getDatabase().getHomes(player).size()) {
-                        Players.getDatabase().setHome(player, args[0]);
+                    if (getDatabase().setHome(player, args[0])) {
                         getMessage().send(player, args[0] + "&6 has been set");
                     } else {
                         getMessage().send(player, "&cYou have reach your limit of&f " + getDatabase().getHomes(player).size() + "&c homes");

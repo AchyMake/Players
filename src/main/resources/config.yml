@@ -10,10 +10,10 @@ economy:
   format: '#,##0.00'
   starting-balance: 0.0
 homes:
-  # default max homes on file setup
+  # player.command.sethome.multiple.default
   default: 1
-  # per home cost
-  cost: 750.0
+  vip: 3
+  staff: 6
 deaths:
   drop-player-head:
     # enable drop player heads

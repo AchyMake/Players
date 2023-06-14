@@ -482,6 +482,12 @@ permissions:
   players.command.sethome:
     description: message
     default: op
+  players.command.sethome.multiple.default:
+    description: message
+    default: op
+  players.command.sethome.multiple.[rank]:
+    description: message
+    default: op
   players.command.setjail:
     description: message
     default: op

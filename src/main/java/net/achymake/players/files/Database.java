@@ -151,13 +151,31 @@ public class Database {
     public List<String> getHomes(OfflinePlayer offlinePlayer) {
         return new ArrayList<>(getConfig(offlinePlayer).getConfigurationSection("homes").getKeys(false));
     }
-    public void setHome(Player player, String homeName) {
-        setString(player, "homes." + homeName + ".world", player.getWorld().getName());
-        setDouble(player, "homes." + homeName + ".x", player.getLocation().getX());
-        setDouble(player, "homes." + homeName + ".y", player.getLocation().getY());
-        setDouble(player, "homes." + homeName + ".z", player.getLocation().getZ());
-        setFloat(player, "homes." + homeName + ".yaw", player.getLocation().getYaw());
-        setFloat(player, "homes." + homeName + ".pitch", player.getLocation().getPitch());
+    public boolean setHome(Player player, String homeName) {
+        if (homeExist(player, homeName)) {
+            setString(player, "homes." + homeName + ".world", player.getWorld().getName());
+            setDouble(player, "homes." + homeName + ".x", player.getLocation().getX());
+            setDouble(player, "homes." + homeName + ".y", player.getLocation().getY());
+            setDouble(player, "homes." + homeName + ".z", player.getLocation().getZ());
+            setFloat(player, "homes." + homeName + ".yaw", player.getLocation().getYaw());
+            setFloat(player, "homes." + homeName + ".pitch", player.getLocation().getPitch());
+            return true;
+        } else {
+            for (String rank : getPlugin().getConfig().getConfigurationSection("homes").getKeys(false)) {
+                if (player.hasPermission("players.command.sethome.multiple." + rank)) {
+                    if (getConfig().getInt("homes.max." + rank) > getHomes(player).size()) {
+                        setString(player, "homes." + homeName + ".world", player.getWorld().getName());
+                        setDouble(player, "homes." + homeName + ".x", player.getLocation().getX());
+                        setDouble(player, "homes." + homeName + ".y", player.getLocation().getY());
+                        setDouble(player, "homes." + homeName + ".z", player.getLocation().getZ());
+                        setFloat(player, "homes." + homeName + ".yaw", player.getLocation().getYaw());
+                        setFloat(player, "homes." + homeName + ".pitch", player.getLocation().getPitch());
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
     public Location getHome(OfflinePlayer offlinePlayer, String homeName) {
         String worldName = getConfig(offlinePlayer).getString("homes." + homeName + ".world");
