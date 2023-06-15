@@ -1,7 +1,6 @@
 package net.achymake.players.commands;
 
 import net.achymake.players.Players;
-import net.achymake.players.files.Message;
 import net.achymake.players.files.Motd;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,9 +14,6 @@ import java.util.List;
 public class RulesCommand implements CommandExecutor, TabCompleter {
     private Motd getMotd() {
         return Players.getMotd();
-    }
-    private Message getMessage() {
-        return Players.getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

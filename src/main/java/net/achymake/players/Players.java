@@ -82,7 +82,7 @@ public final class Players extends JavaPlugin {
         reload();
         getCommands();
         getEvents();
-        message.sendLog(Level.INFO, "Enabled " + getName() + " " + getDescription().getVersion());
+        message.sendLog(Level.INFO, "Enabled " + getName() + " " + getServer().getBukkitVersion());
         new UpdateChecker(this, 110266).getUpdate();
     }
     private void getCommands() {
@@ -179,7 +179,7 @@ public final class Players extends JavaPlugin {
             new PlaceholderProvider().unregister();
         }
         getServer().getServicesManager().unregisterAll(this);
-        message.sendLog(Level.INFO, "Disabled " + getName() + " " + getDescription().getVersion());
+        message.sendLog(Level.INFO, "Disabled " + getName() + " " + getServer().getBukkitVersion());
     }
     public void reload() {
         if (new File(getDataFolder(), "config.yml").exists()) {

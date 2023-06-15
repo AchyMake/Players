@@ -4,10 +4,7 @@ import net.achymake.players.Players;
 import net.achymake.players.files.Database;
 import net.achymake.players.files.Message;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -22,102 +19,176 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
-            if (sender instanceof Player) {
+        if (sender instanceof Player) {
+            if (args.length == 0) {
                 Player player = (Player) sender;
                 getDatabase().setVanish(player, !getDatabase().isVanished(player));
             }
-        }
-        if (args.length == 1) {
-            if (sender.hasPermission("players.command.vanish.others")) {
-                Player target = sender.getServer().getPlayerExact(args[0]);
-                if (target != null) {
-                    if (target == sender) {
-                        getDatabase().setVanish(target, !getDatabase().isVanished(target));
-                    } else {
-                        if (!target.hasPermission("players.command.vanish.exempt")) {
+            if (args.length == 1) {
+                Player player = (Player) sender;
+                if (player.hasPermission("players.command.vanish.others")) {
+                    Player target = player.getServer().getPlayerExact(args[0]);
+                    if (target != null) {
+                        if (target == player) {
                             getDatabase().setVanish(target, !getDatabase().isVanished(target));
-                            if (getDatabase().isVanished(target)) {
-                                getMessage().send(target, sender.getName() + "&6 made you vanish");
-                                getMessage().send(sender, target.getName() + "&6 is now vanished");
-                            } else {
-                                getMessage().send(target, sender.getName() + "&6 made you no longer vanish");
-                                getMessage().send(sender, target.getName() + "&6 is no longer vanished");
+                        } else {
+                            if (!target.hasPermission("players.command.vanish.exempt")) {
+                                getDatabase().setVanish(target, !getDatabase().isVanished(target));
+                                if (getDatabase().isVanished(target)) {
+                                    getMessage().send(target, player.getName() + "&6 made you vanish");
+                                    getMessage().send(player, target.getName() + "&6 is now vanished");
+                                } else {
+                                    getMessage().send(target, player.getName() + "&6 made you no longer vanish");
+                                    getMessage().send(player, target.getName() + "&6 is no longer vanished");
+                                }
                             }
                         }
+                    } else {
+                        OfflinePlayer offlinePlayer = player.getServer().getOfflinePlayer(args[0]);
+                        if (getDatabase().exist(offlinePlayer)) {
+                            getDatabase().setVanish(offlinePlayer, !getDatabase().isVanished(offlinePlayer));
+                            if (getDatabase().isVanished(offlinePlayer)) {
+                                getMessage().send(player, offlinePlayer.getName() + "&6 is now vanished");
+                            } else {
+                                getMessage().send(player, offlinePlayer.getName() + "&6 is no longer vanished");
+                            }
+                        } else {
+                            getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
+                        }
+                    }
+                }
+            }
+            if (args.length == 2) {
+                Player player = (Player) sender;
+                Player target = player.getServer().getPlayerExact(args[0]);
+                boolean value = Boolean.valueOf(args[1]);
+                if (value) {
+                    if (target != null) {
+                        if (!getDatabase().isVanished(target)) {
+                            if (target == player) {
+                                getDatabase().setVanish(target, true);
+                            } else {
+                                if (!target.hasPermission("players.command.vanish.exempt")) {
+                                    getDatabase().setVanish(target, true);
+                                    getMessage().send(target, player.getName() + "&6 made you vanish");
+                                    getMessage().send(player, target.getName() + "&6 is now vanished");
+                                }
+                            }
+                        }
+                    } else {
+                        OfflinePlayer offlinePlayer = player.getServer().getOfflinePlayer(args[0]);
+                        if (getDatabase().exist(offlinePlayer)) {
+                            if (!getDatabase().isVanished(offlinePlayer)) {
+                                getDatabase().setVanish(offlinePlayer, true);
+                                if (getDatabase().isVanished(offlinePlayer)) {
+                                    getMessage().send(player, offlinePlayer.getName() + "&6 is now vanished");
+                                } else {
+                                    getMessage().send(player, offlinePlayer.getName() + "&6 is no longer vanished");
+                                }
+                            }
+                        } else {
+                            getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
+                        }
+                    }
+                } else {
+                    if (target != null) {
+                        if (getDatabase().isVanished(target)) {
+                            if (target == player) {
+                                getDatabase().setVanish(target, false);
+                            } else {
+                                if (!target.hasPermission("players.command.vanish.exempt")) {
+                                    getDatabase().setVanish(target, false);
+                                    getMessage().send(target, player.getName() + "&6 made you no longer vanish");
+                                    getMessage().send(player, target.getName() + "&6 is no longer vanished");
+                                }
+                            }
+                        }
+                    } else {
+                        OfflinePlayer offlinePlayer = player.getServer().getOfflinePlayer(args[0]);
+                        if (getDatabase().exist(offlinePlayer)) {
+                            if (getDatabase().isVanished(offlinePlayer)) {
+                                getDatabase().setVanish(offlinePlayer, false);
+                                if (getDatabase().isVanished(offlinePlayer)) {
+                                    getMessage().send(player, offlinePlayer.getName() + "&6 is now vanished");
+                                } else {
+                                    getMessage().send(player, offlinePlayer.getName() + "&6 is no longer vanished");
+                                }
+                            }
+                        } else {
+                            getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
+                        }
+                    }
+                }
+            }
+        }
+        if (sender instanceof ConsoleCommandSender) {
+            if (args.length == 1) {
+                Player target = sender.getServer().getPlayerExact(args[0]);
+                if (target != null) {
+                    getDatabase().setVanish(target, !getDatabase().isVanished(target));
+                    if (getDatabase().isVanished(target)) {
+                        getMessage().send(sender, target.getName() + " is now vanished");
+                    } else {
+                        getMessage().send(sender, target.getName() + " is no longer vanished");
                     }
                 } else {
                     OfflinePlayer offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
                     if (getDatabase().exist(offlinePlayer)) {
                         getDatabase().setVanish(offlinePlayer, !getDatabase().isVanished(offlinePlayer));
                         if (getDatabase().isVanished(offlinePlayer)) {
-                            getMessage().send(sender, offlinePlayer.getName() + "&6 is now vanished");
+                            getMessage().send(sender, offlinePlayer.getName() + " is now vanished");
                         } else {
-                            getMessage().send(sender, offlinePlayer.getName() + "&6 is no longer vanished");
+                            getMessage().send(sender, offlinePlayer.getName() + " is no longer vanished");
                         }
                     } else {
-                        getMessage().send(sender, offlinePlayer.getName() + "&c has never joined");
+                        getMessage().send(sender, offlinePlayer.getName() + " has never joined");
                     }
                 }
             }
-        }
-        if (args.length == 2) {
-            Player target = sender.getServer().getPlayerExact(args[0]);
-            boolean value = Boolean.valueOf(args[1]);
-            if (value) {
-                if (target != null) {
-                    if (!getDatabase().isVanished(target)) {
-                        if (target == sender) {
+            if (args.length == 2) {
+                Player target = sender.getServer().getPlayerExact(args[0]);
+                boolean value = Boolean.valueOf(args[1]);
+                if (value) {
+                    if (target != null) {
+                        if (!getDatabase().isVanished(target)) {
                             getDatabase().setVanish(target, true);
-                        } else {
-                            if (!target.hasPermission("players.command.vanish.exempt")) {
-                                getDatabase().setVanish(target, true);
-                                getMessage().send(target, sender.getName() + "&6 made you vanish");
-                                getMessage().send(sender, target.getName() + "&6 is now vanished");
+                            getMessage().send(sender, target.getName() + " is now vanished");
+                        }
+                    } else {
+                        OfflinePlayer offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
+                        if (getDatabase().exist(offlinePlayer)) {
+                            if (!getDatabase().isVanished(offlinePlayer)) {
+                                getDatabase().setVanish(offlinePlayer, true);
+                                if (getDatabase().isVanished(offlinePlayer)) {
+                                    getMessage().send(sender, offlinePlayer.getName() + " is now vanished");
+                                } else {
+                                    getMessage().send(sender, offlinePlayer.getName() + " is no longer vanished");
+                                }
                             }
+                        } else {
+                            getMessage().send(sender, offlinePlayer.getName() + " has never joined");
                         }
                     }
                 } else {
-                    OfflinePlayer offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
-                    if (getDatabase().exist(offlinePlayer)) {
-                        if (!getDatabase().isVanished(offlinePlayer)) {
-                            getDatabase().setVanish(offlinePlayer, true);
-                            if (getDatabase().isVanished(offlinePlayer)) {
-                                getMessage().send(sender, offlinePlayer.getName() + "&6 is now vanished");
-                            } else {
-                                getMessage().send(sender, offlinePlayer.getName() + "&6 is no longer vanished");
-                            }
-                        }
-                    } else {
-                        getMessage().send(sender, offlinePlayer.getName() + "&c has never joined");
-                    }
-                }
-            } else {
-                if (target != null) {
-                    if (getDatabase().isVanished(target)) {
-                        if (target == sender) {
+                    if (target != null) {
+                        if (getDatabase().isVanished(target)) {
                             getDatabase().setVanish(target, false);
-                        } else {
-                            if (!target.hasPermission("players.command.vanish.exempt")) {
-                                getDatabase().setVanish(target, false);
-                                getMessage().send(target, sender.getName() + "&6 made you no longer vanish");
-                                getMessage().send(sender, target.getName() + "&6 is no longer vanished");
-                            }
-                        }
-                    }
-                } else {
-                    OfflinePlayer offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
-                    if (getDatabase().exist(offlinePlayer)) {
-                        if (getDatabase().isVanished(offlinePlayer)) {
-                            getDatabase().setVanish(offlinePlayer, false);
-                            if (getDatabase().isVanished(offlinePlayer)) {
-                                getMessage().send(sender, offlinePlayer.getName() + "&6 is now vanished");
-                            } else {
-                                getMessage().send(sender, offlinePlayer.getName() + "&6 is no longer vanished");
-                            }
+                            getMessage().send(sender, target.getName() + " is no longer vanished");
                         }
                     } else {
-                        getMessage().send(sender, offlinePlayer.getName() + "&c has never joined");
+                        OfflinePlayer offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
+                        if (getDatabase().exist(offlinePlayer)) {
+                            if (getDatabase().isVanished(offlinePlayer)) {
+                                getDatabase().setVanish(offlinePlayer, false);
+                                if (getDatabase().isVanished(offlinePlayer)) {
+                                    getMessage().send(sender, offlinePlayer.getName() + " is now vanished");
+                                } else {
+                                    getMessage().send(sender, offlinePlayer.getName() + " is no longer vanished");
+                                }
+                            }
+                        } else {
+                            getMessage().send(sender, offlinePlayer.getName() + " has never joined");
+                        }
                     }
                 }
             }

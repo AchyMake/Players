@@ -163,7 +163,7 @@ public class Database {
         } else {
             for (String rank : getPlugin().getConfig().getConfigurationSection("homes").getKeys(false)) {
                 if (player.hasPermission("players.command.sethome.multiple." + rank)) {
-                    if (getConfig().getInt("homes.max." + rank) > getHomes(player).size()) {
+                    if (getConfig().getInt("homes." + rank) > getHomes(player).size()) {
                         setString(player, "homes." + homeName + ".world", player.getWorld().getName());
                         setDouble(player, "homes." + homeName + ".x", player.getLocation().getX());
                         setDouble(player, "homes." + homeName + ".y", player.getLocation().getY());

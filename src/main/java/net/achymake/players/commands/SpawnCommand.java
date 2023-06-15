@@ -4,10 +4,7 @@ import net.achymake.players.Players;
 import net.achymake.players.files.Database;
 import net.achymake.players.files.Message;
 import net.achymake.players.files.Spawn;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -25,8 +22,8 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
-            if (sender instanceof Player) {
+        if (sender instanceof Player) {
+            if (args.length == 0) {
                 Player player = (Player) sender;
                 if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                     return false;
@@ -38,9 +35,27 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                     }
                 }
             }
+            if (args.length == 1) {
+                Player player = (Player) sender;
+                if (player.hasPermission("players.command.spawn.others")) {
+                    Player target = player.getServer().getPlayerExact(args[0]);
+                    if (target != null) {
+                        if (getDatabase().isFrozen(target) || getDatabase().isJailed(target)) {
+                            return false;
+                        } else {
+                            if (getSpawn().spawnExist()) {
+                                getSpawn().getSpawn().getChunk().load();
+                                getMessage().send(target, "&6Teleporting to&f spawn");
+                                target.teleport(getSpawn().getSpawn());
+                                getMessage().send(player, "&6You teleported&f " + target.getName() + "&6 to&f spawn");
+                            }
+                        }
+                    }
+                }
+            }
         }
-        if (args.length == 1) {
-            if (sender.hasPermission("players.command.spawn.others")) {
+        if (sender instanceof ConsoleCommandSender) {
+            if (args.length == 1) {
                 Player target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     if (getDatabase().isFrozen(target) || getDatabase().isJailed(target)) {
@@ -50,7 +65,7 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                             getSpawn().getSpawn().getChunk().load();
                             getMessage().send(target, "&6Teleporting to&f spawn");
                             target.teleport(getSpawn().getSpawn());
-                            getMessage().send(sender, "&6You teleported&f " + target.getName() + "&6 to&f spawn");
+                            getMessage().send(sender, "You teleported " + target.getName() + " to spawn");
                         }
                     }
                 }
