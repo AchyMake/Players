@@ -26,11 +26,12 @@ public class DelHomeCommand implements CommandExecutor, TabCompleter {
                 getMessage().send(sender, "&cUsage:&f /delhome homeName");
             }
             if (args.length == 1) {
-                if (getDatabase().homeExist((Player) sender, args[0])) {
-                    getDatabase().setString((Player) sender, "homes." + args[0], null);
-                    getMessage().send(sender, args[0] + "&6 has been deleted");
+                Player player = (Player) sender;
+                if (getDatabase().homeExist(player, args[0])) {
+                    getDatabase().setString(player, "homes." + args[0], null);
+                    getMessage().send(player, args[0] + "&6 has been deleted");
                 } else {
-                    getMessage().send(sender, args[0] + "&c does not exist");
+                    getMessage().send(player, args[0] + "&c does not exist");
                 }
             }
         }
@@ -41,7 +42,8 @@ public class DelHomeCommand implements CommandExecutor, TabCompleter {
         List<String> commands = new ArrayList<>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                commands.addAll(getDatabase().getHomes((Player) sender));
+                Player player = (Player) sender;
+                commands.addAll(getDatabase().getHomes(player));
             }
         }
         return commands;

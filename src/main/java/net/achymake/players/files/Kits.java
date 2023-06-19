@@ -24,11 +24,11 @@ public class Kits {
     public boolean exist() {
         return file.exists();
     }
-    public FileConfiguration configuration() {
+    public FileConfiguration getConfig() {
         return YamlConfiguration.loadConfiguration(file);
     }
     public List<String> getKits() {
-        return new ArrayList<>(configuration().getKeys(false));
+        return new ArrayList<>(getConfig().getKeys(false));
     }
     public void giveKitWithCooldown(Player player, String kitName) {
         Database database = Players.getDatabase();
@@ -41,7 +41,7 @@ public class Kits {
             Players.getMessage().send(player, "&6You received &f" + kitName + "&6 kit");
         } else {
             Long timeElapsed = System.currentTimeMillis() - database.getCommandCooldown().get(kitName + "-" + player.getUniqueId());
-            String cooldownTimer = configuration().getString(kitName + ".cooldown");
+            String cooldownTimer = getConfig().getString(kitName + ".cooldown");
             Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
             if (timeElapsed > integer) {
                 database.getCommandCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
@@ -55,22 +55,22 @@ public class Kits {
     }
     public List<ItemStack> getKit(String kitName) {
         List<ItemStack> giveItems = new ArrayList<>();
-        for (String items : configuration().getConfigurationSection(kitName + ".materials").getKeys(false)) {
-            ItemStack item = new ItemStack(Material.valueOf(configuration().getString(kitName + ".materials." + items + ".type")), configuration().getInt(kitName + ".materials." + items + ".amount"));
+        for (String items : getConfig().getConfigurationSection(kitName + ".materials").getKeys(false)) {
+            ItemStack item = new ItemStack(Material.valueOf(getConfig().getString(kitName + ".materials." + items + ".type")), getConfig().getInt(kitName + ".materials." + items + ".amount"));
             ItemMeta itemMeta = item.getItemMeta();
-            if (configuration().getKeys(true).contains(kitName+".materials." + items + ".name")) {
-                itemMeta.setDisplayName(Players.getMessage().addColor(configuration().getString(kitName + ".materials." + items + ".name")));
+            if (getConfig().getKeys(true).contains(kitName+".materials." + items + ".name")) {
+                itemMeta.setDisplayName(Players.getMessage().addColor(getConfig().getString(kitName + ".materials." + items + ".name")));
             }
-            if (configuration().getKeys(true).contains(kitName+".materials." + items + ".lore")) {
+            if (getConfig().getKeys(true).contains(kitName+".materials." + items + ".lore")) {
                 List<String> lore = new ArrayList<>();
-                for (String listedLore : configuration().getStringList(kitName + ".materials." + items + ".lore")) {
+                for (String listedLore : getConfig().getStringList(kitName + ".materials." + items + ".lore")) {
                     lore.add(Players.getMessage().addColor(listedLore));
                 }
                 itemMeta.setLore(lore);
             }
-            if (configuration().getKeys(true).contains(kitName+".materials." + items + ".enchantments")) {
-                for (String enchantList : configuration().getConfigurationSection(kitName + ".materials." + items + ".enchantments").getKeys(false)){
-                    itemMeta.addEnchant(Enchantment.getByName(configuration().getString(kitName + ".materials." + items + ".enchantments." + enchantList + ".type")), configuration().getInt(kitName+".materials."+items+".enchantments."+enchantList+".amount"),true);
+            if (getConfig().getKeys(true).contains(kitName+".materials." + items + ".enchantments")) {
+                for (String enchantList : getConfig().getConfigurationSection(kitName + ".materials." + items + ".enchantments").getKeys(false)){
+                    itemMeta.addEnchant(Enchantment.getByName(getConfig().getString(kitName + ".materials." + items + ".enchantments." + enchantList + ".type")), getConfig().getInt(kitName+".materials."+items+".enchantments."+enchantList+".amount"),true);
                 }
             }
             item.setItemMeta(itemMeta);

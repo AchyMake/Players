@@ -182,9 +182,10 @@ public final class Players extends JavaPlugin {
         message.sendLog(Level.INFO, "Disabled " + getName() + " " + getServer().getBukkitVersion());
     }
     public void reload() {
-        if (new File(getDataFolder(), "config.yml").exists()) {
+        File file = new File(getDataFolder(), "config.yml");
+        if (file.exists()) {
             try {
-                getConfig().load(new File(getDataFolder(), "config.yml"));
+                getConfig().load(file);
                 saveConfig();
             } catch (IOException | InvalidConfigurationException e) {
                 message.sendLog(Level.WARNING, e.getMessage());

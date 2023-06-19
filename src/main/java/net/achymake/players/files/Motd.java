@@ -19,7 +19,7 @@ public class Motd {
     public boolean exist() {
         return file.exists();
     }
-    public FileConfiguration configuration() {
+    public FileConfiguration getConfig() {
         return YamlConfiguration.loadConfiguration(file);
     }
     public void reload() {
@@ -59,14 +59,14 @@ public class Motd {
         }
     }
     public boolean motdExist(String motd) {
-        return configuration().isList(motd);
+        return getConfig().isList(motd);
     }
     public List<String> getMotds() {
-        return new ArrayList<>(configuration().getKeys(false));
+        return new ArrayList<>(getConfig().getKeys(false));
     }
     public void sendMotd(CommandSender sender, String motd) {
         if (motdExist(motd)) {
-            for (String message : configuration().getStringList(motd)) {
+            for (String message : getConfig().getStringList(motd)) {
                 sender.sendMessage(addColor(message.replaceAll("%player%", sender.getName())));
             }
         } else {

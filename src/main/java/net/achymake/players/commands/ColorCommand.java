@@ -25,7 +25,7 @@ public class ColorCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage("&o" + ChatColor.ITALIC + " Italic" + ChatColor.RESET + " &r Reset");
         }
         if (args.length == 1) {
-            if (sender.hasPermission("smpcore.command.color.others")) {
+            if (sender.hasPermission("players.command.color.others")) {
                 Player target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     target.sendMessage(ChatColor.GOLD + "Minecraft colors:");

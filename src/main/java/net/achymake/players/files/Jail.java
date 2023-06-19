@@ -17,11 +17,11 @@ public class Jail {
     public boolean exist() {
         return file.exists();
     }
-    public FileConfiguration configuration() {
+    public FileConfiguration getConfig() {
         return YamlConfiguration.loadConfiguration(file);
     }
     public boolean jailExist() {
-        return configuration().isConfigurationSection("jail");
+        return getConfig().isConfigurationSection("jail");
     }
     public void setJail(Location location) {
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -39,12 +39,12 @@ public class Jail {
     }
     public Location getJail() {
         if (jailExist()) {
-            String world = configuration().getString("jail.world");
-            double x = configuration().getDouble("jail.x");
-            double y = configuration().getDouble("jail.y");
-            double z = configuration().getDouble("jail.z");
-            float yaw = configuration().getLong("jail.yaw");
-            float pitch = configuration().getLong("jail.pitch");
+            String world = getConfig().getString("jail.world");
+            double x = getConfig().getDouble("jail.x");
+            double y = getConfig().getDouble("jail.y");
+            double z = getConfig().getDouble("jail.z");
+            float yaw = getConfig().getLong("jail.yaw");
+            float pitch = getConfig().getLong("jail.pitch");
             return new Location(Players.getInstance().getServer().getWorld(world), x, y, z, yaw, pitch);
         } else {
             return null;

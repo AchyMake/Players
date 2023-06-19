@@ -16,14 +16,14 @@ public class Warps {
     public Warps(File dataFolder) {
         this.file = new File(dataFolder, "warps.yml");
     }
-    public FileConfiguration configuration() {
+    public FileConfiguration getConfig() {
         return YamlConfiguration.loadConfiguration(file);
     }
-    public boolean exist(String warpName) {
-        return configuration().isConfigurationSection(warpName);
+    public boolean exist() {
+        return file.exists();
     }
     public boolean warpExist(String warpName) {
-        return configuration().isConfigurationSection(warpName);
+        return getConfig().isConfigurationSection(warpName);
     }
     public void setWarp(String warpName, Location location) {
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -41,19 +41,19 @@ public class Warps {
     }
     public Location getWarp(String warpName) {
         if (warpExist(warpName)) {
-            String worldName = configuration().getString(warpName + ".world");
-            double x = configuration().getDouble(warpName + ".x");
-            double y = configuration().getDouble(warpName + ".y");
-            double z = configuration().getDouble(warpName + ".z");
-            float yaw = configuration().getLong(warpName + ".yaw");
-            float pitch = configuration().getLong(warpName + ".pitch");
+            String worldName = getConfig().getString(warpName + ".world");
+            double x = getConfig().getDouble(warpName + ".x");
+            double y = getConfig().getDouble(warpName + ".y");
+            double z = getConfig().getDouble(warpName + ".z");
+            float yaw = getConfig().getLong(warpName + ".yaw");
+            float pitch = getConfig().getLong(warpName + ".pitch");
             return new Location(Players.getInstance().getServer().getWorld(worldName), x, y, z, yaw, pitch);
         } else {
             return null;
         }
     }
     public List<String> getWarps() {
-        return new ArrayList<>(configuration().getKeys(false));
+        return new ArrayList<>(getConfig().getKeys(false));
     }
     public void delWarp(String warpName) {
         if (warpExist(warpName)) {
@@ -67,8 +67,8 @@ public class Warps {
         }
     }
     public void reload() {
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        if (file.exists()) {
+        if (exist()) {
+            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
                 config.save(file);
@@ -76,6 +76,7 @@ public class Warps {
                 throw new RuntimeException(e);
             }
         } else {
+            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             config.options().copyDefaults(true);
             try {
                 config.save(file);

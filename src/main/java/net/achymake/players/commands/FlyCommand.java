@@ -2,10 +2,7 @@ package net.achymake.players.commands;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Message;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -17,8 +14,8 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
-            if (sender instanceof Player) {
+        if (sender instanceof Player) {
+            if (args.length == 0) {
                 Player player = (Player) sender;
                 player.setAllowFlight(!player.getAllowFlight());
                 if (player.getAllowFlight()) {
@@ -27,9 +24,36 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
                     getMessage().sendActionBar(player, "&6&lFly:&c Disabled");
                 }
             }
+            if (args.length == 1) {
+                Player player = (Player) sender;
+                if (player.hasPermission("players.command.fly.others")) {
+                    Player target = player.getServer().getPlayerExact(args[0]);
+                    if (target == sender) {
+                        target.setAllowFlight(!target.getAllowFlight());
+                        if (target.getAllowFlight()) {
+                            getMessage().sendActionBar(target, "&6&lFly:&a Enabled");
+                        } else {
+                            getMessage().sendActionBar(target, "&6&lFly:&c Disabled");
+                        }
+                    } else {
+                        if (target != null) {
+                            if (!target.hasPermission("players.command.fly.exempt")) {
+                                target.setAllowFlight(!target.getAllowFlight());
+                                if (target.getAllowFlight()) {
+                                    getMessage().sendActionBar(target, "&6&lFly:&a Enabled");
+                                    getMessage().send(player, "&6You enabled fly for&f " + target.getName());
+                                } else {
+                                    getMessage().sendActionBar(target, "&6&lFly:&c Disabled");
+                                    getMessage().send(player, "&6You disabled fly for&f " + target.getName());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-        if (args.length == 1) {
-            if (sender.hasPermission("players.command.fly.others")) {
+        if (sender instanceof ConsoleCommandSender) {
+            if (args.length == 1) {
                 Player target = sender.getServer().getPlayerExact(args[0]);
                 if (target == sender) {
                     target.setAllowFlight(!target.getAllowFlight());

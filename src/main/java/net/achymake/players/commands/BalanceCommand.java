@@ -44,9 +44,9 @@ public class BalanceCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
                 if (getDatabase().exist(offlinePlayer)) {
-                    getMessage().send(sender, offlinePlayer.getName() + " &6balance:&a " + getEconomyProvider().currencyNameSingular() + getEconomyProvider().format(getDatabase().getEconomy(offlinePlayer)));
+                    getMessage().send(sender, offlinePlayer.getName() + " balance: " + getEconomyProvider().currencyNameSingular() + getEconomyProvider().format(getDatabase().getEconomy(offlinePlayer)));
                 } else {
-                    getMessage().send(sender, offlinePlayer.getName() + "&c has never joined");
+                    getMessage().send(sender, offlinePlayer.getName() + " has never joined");
                 }
             }
         }

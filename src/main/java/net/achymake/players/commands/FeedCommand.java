@@ -3,10 +3,7 @@ package net.achymake.players.commands;
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
 import net.achymake.players.files.Message;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -46,14 +43,24 @@ public class FeedCommand implements CommandExecutor, TabCompleter {
                     getMessage().sendActionBar((Player) sender, "&6Your starvation has been satisfied");
                 }
             }
+            if (args.length == 1) {
+                if (sender.hasPermission("players.command.feed.others")) {
+                    Player target = sender.getServer().getPlayerExact(args[0]);
+                    if (target != null) {
+                        target.setFoodLevel(20);
+                        getMessage().sendActionBar(target, "&6Your starvation has been satisfied by&f " + sender.getName());
+                        getMessage().send(sender, "&6You satisfied&f " + target.getName() + "&6's starvation");
+                    }
+                }
+            }
         }
-        if (args.length == 1) {
-            if (sender.hasPermission("players.command.feed.others")) {
+        if (sender instanceof ConsoleCommandSender) {
+            if (args.length == 1) {
                 Player target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     target.setFoodLevel(20);
-                    getMessage().sendActionBar(target, "&6Your starvation has been satisfied by&f " + sender.getName());
-                    getMessage().send(sender, "&6You satisfied&f " + target.getName() + "&6's starvation");
+                    getMessage().sendActionBar(target, "&6Your starvation has been satisfied");
+                    getMessage().send(sender, "You satisfied " + target.getName() + "'s starvation");
                 }
             }
         }

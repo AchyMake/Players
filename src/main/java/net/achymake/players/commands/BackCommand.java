@@ -18,19 +18,20 @@ public class BackCommand implements CommandExecutor, TabCompleter {
             Player player = (Player) sender;
             if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                 return false;
-            }
-            if (args.length == 0) {
-                getDatabase().teleportBack(player);
-            }
-            if (args.length == 1) {
-                if (player.hasPermission("players.command.back.others")) {
-                    Player target = player.getServer().getPlayerExact(args[0]);
-                    if (target != null) {
-                        if (target == player) {
-                            getDatabase().teleportBack(target);
-                        } else {
-                            if (!target.hasPermission("players.command.back.exempt")) {
+            } else {
+                if (args.length == 0) {
+                    getDatabase().teleportBack(player);
+                }
+                if (args.length == 1) {
+                    if (player.hasPermission("players.command.back.others")) {
+                        Player target = player.getServer().getPlayerExact(args[0]);
+                        if (target != null) {
+                            if (target == player) {
                                 getDatabase().teleportBack(target);
+                            } else {
+                                if (!target.hasPermission("players.command.back.exempt")) {
+                                    getDatabase().teleportBack(target);
+                                }
                             }
                         }
                     }
@@ -40,8 +41,12 @@ public class BackCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof ConsoleCommandSender) {
             if (args.length == 1) {
                 Player target = sender.getServer().getPlayerExact(args[0]);
-                if (target != null) {
-                    getDatabase().teleportBack(target);
+                if (getDatabase().isFrozen(target) || getDatabase().isJailed(target)) {
+                    return false;
+                } else {
+                    if (target != null) {
+                        getDatabase().teleportBack(target);
+                    }
                 }
             }
         }

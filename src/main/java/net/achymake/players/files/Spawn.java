@@ -17,11 +17,11 @@ public class Spawn {
     public boolean exist() {
         return file.exists();
     }
-    public FileConfiguration configuration() {
+    public FileConfiguration getConfig() {
         return YamlConfiguration.loadConfiguration(file);
     }
     public boolean spawnExist() {
-        return configuration().isConfigurationSection("spawn");
+        return getConfig().isConfigurationSection("spawn");
     }
     public void setSpawn(Location location) {
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -39,12 +39,12 @@ public class Spawn {
     }
     public Location getSpawn() {
         if (spawnExist()) {
-            String worldName = configuration().getString("spawn.world");
-            double x = configuration().getDouble("spawn.x");
-            double y = configuration().getDouble("spawn.y");
-            double z = configuration().getDouble("spawn.z");
-            float yaw = configuration().getLong("spawn.x");
-            float pitch = configuration().getLong("spawn.x");
+            String worldName = getConfig().getString("spawn.world");
+            double x = getConfig().getDouble("spawn.x");
+            double y = getConfig().getDouble("spawn.y");
+            double z = getConfig().getDouble("spawn.z");
+            float yaw = getConfig().getLong("spawn.x");
+            float pitch = getConfig().getLong("spawn.x");
             return new Location(Players.getInstance().getServer().getWorld(worldName), x, y, z, yaw, pitch);
         } else {
             return null;

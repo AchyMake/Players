@@ -7,7 +7,7 @@ tablist:
   footer: '&e--&6--&d--&9--&7[&6{0}&7/&6{1}&7]&9--&d--&6--&e--'
 economy:
   currency: $
-  format: '#,##0.00'
+  format: '#,##0'
   starting-balance: 0.0
 homes:
   # players.command.sethome.multiple.default
