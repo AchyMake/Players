@@ -26,6 +26,21 @@ public class Motd {
     public FileConfiguration getConfig() {
         return YamlConfiguration.loadConfiguration(file);
     }
+    public boolean motdExist(String motd) {
+        return getConfig().isList(motd);
+    }
+    public List<String> getMotds() {
+        return new ArrayList<>(getConfig().getKeys(false));
+    }
+    public void sendMotd(CommandSender sender, String motd) {
+        if (motdExist(motd)) {
+            for (String message : getConfig().getStringList(motd)) {
+                getMessage().send(sender, message.replaceAll("%player%", sender.getName()));
+            }
+        } else {
+            getMessage().send(sender, motd + "&c does not exist");
+        }
+    }
     public void reload() {
         if (exist()) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -59,21 +74,6 @@ public class Motd {
             } catch (IOException e) {
                 getMessage().sendLog(Level.WARNING, e.getMessage());
             }
-        }
-    }
-    public boolean motdExist(String motd) {
-        return getConfig().isList(motd);
-    }
-    public List<String> getMotds() {
-        return new ArrayList<>(getConfig().getKeys(false));
-    }
-    public void sendMotd(CommandSender sender, String motd) {
-        if (motdExist(motd)) {
-            for (String message : getConfig().getStringList(motd)) {
-                sender.sendMessage(getMessage().addColor(message.replaceAll("%player%", sender.getName())));
-            }
-        } else {
-            getMessage().send(sender, motd + "&c does not exist");
         }
     }
 }
