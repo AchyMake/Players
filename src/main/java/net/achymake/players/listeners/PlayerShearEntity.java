@@ -11,8 +11,8 @@ public class PlayerShearEntity implements Listener {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    public PlayerShearEntity(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public PlayerShearEntity(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerShearEntity(PlayerShearEntityEvent event) {

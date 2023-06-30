@@ -15,8 +15,8 @@ public class PlayerSpawnLocation implements Listener {
     private Spawn getSpawn() {
         return Players.getSpawn();
     }
-    public PlayerSpawnLocation(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public PlayerSpawnLocation(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerSpawnLocation(PlayerSpawnLocationEvent event) {

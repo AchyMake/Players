@@ -18,8 +18,8 @@ public class DamageEntityWithTrident implements Listener {
     private Message getMessage() {
         return Players.getMessage();
     }
-    public DamageEntityWithTrident(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public DamageEntityWithTrident(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onDamageEntityWithTrident(EntityDamageByEntityEvent event) {

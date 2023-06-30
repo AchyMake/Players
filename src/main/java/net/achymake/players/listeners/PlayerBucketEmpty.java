@@ -14,7 +14,7 @@ import java.text.MessageFormat;
 
 public class PlayerBucketEmpty implements Listener {
     private FileConfiguration getConfig() {
-        return Players.getInstance().getConfig();
+        return Players.getConfiguration();
     }
     private Database getDatabase() {
         return Players.getDatabase();
@@ -22,8 +22,8 @@ public class PlayerBucketEmpty implements Listener {
     private Message getMessage() {
         return Players.getMessage();
     }
-    public PlayerBucketEmpty(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public PlayerBucketEmpty(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {

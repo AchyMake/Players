@@ -18,8 +18,8 @@ public class DamageEntityWithSnowball implements Listener {
     private Message getMessage() {
         return Players.getMessage();
     }
-    public DamageEntityWithSnowball(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public DamageEntityWithSnowball(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onDamageEntityWithSnowball(EntityDamageByEntityEvent event) {

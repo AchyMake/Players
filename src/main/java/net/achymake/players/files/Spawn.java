@@ -8,11 +8,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 
 public class Spawn {
-    private File file;
+    private final File file;
     public Spawn(File dataFolder) {
         this.file = new File(dataFolder, "spawn.yml");
+    }
+    private Message getMessage() {
+        return Players.getMessage();
     }
     public boolean exist() {
         return file.exists();
@@ -34,7 +38,7 @@ public class Spawn {
         try {
             config.save(file);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public Location getSpawn() {
@@ -43,8 +47,8 @@ public class Spawn {
             double x = getConfig().getDouble("spawn.x");
             double y = getConfig().getDouble("spawn.y");
             double z = getConfig().getDouble("spawn.z");
-            float yaw = getConfig().getLong("spawn.x");
-            float pitch = getConfig().getLong("spawn.x");
+            float yaw = getConfig().getLong("spawn.yaw");
+            float pitch = getConfig().getLong("spawn.pitch");
             return new Location(Players.getInstance().getServer().getWorld(worldName), x, y, z, yaw, pitch);
         } else {
             return null;
@@ -55,9 +59,8 @@ public class Spawn {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
-                config.save(file);
             } catch (IOException | InvalidConfigurationException e) {
-                throw new RuntimeException(e);
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         } else {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -65,7 +68,7 @@ public class Spawn {
             try {
                 config.save(file);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         }
     }

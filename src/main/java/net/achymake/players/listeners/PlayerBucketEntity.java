@@ -11,8 +11,8 @@ public class PlayerBucketEntity implements Listener {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    public PlayerBucketEntity(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public PlayerBucketEntity(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEntity(PlayerBucketEntityEvent event) {

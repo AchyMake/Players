@@ -33,7 +33,10 @@ public class Database {
         return Players.getInstance();
     }
     private FileConfiguration getConfig() {
-        return getPlugin().getConfig();
+        return Players.getConfiguration();
+    }
+    private Message getMessage() {
+        return Players.getMessage();
     }
     public boolean exist(OfflinePlayer offlinePlayer) {
         return new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
@@ -81,7 +84,7 @@ public class Database {
             try {
                 playerConfig.save(file);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         }
     }
@@ -92,7 +95,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setDouble(OfflinePlayer offlinePlayer, String path, double value) {
@@ -102,7 +105,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setFloat(OfflinePlayer offlinePlayer, String path, float value) {
@@ -112,7 +115,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setString(OfflinePlayer offlinePlayer, String path, String value) {
@@ -122,7 +125,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
@@ -132,7 +135,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setBoolean(OfflinePlayer offlinePlayer, String path, boolean value) {
@@ -142,7 +145,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public boolean homeExist(OfflinePlayer offlinePlayer, String homeName) {
@@ -161,7 +164,7 @@ public class Database {
             setFloat(player, "homes." + homeName + ".pitch", player.getLocation().getPitch());
             return true;
         } else {
-            for (String rank : getPlugin().getConfig().getConfigurationSection("homes").getKeys(false)) {
+            for (String rank : getConfig().getConfigurationSection("homes").getKeys(false)) {
                 if (player.hasPermission("players.command.sethome.multiple." + rank)) {
                     if (getConfig().getInt("homes." + rank) > getHomes(player).size()) {
                         setString(player, "homes." + homeName + ".world", player.getWorld().getName());
@@ -215,8 +218,8 @@ public class Database {
         return new Location(Players.getInstance().getServer().getWorld(worldName), x, y, z, yaw, pitch);
     }
     public void hideVanished(Player player) {
-        if (!vanished.isEmpty()) {
-            for (Player vanishedPlayers : vanished) {
+        if (!getVanished().isEmpty()) {
+            for (Player vanishedPlayers : getVanished()) {
                 player.hidePlayer(Players.getInstance(), vanishedPlayers);
             }
         }
@@ -226,7 +229,7 @@ public class Database {
             setBoolean(offlinePlayer,"settings.vanished", true);
             if (offlinePlayer.isOnline()) {
                 Player player = offlinePlayer.getPlayer();
-                vanished.add(player);
+                getVanished().add(player);
                 if (getConfig(player).getBoolean("settings.coordinates")) {
                     setBoolean(player, "settings.coordinates", false);
                 }
@@ -239,18 +242,18 @@ public class Database {
                 player.setCollidable(false);
                 player.setSilent(true);
                 player.setCanPickupItems(false);
-                for (Player vanishedPlayers : vanished) {
+                for (Player vanishedPlayers : getVanished()) {
                     vanishedPlayers.showPlayer(getPlugin(), player);
                     player.showPlayer(getPlugin(), vanishedPlayers);
                 }
                 resetTabList();
-                sendActionBar(player, "&6&lVanish:&a Enabled");
+                getMessage().sendActionBar(player, "&6&lVanish:&a Enabled");
             }
         } else {
             setBoolean(offlinePlayer,"settings.vanished", false);
             if (offlinePlayer.isOnline()) {
                 Player player = offlinePlayer.getPlayer();
-                vanished.remove(player);
+                getVanished().remove(player);
                 for (Player onlinePlayers : getPlugin().getServer().getOnlinePlayers()) {
                     onlinePlayers.showPlayer(getPlugin(), player);
                 }
@@ -262,11 +265,11 @@ public class Database {
                 player.setCollidable(true);
                 player.setSilent(false);
                 player.setCanPickupItems(true);
-                for (Player vanishedPlayers : vanished) {
+                for (Player vanishedPlayers : getVanished()) {
                     player.hidePlayer(getPlugin(), vanishedPlayers);
                 }
                 resetTabList();
-                sendActionBar(player, "&6&lVanish:&c Disabled");
+                getMessage().sendActionBar(player, "&6&lVanish:&c Disabled");
             }
         }
     }
@@ -287,7 +290,7 @@ public class Database {
     }
     public String prefix(Player player) {
         if (PlaceholderAPI.isRegistered("vault")) {
-            return addColor(PlaceholderAPI.setPlaceholders(player, "%vault_prefix%"));
+            return getMessage().addColor(PlaceholderAPI.setPlaceholders(player, "%vault_prefix%"));
         } else {
             return "";
         }
@@ -297,7 +300,7 @@ public class Database {
     }
     public String suffix(Player player) {
         if (PlaceholderAPI.isRegistered("vault")) {
-            return addColor(PlaceholderAPI.setPlaceholders(player, "%vault_suffix%"));
+            return getMessage().addColor(PlaceholderAPI.setPlaceholders(player, "%vault_suffix%"));
         } else {
             return "";
         }
@@ -305,24 +308,24 @@ public class Database {
     public void resetTabList() {
         if (getConfig().getBoolean("tablist.enable")) {
             for (Player players : getPlugin().getServer().getOnlinePlayers()) {
-                players.setPlayerListHeader(addColor(getConfig().getString("tablist.header")));
+                players.setPlayerListHeader(getMessage().addColor(getConfig().getString("tablist.header")));
                 players.setPlayerListName(prefix(players) + nickname(players) + suffix(players));
-                players.setPlayerListFooter(addColor(MessageFormat.format(getConfig().getString("tablist.footer"), players.getServer().getOnlinePlayers().size() - vanished.size(), players.getServer().getMaxPlayers())));
+                players.setPlayerListFooter(getMessage().addColor(MessageFormat.format(getConfig().getString("tablist.footer"), players.getServer().getOnlinePlayers().size() - vanished.size(), players.getServer().getMaxPlayers())));
             }
         }
     }
     public void teleportBack(Player player) {
         if (locationExist(player, "death")) {
             getLocation(player, "death").getChunk().load();
-            sendActionBar(player, "&6Teleporting to&f death location");
+            getMessage().sendActionBar(player, "&6Teleporting to&f death location");
             player.teleport(getLocation(player, "death"));
             setString(player, "locations.death", null);
         } else if (locationExist(player, "recent")) {
             getLocation(player, "recent").getChunk().load();
-            sendActionBar(player, "&6Teleporting to&f recent location");
+            getMessage().sendActionBar(player, "&6Teleporting to&f recent location");
             player.teleport(getLocation(player, "recent"));
         } else {
-            send(player, "&cRecent location either removed or has never been set");
+            getMessage().send(player, "&cRecent location either removed or has never been set");
         }
     }
     public Block highestRandomBlock() {
@@ -362,14 +365,5 @@ public class Database {
     }
     public List<Player> getVanished() {
         return vanished;
-    }
-    private void send(CommandSender sender, String message) {
-        sender.sendMessage(addColor(message));
-    }
-    private void sendActionBar(Player player, String message) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(addColor(message)));
-    }
-    private String addColor(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
     }
 }

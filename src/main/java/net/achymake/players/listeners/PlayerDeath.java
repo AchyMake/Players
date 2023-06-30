@@ -18,8 +18,8 @@ public class PlayerDeath implements Listener {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    public PlayerDeath(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public PlayerDeath(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerDeath(PlayerDeathEvent event) {

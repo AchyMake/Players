@@ -11,8 +11,8 @@ public class PlayerTeleport implements Listener {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    public PlayerTeleport(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public PlayerTeleport(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {

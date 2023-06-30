@@ -8,11 +8,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 
 public class Jail {
-    private File file;
+    private final File file;
     public Jail(File dataFolder) {
         this.file = new File(dataFolder, "jail.yml");
+    }
+    private Message getMessage() {
+        return Players.getMessage();
     }
     public boolean exist() {
         return file.exists();
@@ -34,7 +38,7 @@ public class Jail {
         try {
             config.save(file);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public Location getJail() {
@@ -55,17 +59,16 @@ public class Jail {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
-                config.save(file);
             } catch (IOException | InvalidConfigurationException e) {
-                throw new RuntimeException(e);
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         } else {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+            config.options().copyDefaults(true);
             try {
-                config.options().copyDefaults(true);
                 config.save(file);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         }
     }

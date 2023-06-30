@@ -22,6 +22,10 @@ public final class Players extends JavaPlugin {
     public static Players getInstance() {
         return instance;
     }
+    private static FileConfiguration configuration;
+    public static FileConfiguration getConfiguration() {
+        return configuration;
+    }
     private static Message message;
     public static Message getMessage() {
         return message;
@@ -54,10 +58,10 @@ public final class Players extends JavaPlugin {
     public static EconomyProvider getEconomyProvider() {
         return economyProvider;
     }
-    @Override
-    public void onEnable() {
+    private void start() {
         instance = this;
-        message = new Message(this);
+        configuration = getConfig();
+        message = new Message(getLogger());
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             getServer().getPluginManager().disablePlugin(this);
             getMessage().sendLog(Level.WARNING, "You have to install 'Vault'");
@@ -80,12 +84,30 @@ public final class Players extends JavaPlugin {
         spawn = new Spawn(getDataFolder());
         warps = new Warps(getDataFolder());
         reload();
-        getCommands();
-        getEvents();
-        message.sendLog(Level.INFO, "Enabled " + getName() + " " + getServer().getBukkitVersion());
+        commands();
+        events();
+        getMessage().sendLog(Level.INFO, "Enabled " + getName() + " " + getServer().getBukkitVersion());
         new UpdateChecker(this, 110266).getUpdate();
     }
-    private void getCommands() {
+    private void stop() {
+        if (!getDatabase().getVanished().isEmpty()) {
+            getDatabase().getVanished().clear();
+        }
+        if (new PlaceholderProvider().isRegistered()) {
+            new PlaceholderProvider().unregister();
+        }
+        getServer().getServicesManager().unregisterAll(this);
+        getMessage().sendLog(Level.INFO, "Disabled " + getName() + " " + getServer().getBukkitVersion());
+    }
+    @Override
+    public void onEnable() {
+        start();
+    }
+    @Override
+    public void onDisable() {
+        stop();
+    }
+    private void commands() {
         getCommand("announcement").setExecutor(new AnnouncementCommand());
         getCommand("back").setExecutor(new BackCommand());
         getCommand("balance").setExecutor(new BalanceCommand());
@@ -139,7 +161,7 @@ public final class Players extends JavaPlugin {
         getCommand("whisper").setExecutor(new WhisperCommand());
         getCommand("workbench").setExecutor(new WorkbenchCommand());
     }
-    private void getEvents() {
+    private void events() {
         new AsyncPlayerChat(this);
         new BlockBreak(this);
         new BlockFertilize(this);
@@ -170,48 +192,39 @@ public final class Players extends JavaPlugin {
         new PrepareAnvil(this);
         new SignChange(this);
     }
-    @Override
-    public void onDisable() {
-        if (!database.getVanished().isEmpty()) {
-            database.getVanished().clear();
-        }
-        if (new PlaceholderProvider().isRegistered()) {
-            new PlaceholderProvider().unregister();
-        }
-        getServer().getServicesManager().unregisterAll(this);
-        message.sendLog(Level.INFO, "Disabled " + getName() + " " + getServer().getBukkitVersion());
-    }
     public void reload() {
         File file = new File(getDataFolder(), "config.yml");
         if (file.exists()) {
             try {
                 getConfig().load(file);
-                saveConfig();
+                getMessage().sendLog(Level.INFO, "reloaded config.yml");
             } catch (IOException | InvalidConfigurationException e) {
-                message.sendLog(Level.WARNING, e.getMessage());
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
+            saveConfig();
         } else {
+            getMessage().sendLog(Level.INFO, "creating config.yml");
             getConfig().options().copyDefaults(true);
             saveConfig();
+            getMessage().sendLog(Level.INFO, "created config.yml");
         }
-        jail.reload();
-        kits.reload();
-        motd.reload();
-        spawn.reload();
-        warps.reload();
-        database.resetTabList();
-        database.getCommandCooldown().clear();
+        getJail().reload();
+        getKits().reload();
+        getMotd().reload();
+        getSpawn().reload();
+        getWarps().reload();
+        getDatabase().resetTabList();
+        getDatabase().getCommandCooldown().clear();
     }
     public void reloadPlayerFiles() {
         for (OfflinePlayer offlinePlayer : getServer().getOfflinePlayers()) {
-            if (database.exist(offlinePlayer)) {
+            if (getDatabase().exist(offlinePlayer)) {
                 File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 try {
                     config.load(file);
-                    config.save(file);
                 } catch (IOException | InvalidConfigurationException e) {
-                    message.sendLog(Level.WARNING, e.getMessage());
+                    getMessage().sendLog(Level.WARNING, e.getMessage());
                 }
             }
         }

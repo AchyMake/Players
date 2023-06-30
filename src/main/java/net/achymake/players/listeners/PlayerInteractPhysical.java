@@ -12,8 +12,8 @@ public class PlayerInteractPhysical implements Listener {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    public PlayerInteractPhysical(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public PlayerInteractPhysical(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteractPhysical(PlayerInteractEvent event) {

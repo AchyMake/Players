@@ -24,8 +24,8 @@ public class PlayerQuit implements Listener {
     private Message getMessage() {
         return Players.getMessage();
     }
-    public PlayerQuit(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public PlayerQuit(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerQuit(PlayerQuitEvent event) {

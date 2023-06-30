@@ -17,8 +17,8 @@ public class PlayerRespawn implements Listener {
     private Message getMessage() {
         return Players.getMessage();
     }
-    public PlayerRespawn(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public PlayerRespawn(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerRespawn(PlayerRespawnEvent event) {

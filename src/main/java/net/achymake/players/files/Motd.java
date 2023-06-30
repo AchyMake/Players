@@ -1,6 +1,6 @@
 package net.achymake.players.files;
 
-import org.bukkit.ChatColor;
+import net.achymake.players.Players;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,11 +10,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class Motd {
-    private File file;
+    private final File file;
     public Motd(File dataFolder) {
         this.file = new File(dataFolder, "motd.yml");
+    }
+    private Message getMessage() {
+        return Players.getMessage();
     }
     public boolean exist() {
         return file.exists();
@@ -27,9 +31,8 @@ public class Motd {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
-                config.save(file);
             } catch (IOException | InvalidConfigurationException e) {
-                throw new RuntimeException(e);
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         } else {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -54,7 +57,7 @@ public class Motd {
             try {
                 config.save(file);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         }
     }
@@ -67,16 +70,10 @@ public class Motd {
     public void sendMotd(CommandSender sender, String motd) {
         if (motdExist(motd)) {
             for (String message : getConfig().getStringList(motd)) {
-                sender.sendMessage(addColor(message.replaceAll("%player%", sender.getName())));
+                sender.sendMessage(getMessage().addColor(message.replaceAll("%player%", sender.getName())));
             }
         } else {
-            send(sender, motd + "&c does not exist");
+            getMessage().send(sender, motd + "&c does not exist");
         }
-    }
-    private void send(CommandSender sender, String message) {
-        sender.sendMessage(addColor(message));
-    }
-    private String addColor(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
     }
 }

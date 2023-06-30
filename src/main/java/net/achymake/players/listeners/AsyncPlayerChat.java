@@ -16,8 +16,8 @@ public class AsyncPlayerChat implements Listener {
     private Message getMessage() {
         return Players.getMessage();
     }
-    public AsyncPlayerChat(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public AsyncPlayerChat(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onAsyncPlayerChat (AsyncPlayerChatEvent event) {

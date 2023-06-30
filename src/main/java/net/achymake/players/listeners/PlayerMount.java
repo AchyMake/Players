@@ -13,8 +13,8 @@ public class PlayerMount implements Listener {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    public PlayerMount(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public PlayerMount(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMount(EntityMountEvent event) {

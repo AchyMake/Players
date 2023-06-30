@@ -18,8 +18,8 @@ public class DamageEntityWithArrow implements Listener {
     private Message getMessage() {
         return Players.getMessage();
     }
-    public DamageEntityWithArrow(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public DamageEntityWithArrow(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onDamageEntityWithArrow(EntityDamageByEntityEvent event) {

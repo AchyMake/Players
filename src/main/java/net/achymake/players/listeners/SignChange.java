@@ -11,8 +11,8 @@ public class SignChange implements Listener {
     private Message getMessage() {
         return Players.getMessage();
     }
-    public SignChange(Players players) {
-        players.getServer().getPluginManager().registerEvents(this, players);
+    public SignChange(Players plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onSignChange(SignChangeEvent event) {

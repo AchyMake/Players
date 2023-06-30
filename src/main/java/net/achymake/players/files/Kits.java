@@ -15,11 +15,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
 public class Kits {
-    private File file;
+    private final File file;
     public Kits(File dataFolder) {
         this.file = new File(dataFolder, "kits.yml");
+    }
+    private Message getMessage() {
+        return Players.getMessage();
     }
     public boolean exist() {
         return file.exists();
@@ -92,9 +96,8 @@ public class Kits {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
-                config.save(file);
             } catch (IOException | InvalidConfigurationException e) {
-                throw new RuntimeException(e);
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         } else {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -135,7 +138,7 @@ public class Kits {
             try {
                 config.save(file);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         }
     }

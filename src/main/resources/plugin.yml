@@ -566,15 +566,6 @@ permissions:
   players.exempt.commands:
     description: message
     default: op
-  players.command.spawn.signs:
-    description: message
-    default: op
-  players.command.workbench.signs:
-    description: message
-    default: op
-  players.command.warp.signs:
-    description: message
-    default: op
   players.join-message:
     description: message
     default: op

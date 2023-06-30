@@ -2,6 +2,7 @@ package net.achymake.players.version;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Message;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Consumer;
 
@@ -17,6 +18,9 @@ public class UpdateChecker {
     public UpdateChecker(Players plugin, int resourceId) {
         this.plugin = plugin;
         this.resourceId = resourceId;
+    }
+    private FileConfiguration getConfig() {
+        return Players.getConfiguration();
     }
     private Message getMessage() {
         return Players.getMessage();
@@ -39,8 +43,9 @@ public class UpdateChecker {
         });
     }
     public void getUpdate() {
-        if (plugin.getConfig().getBoolean("notify-update.enable")) {
+        if (getConfig().getBoolean("notify-update.enable")) {
             (new UpdateChecker(plugin, resourceId)).getVersion((latest) -> {
+                getMessage().sendLog(Level.INFO, "checking latest release");
                 if (plugin.getDescription().getVersion().equals(latest)) {
                     getMessage().sendLog(Level.INFO, "You are using the latest version");
                 } else {
@@ -51,7 +56,7 @@ public class UpdateChecker {
         }
     }
     public void sendMessage(Player player) {
-        if (plugin.getConfig().getBoolean("notify-update.enable")) {
+        if (getConfig().getBoolean("notify-update.enable")) {
             (new UpdateChecker(plugin, resourceId)).getVersion((latest) -> {
                 if (!plugin.getDescription().getVersion().equals(latest)) {
                     getMessage().send(player,"&6" + plugin.getName() + " Update:&f " + latest);
