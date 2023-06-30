@@ -4,17 +4,21 @@ import net.achymake.players.api.*;
 import net.achymake.players.commands.*;
 import net.achymake.players.files.*;
 import net.achymake.players.listeners.*;
-import net.achymake.players.version.UpdateChecker;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Consumer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Scanner;
 import java.util.logging.Level;
 
 public final class Players extends JavaPlugin {
@@ -87,7 +91,7 @@ public final class Players extends JavaPlugin {
         commands();
         events();
         getMessage().sendLog(Level.INFO, "Enabled " + getName() + " " + getServer().getBukkitVersion());
-        new UpdateChecker(this, 110266).getUpdate();
+        sendUpdate();
     }
     private void stop() {
         if (!getDatabase().getVanished().isEmpty()) {
@@ -228,5 +232,45 @@ public final class Players extends JavaPlugin {
                 }
             }
         }
+    }
+    public void sendUpdate(Player player) {
+        if (getConfig().getBoolean("notify-update.enable")) {
+            checkLatest((latest) -> {
+                if (!getDescription().getVersion().equals(latest)) {
+                    getMessage().send(player,"&6" + getName() + " Update:&f " + latest);
+                    getMessage().send(player,"&6Current Version: &f" + getDescription().getVersion());
+                }
+            });
+        }
+    }
+    public void sendUpdate() {
+        if (getConfig().getBoolean("notify-update.enable")) {
+            checkLatest((latest) -> {
+                getMessage().sendLog(Level.INFO, "Checking latest release");
+                if (getDescription().getVersion().equals(latest)) {
+                    getMessage().sendLog(Level.INFO, "You are using the latest version");
+                } else {
+                    getMessage().sendLog(Level.INFO, "New Update: " + latest);
+                    getMessage().sendLog(Level.INFO, "Current Version: " + getDescription().getVersion());
+                }
+            });
+        }
+    }
+    public void checkLatest(Consumer<String> consumer) {
+        getServer().getScheduler().runTaskAsynchronously(this, () -> {
+            try {
+                InputStream inputStream = (new URL("https://api.spigotmc.org/legacy/update.php?resource=" + 110266)).openStream();
+                Scanner scanner = new Scanner(inputStream);
+                if (scanner.hasNext()) {
+                    consumer.accept(scanner.next());
+                    scanner.close();
+                }
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                getMessage().sendLog(Level.WARNING, e.getMessage());
+            }
+        });
     }
 }

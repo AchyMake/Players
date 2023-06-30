@@ -4,7 +4,6 @@ import net.achymake.players.Players;
 import net.achymake.players.files.Database;
 import net.achymake.players.files.Message;
 import net.achymake.players.files.Motd;
-import net.achymake.players.version.UpdateChecker;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -16,6 +15,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import java.text.MessageFormat;
 
 public class PlayerJoin implements Listener {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private Database getDatabase() {
         return Players.getDatabase();
     }
@@ -28,7 +30,7 @@ public class PlayerJoin implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (event.getPlayer().hasPermission("players.command.reload")) {
-            new UpdateChecker(Players.getInstance(), 110266).sendMessage(event.getPlayer());
+            getPlugin().sendUpdate(event.getPlayer());
         }
         if (getDatabase().isVanished(event.getPlayer())) {
             getDatabase().setVanish(event.getPlayer(), true);
