@@ -28,6 +28,8 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                         getSpawn().getSpawn().getChunk().load();
                         Players.send(player, "&6Teleporting to&f spawn");
                         player.teleport(getSpawn().getSpawn());
+                    } else {
+                        Players.send(player, "Spawn&c does not exist");
                     }
                 }
             }
@@ -44,6 +46,8 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                                 Players.send(target, "&6Teleporting to&f spawn");
                                 target.teleport(getSpawn().getSpawn());
                                 Players.send(player, "&6You teleported&f " + target.getName() + "&6 to&f spawn");
+                            } else {
+                                Players.send(player, "Spawn&c does not exist");
                             }
                         }
                     }
@@ -63,6 +67,8 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                             Players.send(target, "&6Teleporting to&f spawn");
                             target.teleport(getSpawn().getSpawn());
                             Players.send(commandSender, "You teleported " + target.getName() + " to spawn");
+                        } else {
+                            Players.send(commandSender, "Spawn&c does not exist");
                         }
                     }
                 }

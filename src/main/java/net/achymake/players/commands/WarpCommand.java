@@ -44,6 +44,8 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                             getWarps().getWarp(args[0]).getChunk().load();
                             Players.sendActionBar(player, "&6Teleporting to&f "+ args[0]);
                             player.teleport(getWarps().getWarp(args[0]));
+                        } else {
+                            Players.send(player, args[0] + "&c does not exist");
                         }
                     }
                 }
@@ -61,6 +63,8 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                                     getWarps().getWarp(args[0]).getChunk().load();
                                     Players.send(target, "&6Teleporting to&f " + args[0]);
                                     target.teleport(getWarps().getWarp(args[0]));
+                                } else {
+                                    Players.send(player, args[0] + "&c does not exist");
                                 }
                             }
                         }
@@ -70,7 +74,8 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
         }
         if (sender instanceof ConsoleCommandSender) {
             if (args.length == 2) {
-                Player target = sender.getServer().getPlayerExact(args[1]);
+                ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
+                Player target = commandSender.getServer().getPlayerExact(args[1]);
                 if (target != null) {
                     if (getDatabase().isFrozen(target) || getDatabase().isJailed(target)) {
                         return false;
@@ -79,6 +84,8 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                             getWarps().getWarp(args[0]).getChunk().load();
                             Players.send(target, "&6Teleporting to&f " + args[0]);
                             target.teleport(getWarps().getWarp(args[0]));
+                        } else {
+                            Players.send(commandSender, args[0] + " does not exist");
                         }
                     }
                 }
