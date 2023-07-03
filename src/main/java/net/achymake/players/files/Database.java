@@ -2,13 +2,10 @@ package net.achymake.players.files;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.achymake.players.Players;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
-import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -24,19 +21,16 @@ import java.util.logging.Level;
 
 public class Database {
     private final File dataFolder;
-    private final HashMap<String, Long> commandCooldown = new HashMap<>();
-    private final List<Player> vanished = new ArrayList<>();
     public Database(File dataFolder) {
         this.dataFolder = dataFolder;
     }
+    private final HashMap<String, Long> commandCooldown = new HashMap<>();
+    private final List<Player> vanished = new ArrayList<>();
     private Players getPlugin() {
         return Players.getInstance();
     }
     private FileConfiguration getConfig() {
         return Players.getConfiguration();
-    }
-    private Message getMessage() {
-        return Players.getMessage();
     }
     public boolean exist(OfflinePlayer offlinePlayer) {
         return new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
@@ -53,7 +47,7 @@ public class Database {
                 try {
                     playerConfig.save(file);
                 } catch (IOException e) {
-                    Players.getMessage().sendLog(Level.WARNING, e.getMessage());
+                    Players.sendLog(Level.WARNING, e.getMessage());
                 }
             }
         } else {
@@ -84,7 +78,7 @@ public class Database {
             try {
                 playerConfig.save(file);
             } catch (IOException e) {
-                getMessage().sendLog(Level.WARNING, e.getMessage());
+                Players.sendLog(Level.WARNING, e.getMessage());
             }
         }
     }
@@ -95,7 +89,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            getMessage().sendLog(Level.WARNING, e.getMessage());
+            Players.sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setDouble(OfflinePlayer offlinePlayer, String path, double value) {
@@ -105,7 +99,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            getMessage().sendLog(Level.WARNING, e.getMessage());
+            Players.sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setFloat(OfflinePlayer offlinePlayer, String path, float value) {
@@ -115,7 +109,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            getMessage().sendLog(Level.WARNING, e.getMessage());
+            Players.sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setString(OfflinePlayer offlinePlayer, String path, String value) {
@@ -125,7 +119,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            getMessage().sendLog(Level.WARNING, e.getMessage());
+            Players.sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
@@ -135,7 +129,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            getMessage().sendLog(Level.WARNING, e.getMessage());
+            Players.sendLog(Level.WARNING, e.getMessage());
         }
     }
     public void setBoolean(OfflinePlayer offlinePlayer, String path, boolean value) {
@@ -145,7 +139,7 @@ public class Database {
         try {
             config.save(file);
         } catch (IOException e) {
-            getMessage().sendLog(Level.WARNING, e.getMessage());
+            Players.sendLog(Level.WARNING, e.getMessage());
         }
     }
     public boolean homeExist(OfflinePlayer offlinePlayer, String homeName) {
@@ -187,7 +181,7 @@ public class Database {
         double z = getConfig(offlinePlayer).getDouble("homes." + homeName + ".z");
         float yaw = getConfig(offlinePlayer).getLong("homes." + homeName + ".yaw");
         float pitch = getConfig(offlinePlayer).getLong("homes." + homeName + ".pitch");
-        return new Location(Players.getInstance().getServer().getWorld(worldName), x, y, z, yaw, pitch);
+        return new Location(getPlugin().getServer().getWorld(worldName), x, y, z, yaw, pitch);
     }
     public boolean locationExist(OfflinePlayer offlinePlayer, String locationName) {
         return getConfig(offlinePlayer).getConfigurationSection("locations").contains(locationName);
@@ -215,12 +209,12 @@ public class Database {
         double z = getConfig(offlinePlayer).getDouble("locations." + locationName + ".z");
         float yaw = getConfig(offlinePlayer).getLong("locations." + locationName + ".yaw");
         float pitch = getConfig(offlinePlayer).getLong("locations." + locationName + ".pitch");
-        return new Location(Players.getInstance().getServer().getWorld(worldName), x, y, z, yaw, pitch);
+        return new Location(getPlugin().getServer().getWorld(worldName), x, y, z, yaw, pitch);
     }
     public void hideVanished(Player player) {
         if (!getVanished().isEmpty()) {
             for (Player vanishedPlayers : getVanished()) {
-                player.hidePlayer(Players.getInstance(), vanishedPlayers);
+                player.hidePlayer(getPlugin(), vanishedPlayers);
             }
         }
     }
@@ -247,7 +241,7 @@ public class Database {
                     player.showPlayer(getPlugin(), vanishedPlayers);
                 }
                 resetTabList();
-                getMessage().sendActionBar(player, "&6&lVanish:&a Enabled");
+                Players.sendActionBar(player, "&6&lVanish:&a Enabled");
             }
         } else {
             setBoolean(offlinePlayer,"settings.vanished", false);
@@ -269,7 +263,7 @@ public class Database {
                     player.hidePlayer(getPlugin(), vanishedPlayers);
                 }
                 resetTabList();
-                getMessage().sendActionBar(player, "&6&lVanish:&c Disabled");
+                Players.sendActionBar(player, "&6&lVanish:&c Disabled");
             }
         }
     }
@@ -290,7 +284,7 @@ public class Database {
     }
     public String prefix(Player player) {
         if (PlaceholderAPI.isRegistered("vault")) {
-            return getMessage().addColor(PlaceholderAPI.setPlaceholders(player, "%vault_prefix%"));
+            return Players.addColor(PlaceholderAPI.setPlaceholders(player, "%vault_prefix%"));
         } else {
             return "";
         }
@@ -300,7 +294,7 @@ public class Database {
     }
     public String suffix(Player player) {
         if (PlaceholderAPI.isRegistered("vault")) {
-            return getMessage().addColor(PlaceholderAPI.setPlaceholders(player, "%vault_suffix%"));
+            return Players.addColor(PlaceholderAPI.setPlaceholders(player, "%vault_suffix%"));
         } else {
             return "";
         }
@@ -308,24 +302,24 @@ public class Database {
     public void resetTabList() {
         if (getConfig().getBoolean("tablist.enable")) {
             for (Player players : getPlugin().getServer().getOnlinePlayers()) {
-                players.setPlayerListHeader(getMessage().addColor(getConfig().getString("tablist.header")));
+                players.setPlayerListHeader(Players.addColor(getConfig().getString("tablist.header")));
                 players.setPlayerListName(prefix(players) + nickname(players) + suffix(players));
-                players.setPlayerListFooter(getMessage().addColor(MessageFormat.format(getConfig().getString("tablist.footer"), players.getServer().getOnlinePlayers().size() - vanished.size(), players.getServer().getMaxPlayers())));
+                players.setPlayerListFooter(Players.addColor(MessageFormat.format(getConfig().getString("tablist.footer"), players.getServer().getOnlinePlayers().size() - vanished.size(), players.getServer().getMaxPlayers())));
             }
         }
     }
     public void teleportBack(Player player) {
         if (locationExist(player, "death")) {
             getLocation(player, "death").getChunk().load();
-            getMessage().sendActionBar(player, "&6Teleporting to&f death location");
+            Players.sendActionBar(player, "&6Teleporting to&f death location");
             player.teleport(getLocation(player, "death"));
             setString(player, "locations.death", null);
         } else if (locationExist(player, "recent")) {
             getLocation(player, "recent").getChunk().load();
-            getMessage().sendActionBar(player, "&6Teleporting to&f recent location");
+            Players.sendActionBar(player, "&6Teleporting to&f recent location");
             player.teleport(getLocation(player, "recent"));
         } else {
-            getMessage().send(player, "&cRecent location either removed or has never been set");
+            Players.send(player, "&cRecent location either removed or has never been set");
         }
     }
     public Block highestRandomBlock() {
@@ -365,5 +359,18 @@ public class Database {
     }
     public List<Player> getVanished() {
         return vanished;
+    }
+    public void reload(OfflinePlayer[] offlinePlayers) {
+        for (OfflinePlayer offlinePlayer : offlinePlayers) {
+            if (exist(offlinePlayer)) {
+                File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+                FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+                try {
+                    config.load(file);
+                } catch (IOException | InvalidConfigurationException e) {
+                    Players.sendLog(Level.WARNING, e.getMessage());
+                }
+            }
+        }
     }
 }

@@ -2,7 +2,6 @@ package net.achymake.players.commands;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
-import net.achymake.players.files.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,15 +15,15 @@ public class TPACommand implements CommandExecutor, TabCompleter {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    private Message getMessage() {
-        return Players.getMessage();
+    private Players getPlugin() {
+        return Players.getInstance();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
                 Player player = (Player) sender;
-                getMessage().send(player, "&cUsage:&f /tpa target");
+                Players.send(player, "&cUsage:&f /tpa target");
             }
             if (args.length == 1) {
                 Player player = (Player) sender;
@@ -33,30 +32,30 @@ public class TPACommand implements CommandExecutor, TabCompleter {
                 } else {
                     Player target = sender.getServer().getPlayerExact(args[0]);
                     if (target == null) {
-                        getMessage().send(player, args[0] + "&c is currently offline");
+                        Players.send(player, args[0] + "&c is currently offline");
                     } else if (target == player) {
-                        getMessage().send(player, "&cYou can't send request to your self");
+                        Players.send(player, "&cYou can't send request to your self");
                     } else if (getDatabase().getConfig(player).isString("tpa.sent")) {
-                        getMessage().send(player, "&cYou already sent tpa request");
-                        getMessage().send(player, "&cYou can type&f /tpcancel");
+                        Players.send(player, "&cYou already sent tpa request");
+                        Players.send(player, "&cYou can type&f /tpcancel");
                     } else {
-                        int taskID = player.getServer().getScheduler().runTaskLater(Players.getInstance(), new Runnable() {
+                        int taskID = player.getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
                             @Override
                             public void run() {
                                 getDatabase().setString(target, "tpa.from", null);
                                 getDatabase().setString(player, "tpa.sent", null);
                                 getDatabase().setString(player, "task.tpa", null);
-                                getMessage().send(player, "&cTeleport request has expired");
-                                getMessage().send(target, "&cTeleport request has expired");
+                                Players.send(player, "&cTeleport request has expired");
+                                Players.send(target, "&cTeleport request has expired");
                             }
                         }, 300).getTaskId();
                         getDatabase().setString(target, "tpa.from", player.getUniqueId().toString());
                         getDatabase().setString(player, "tpa.sent", target.getUniqueId().toString());
                         getDatabase().setInt(player, "task.tpa", taskID);
-                        getMessage().send(target, player.getName() + "&6 has sent you a tpa request");
-                        getMessage().send(target, "&6You can type&a /tpaccept&6 or&c /tpdeny");
-                        getMessage().send(player, "&6You have sent a tpa request to&f " + target.getName());
-                        getMessage().send(player, "&6You can type&c /tpcancel");
+                        Players.send(target, player.getName() + "&6 has sent you a tpa request");
+                        Players.send(target, "&6You can type&a /tpaccept&6 or&c /tpdeny");
+                        Players.send(player, "&6You have sent a tpa request to&f " + target.getName());
+                        Players.send(player, "&6You can type&c /tpcancel");
                     }
                 }
             }

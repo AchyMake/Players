@@ -1,7 +1,6 @@
 package net.achymake.players.commands;
 
 import net.achymake.players.Players;
-import net.achymake.players.files.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,15 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryCommand implements CommandExecutor, TabCompleter {
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
                 Player player = (Player) sender;
-                getMessage().send(player, "&cUsage:&f /inventory target");
+                Players.send(player, "&cUsage:&f /inventory target");
             }
             if (args.length == 1) {
                 Player player = (Player) sender;
@@ -29,7 +25,7 @@ public class InventoryCommand implements CommandExecutor, TabCompleter {
                     if (target != player) {
                         if (!target.hasPermission("players.command.inventory.exempt")) {
                             player.openInventory(target.getInventory());
-                            getMessage().send(sender, "&6Opened inventory of " + target.getName());
+                            Players.send(player, "&6Opened inventory of " + target.getName());
                         }
                     }
                 }

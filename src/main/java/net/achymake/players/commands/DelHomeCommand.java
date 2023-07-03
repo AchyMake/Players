@@ -2,7 +2,6 @@ package net.achymake.players.commands;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
-import net.achymake.players.files.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,22 +15,20 @@ public class DelHomeCommand implements CommandExecutor, TabCompleter {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
-                getMessage().send(sender, "&cUsage:&f /delhome homeName");
+                Player player = (Player) sender;
+                Players.send(player, "&cUsage:&f /delhome homeName");
             }
             if (args.length == 1) {
                 Player player = (Player) sender;
                 if (getDatabase().homeExist(player, args[0])) {
                     getDatabase().setString(player, "homes." + args[0], null);
-                    getMessage().send(player, args[0] + "&6 has been deleted");
+                    Players.send(player, args[0] + "&6 has been deleted");
                 } else {
-                    getMessage().send(player, args[0] + "&c does not exist");
+                    Players.send(player, args[0] + "&c does not exist");
                 }
             }
         }

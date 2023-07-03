@@ -2,11 +2,7 @@ package net.achymake.players.commands;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Kits;
-import net.achymake.players.files.Message;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -16,21 +12,19 @@ public class KitCommand implements CommandExecutor, TabCompleter {
     private Kits getKits() {
         return Players.getKits();
     }
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
-            getMessage().send(sender, "&6Kits:");
-            for (String kitNames : getKits().getKits()) {
-                if (sender.hasPermission("players.command.kit." + kitNames)) {
-                    getMessage().send(sender, "- " + kitNames);
+        if (sender instanceof Player) {
+            if (args.length == 0) {
+                Player player = (Player) sender;
+                Players.send(player, "&6Kits:");
+                for (String kitNames : getKits().getKits()) {
+                    if (player.hasPermission("players.command.kit." + kitNames)) {
+                        Players.send(player, "- " + kitNames);
+                    }
                 }
             }
-        }
-        if (args.length == 1) {
-            if (sender instanceof Player) {
+            if (args.length == 1) {
                 Player player = (Player) sender;
                 if (player.hasPermission("players.command.kit." + args[0])) {
                     for (String kitNames : getKits().getKits()) {
@@ -40,14 +34,33 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                     }
                 }
             }
+            if (args.length == 2) {
+                Player player = (Player) sender;
+                if (player.hasPermission("players.command.kit.others")) {
+                    Player target = player.getServer().getPlayerExact(args[1]);
+                    if (target != null) {
+                        getKits().giveKit(target, args[0]);
+                        Players.send(target, "&6You received&f " + args[0] + "&6 kit");
+                        Players.send(player, "&6You dropped&f " + args[0] + "&6 kit to&f " + target.getName());
+                    }
+                }
+            }
         }
-        if (args.length == 2) {
-            if (sender.hasPermission("players.command.kit.others")) {
-                Player target = sender.getServer().getPlayerExact(args[1]);
+        if (sender instanceof ConsoleCommandSender) {
+            if (args.length == 0) {
+                ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
+                Players.send(commandSender, "Kits:");
+                for (String kitNames : getKits().getKits()) {
+                    Players.send(commandSender, "- " + kitNames);
+                }
+            }
+            if (args.length == 2) {
+                ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
+                Player target = commandSender.getServer().getPlayerExact(args[1]);
                 if (target != null) {
                     getKits().giveKit(target, args[0]);
-                    getMessage().send(target, "&6You received&f " + args[0] + "&6 kit");
-                    getMessage().send(sender, "&6You dropped&f " + args[0] + "&6 kit to&f " + target.getName());
+                    Players.send(target, "&6You received&f " + args[0] + "&6 kit");
+                    Players.send(commandSender, "You dropped " + args[0] + " kit to " + target.getName());
                 }
             }
         }

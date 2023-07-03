@@ -1,7 +1,6 @@
 package net.achymake.players.commands;
 
 import net.achymake.players.Players;
-import net.achymake.players.files.Message;
 import net.achymake.players.files.Warps;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,23 +15,21 @@ public class SetWarpCommand implements CommandExecutor, TabCompleter {
     private Warps getWarps() {
         return Players.getWarps();
     }
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
-                getMessage().send(sender, "&cUsage:&f /setwarp warpName");
+                Player player = (Player) sender;
+                Players.send(player, "&cUsage:&f /setwarp warpName");
             }
             if (args.length == 1) {
                 Player player = (Player) sender;
                 if (getWarps().warpExist(args[0])) {
                     getWarps().setWarp(args[0], player.getLocation());
-                    getMessage().send(sender, args[0] + "&6 has been relocated");
+                    Players.send(player, args[0] + "&6 has been relocated");
                 } else {
                     getWarps().setWarp(args[0], player.getLocation());
-                    getMessage().send(sender, args[0] + "&6 has been set");
+                    Players.send(player, args[0] + "&6 has been set");
                 }
             }
         }

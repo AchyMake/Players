@@ -17,9 +17,6 @@ public class Warps {
     public Warps(File dataFolder) {
         this.file = new File(dataFolder, "warps.yml");
     }
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     public FileConfiguration getConfig() {
         return YamlConfiguration.loadConfiguration(file);
     }
@@ -40,7 +37,7 @@ public class Warps {
         try {
             config.save(file);
         } catch (IOException e) {
-            getMessage().sendLog(Level.WARNING, e.getMessage());
+            Players.sendLog(Level.WARNING, e.getMessage());
         }
     }
     public Location getWarp(String warpName) {
@@ -66,7 +63,7 @@ public class Warps {
             try {
                 config.save(file);
             } catch (IOException e) {
-                getMessage().sendLog(Level.WARNING, e.getMessage());
+                Players.sendLog(Level.WARNING, e.getMessage());
             }
         }
     }
@@ -76,7 +73,7 @@ public class Warps {
             try {
                 config.load(file);
             } catch (IOException | InvalidConfigurationException e) {
-                getMessage().sendLog(Level.WARNING, e.getMessage());
+                Players.sendLog(Level.WARNING, e.getMessage());
             }
         } else {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -84,7 +81,7 @@ public class Warps {
             try {
                 config.save(file);
             } catch (IOException e) {
-                getMessage().sendLog(Level.WARNING, e.getMessage());
+                Players.sendLog(Level.WARNING, e.getMessage());
             }
         }
     }

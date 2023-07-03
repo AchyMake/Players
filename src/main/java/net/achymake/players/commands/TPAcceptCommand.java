@@ -2,7 +2,6 @@ package net.achymake.players.commands;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
-import net.achymake.players.files.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,9 +16,6 @@ public class TPAcceptCommand implements CommandExecutor, TabCompleter {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
@@ -31,15 +27,15 @@ public class TPAcceptCommand implements CommandExecutor, TabCompleter {
                         if (player.getServer().getScheduler().isQueued(getDatabase().getConfig(target).getInt("task.tpa"))) {
                             player.getServer().getScheduler().cancelTask(getDatabase().getConfig(target).getInt("task.tpa"));
                             target.teleport(player);
-                            getMessage().sendActionBar(target, "&6Teleporting to&f " + player.getName());
-                            getMessage().send(player, "&6You accepted&f " + target.getName() + "&6 tpa request");
+                            Players.sendActionBar(target, "&6Teleporting to&f " + player.getName());
+                            Players.send(player, "&6You accepted&f " + target.getName() + "&6 tpa request");
                             getDatabase().setString(target, "tpa.sent", null);
                             getDatabase().setString(target, "task.tpa", null);
                             getDatabase().setString(player, "tpa.from", null);
                         }
                     }
                 } else {
-                    getMessage().send(player, "&cYou don't have any tpa request");
+                    Players.send(player, "&cYou don't have any tpa request");
                 }
             }
         }

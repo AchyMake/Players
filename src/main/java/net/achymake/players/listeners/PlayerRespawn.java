@@ -2,7 +2,6 @@ package net.achymake.players.listeners;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
-import net.achymake.players.files.Message;
 import net.achymake.players.files.Spawn;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
@@ -14,8 +13,8 @@ public class PlayerRespawn implements Listener {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    private Message getMessage() {
-        return Players.getMessage();
+    private Spawn getSpawn() {
+        return Players.getSpawn();
     }
     public PlayerRespawn(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -29,8 +28,8 @@ public class PlayerRespawn implements Listener {
             int x = location.getBlockX();
             int y = location.getBlockY();
             int z = location.getBlockZ();
-            getMessage().send(event.getPlayer(), "&6Death location:");
-            getMessage().send(event.getPlayer(), "&6World:&f " + world + "&6 X:&f " + x + "&6 Y:&f " + y + "&6 Z:&f " + z);
+            Players.send(event.getPlayer(), "&6Death location:");
+            Players.send(event.getPlayer(), "&6World:&f " + world + "&6 X:&f " + x + "&6 Y:&f " + y + "&6 Z:&f " + z);
         }
         getDatabase().setBoolean(event.getPlayer(), "settings.dead", false);
         if (event.isAnchorSpawn())return;
@@ -38,9 +37,8 @@ public class PlayerRespawn implements Listener {
         if (getDatabase().locationExist(event.getPlayer(), "spawn")) {
             event.setRespawnLocation(getDatabase().getLocation(event.getPlayer(), "spawn"));
         } else {
-            Spawn spawn = Players.getSpawn();
-            if (spawn.spawnExist()) {
-                event.setRespawnLocation(spawn.getSpawn());
+            if (getSpawn().spawnExist()) {
+                event.setRespawnLocation(getSpawn().getSpawn());
             }
         }
     }

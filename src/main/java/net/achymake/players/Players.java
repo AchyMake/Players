@@ -4,11 +4,13 @@ import net.achymake.players.api.*;
 import net.achymake.players.commands.*;
 import net.achymake.players.files.*;
 import net.achymake.players.listeners.*;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,6 +22,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class Players extends JavaPlugin {
     private static Players instance;
@@ -30,9 +33,9 @@ public final class Players extends JavaPlugin {
     public static FileConfiguration getConfiguration() {
         return configuration;
     }
-    private static Message message;
-    public static Message getMessage() {
-        return message;
+    private static Logger logger;
+    public static void sendLog(Level level, String message) {
+        logger.log(level, message);
     }
     private static Database database;
     public static Database getDatabase() {
@@ -62,24 +65,25 @@ public final class Players extends JavaPlugin {
     public static EconomyProvider getEconomyProvider() {
         return economyProvider;
     }
-    private void start() {
+    @Override
+    public void onEnable() {
         instance = this;
         configuration = getConfig();
-        message = new Message(getLogger());
+        logger = getLogger();
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             getServer().getPluginManager().disablePlugin(this);
-            getMessage().sendLog(Level.WARNING, "You have to install 'Vault'");
+            sendLog(Level.WARNING, "You have to install 'Vault'");
         } else {
             economyProvider = new EconomyProvider(this);
             getServer().getServicesManager().register(Economy.class, getEconomyProvider(), this, ServicePriority.Normal);
-            getMessage().sendLog(Level.INFO, "Hooked to 'Vault'");
+            sendLog(Level.INFO, "Hooked to 'Vault'");
         }
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") == null) {
             getServer().getPluginManager().disablePlugin(this);
-            getMessage().sendLog(Level.WARNING, "You have to install 'PlaceholderAPI'");
+            sendLog(Level.WARNING, "You have to install 'PlaceholderAPI'");
         } else {
             new PlaceholderProvider().register();
-            getMessage().sendLog(Level.INFO, "Hooked to 'PlaceholderAPI'");
+            sendLog(Level.INFO, "Hooked to 'PlaceholderAPI'");
         }
         database = new Database(getDataFolder());
         jail = new Jail(getDataFolder());
@@ -90,10 +94,11 @@ public final class Players extends JavaPlugin {
         reload();
         commands();
         events();
-        getMessage().sendLog(Level.INFO, "Enabled " + getName() + " " + getServer().getBukkitVersion());
-        sendUpdate();
+        sendLog(Level.INFO, "Enabled " + getName() + " " + getServer().getBukkitVersion());
+        getUpdate();
     }
-    private void stop() {
+    @Override
+    public void onDisable() {
         if (!getDatabase().getVanished().isEmpty()) {
             getDatabase().getVanished().clear();
         }
@@ -101,15 +106,8 @@ public final class Players extends JavaPlugin {
             new PlaceholderProvider().unregister();
         }
         getServer().getServicesManager().unregisterAll(this);
-        getMessage().sendLog(Level.INFO, "Disabled " + getName() + " " + getServer().getBukkitVersion());
-    }
-    @Override
-    public void onEnable() {
-        start();
-    }
-    @Override
-    public void onDisable() {
-        stop();
+        getServer().getScheduler().cancelTasks(this);
+        sendLog(Level.INFO, "Disabled " + getName() + " " + getServer().getBukkitVersion());
     }
     private void commands() {
         getCommand("announcement").setExecutor(new AnnouncementCommand());
@@ -201,16 +199,15 @@ public final class Players extends JavaPlugin {
         if (file.exists()) {
             try {
                 getConfig().load(file);
-                getMessage().sendLog(Level.INFO, "reloaded config.yml");
+                sendLog(Level.INFO, "loaded config.yml");
             } catch (IOException | InvalidConfigurationException e) {
-                getMessage().sendLog(Level.WARNING, e.getMessage());
+                sendLog(Level.WARNING, e.getMessage());
             }
             saveConfig();
         } else {
-            getMessage().sendLog(Level.INFO, "creating config.yml");
             getConfig().options().copyDefaults(true);
             saveConfig();
-            getMessage().sendLog(Level.INFO, "created config.yml");
+            sendLog(Level.INFO, "created config.yml");
         }
         getJail().reload();
         getKits().reload();
@@ -219,44 +216,37 @@ public final class Players extends JavaPlugin {
         getWarps().reload();
         getDatabase().resetTabList();
         getDatabase().getCommandCooldown().clear();
+        getDatabase().reload(getServer().getOfflinePlayers());
     }
-    public void reloadPlayerFiles() {
-        for (OfflinePlayer offlinePlayer : getServer().getOfflinePlayers()) {
-            if (getDatabase().exist(offlinePlayer)) {
-                File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
-                FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-                try {
-                    config.load(file);
-                } catch (IOException | InvalidConfigurationException e) {
-                    getMessage().sendLog(Level.WARNING, e.getMessage());
-                }
-            }
-        }
-    }
-    public void sendUpdate(Player player) {
-        if (getConfig().getBoolean("notify-update.enable")) {
-            checkLatest((latest) -> {
+    public void getUpdate(Player player) {
+        if (notifyUpdate()) {
+            getLatest((latest) -> {
                 if (!getDescription().getVersion().equals(latest)) {
-                    getMessage().send(player,"&6" + getName() + " Update:&f " + latest);
-                    getMessage().send(player,"&6Current Version: &f" + getDescription().getVersion());
+                    send(player,"&6" + getName() + " Update:&f " + latest);
+                    send(player,"&6Current Version: &f" + getDescription().getVersion());
                 }
             });
         }
     }
-    public void sendUpdate() {
-        if (getConfig().getBoolean("notify-update.enable")) {
-            checkLatest((latest) -> {
-                getMessage().sendLog(Level.INFO, "Checking latest release");
-                if (getDescription().getVersion().equals(latest)) {
-                    getMessage().sendLog(Level.INFO, "You are using the latest version");
-                } else {
-                    getMessage().sendLog(Level.INFO, "New Update: " + latest);
-                    getMessage().sendLog(Level.INFO, "Current Version: " + getDescription().getVersion());
+    public void getUpdate() {
+        if (notifyUpdate()) {
+            getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
+                @Override
+                public void run() {
+                    getLatest((latest) -> {
+                        sendLog(Level.INFO, "Checking latest release");
+                        if (getDescription().getVersion().equals(latest)) {
+                            sendLog(Level.INFO, "You are using the latest version");
+                        } else {
+                            sendLog(Level.INFO, "New Update: " + latest);
+                            sendLog(Level.INFO, "Current Version: " + getDescription().getVersion());
+                        }
+                    });
                 }
             });
         }
     }
-    public void checkLatest(Consumer<String> consumer) {
+    public void getLatest(Consumer<String> consumer) {
         try {
             InputStream inputStream = (new URL("https://api.spigotmc.org/legacy/update.php?resource=" + 110266)).openStream();
             Scanner scanner = new Scanner(inputStream);
@@ -268,7 +258,22 @@ public final class Players extends JavaPlugin {
                 inputStream.close();
             }
         } catch (IOException e) {
-            getMessage().sendLog(Level.WARNING, e.getMessage());
+            sendLog(Level.WARNING, e.getMessage());
         }
+    }
+    private boolean notifyUpdate() {
+        return getConfig().getBoolean("notify-update.enable");
+    }
+    public static void send(ConsoleCommandSender sender, String message) {
+        sender.sendMessage(message);
+    }
+    public static void send(Player player, String message) {
+        player.sendMessage(addColor(message));
+    }
+    public static void sendActionBar(Player player, String message) {
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(addColor(message)));
+    }
+    public static String addColor(String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 }

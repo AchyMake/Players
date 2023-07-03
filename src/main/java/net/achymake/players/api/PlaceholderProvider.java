@@ -17,7 +17,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
     }
     @Override
     public String getVersion() {
-        return "1.10.0";
+        return "1.20.0";
     }
     @Override
     public boolean canRegister() {
@@ -46,7 +46,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
             return String.valueOf(player.getServer().getOnlinePlayers().size() - Players.getDatabase().getVanished().size());
         }
         if (params.equals("account")) {
-            return Players.getEconomyProvider().format(Players.getDatabase().getEconomy(player));
+            return Players.getEconomyProvider().currencyNameSingular() + Players.getEconomyProvider().format(Players.getDatabase().getEconomy(player));
         }
         return super.onPlaceholderRequest(player, params);
     }

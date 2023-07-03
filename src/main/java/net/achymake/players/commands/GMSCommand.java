@@ -1,51 +1,65 @@
 package net.achymake.players.commands;
 
 import net.achymake.players.Players;
-import net.achymake.players.files.Database;
-import net.achymake.players.files.Message;
 import org.bukkit.GameMode;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GMSCommand implements CommandExecutor, TabCompleter {
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
-            if (sender instanceof Player) {
+        if (sender instanceof Player) {
+            if (args.length == 0) {
                 Player player = (Player) sender;
-                if (!player.getGameMode().equals(GameMode.SURVIVAL)) {
+                if (player.getGameMode().equals(GameMode.SURVIVAL)) {
+                    Players.send(player, "&cYou are already in&f Survival&c mode");
+                } else {
                     player.setGameMode(GameMode.SURVIVAL);
-                    getMessage().send(player, "&6You changed gamemode to&f survival");
+                    Players.send(player, "&6You changed gamemode to&f Survival");
+                }
+            }
+            if (args.length == 1) {
+                Player player = (Player) sender;
+                if (player.hasPermission("players.command.gamemode.others")) {
+                    Player target = player.getServer().getPlayerExact(args[0]);
+                    if (target == player) {
+                        if (!target.getGameMode().equals(GameMode.SURVIVAL)) {
+                            target.setGameMode(GameMode.SURVIVAL);
+                            Players.send(target, player.getName() + "&6 has changed your gamemode to&f Survival");
+                            Players.send(player, "&6You changed&f " + target.getName() + "&6 gamemode to&f Survival");
+                        }
+                    } else {
+                        if (target != null) {
+                            if (target.hasPermission("players.command.gamemode.exempt")) {
+                                Players.send(player, "&cYou are not allowed to change gamemode of&f " + target.getName());
+                            } else {
+                                if (target.getGameMode().equals(GameMode.SURVIVAL)) {
+                                    Players.send(player, target.getName() + "&c is already in&f Survival&c mode");
+                                } else {
+                                    target.setGameMode(GameMode.SURVIVAL);
+                                    Players.send(target, player.getName() + "&6 has changed your gamemode to&f Survival");
+                                    Players.send(player, "&6You changed&f " + target.getName() + "&6 gamemode to&f Survival");
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    Players.send(player, "&cError:&7 You do not have the permissions to execute the command");
                 }
             }
         }
-        if (args.length == 1) {
-            if (sender.hasPermission("players.command.gamemode.others")) {
-                Player target = sender.getServer().getPlayerExact(args[0]);
-                if (target == sender) {
+        if (sender instanceof ConsoleCommandSender) {
+            if (args.length == 1) {
+                ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
+                Player target = commandSender.getServer().getPlayerExact(args[0]);
+                if (target != null) {
                     if (!target.getGameMode().equals(GameMode.SURVIVAL)) {
                         target.setGameMode(GameMode.SURVIVAL);
-                        getMessage().send(target, sender.getName() + "&6 changed your gamemode to&f survival");
-                        getMessage().send(sender, "&6You changed&f " + target.getName() + "&6 gamemode to&f survival");
-                    }
-                } else {
-                    if (target != null) {
-                        if (!target.hasPermission("players.command.gamemode.exempt")) {
-                            if (!target.getGameMode().equals(GameMode.SURVIVAL)) {
-                                target.setGameMode(GameMode.SURVIVAL);
-                                getMessage().send(target, sender.getName() + "&6 changed your gamemode to&f survival");
-                                getMessage().send(sender, "&6You changed&f " + target.getName() + "&6 gamemode to&f survival");
-                            }
-                        }
+                        Players.send(target, "&6Your gamemode has changed to&f Survival");
+                        Players.send(commandSender, "You changed " + target.getName() + " gamemode to Survival");
                     }
                 }
             }

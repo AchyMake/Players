@@ -2,9 +2,11 @@ package net.achymake.players.files;
 
 import net.achymake.players.Players;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +18,6 @@ public class Motd {
     private final File file;
     public Motd(File dataFolder) {
         this.file = new File(dataFolder, "motd.yml");
-    }
-    private Message getMessage() {
-        return Players.getMessage();
     }
     public boolean exist() {
         return file.exists();
@@ -33,12 +32,25 @@ public class Motd {
         return new ArrayList<>(getConfig().getKeys(false));
     }
     public void sendMotd(CommandSender sender, String motd) {
-        if (motdExist(motd)) {
-            for (String message : getConfig().getStringList(motd)) {
-                getMessage().send(sender, message.replaceAll("%player%", sender.getName()));
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            if (motdExist(motd)) {
+                for (String message : getConfig().getStringList(motd)) {
+                    Players.send(player, message.replaceAll("%player%", player.getName()));
+                }
+            } else {
+                Players.send(player, motd + "&c does not exist");
             }
-        } else {
-            getMessage().send(sender, motd + "&c does not exist");
+        }
+        if (sender instanceof ConsoleCommandSender) {
+            ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
+            if (motdExist(motd)) {
+                for (String message : getConfig().getStringList(motd)) {
+                    Players.send(commandSender, message.replaceAll("%player%", commandSender.getName()));
+                }
+            } else {
+                Players.send(commandSender, motd + "&c does not exist");
+            }
         }
     }
     public void reload() {
@@ -47,7 +59,7 @@ public class Motd {
             try {
                 config.load(file);
             } catch (IOException | InvalidConfigurationException e) {
-                getMessage().sendLog(Level.WARNING, e.getMessage());
+                Players.sendLog(Level.WARNING, e.getMessage());
             }
         } else {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -72,7 +84,7 @@ public class Motd {
             try {
                 config.save(file);
             } catch (IOException e) {
-                getMessage().sendLog(Level.WARNING, e.getMessage());
+                Players.sendLog(Level.WARNING, e.getMessage());
             }
         }
     }

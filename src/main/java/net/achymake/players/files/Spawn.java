@@ -15,9 +15,6 @@ public class Spawn {
     public Spawn(File dataFolder) {
         this.file = new File(dataFolder, "spawn.yml");
     }
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     public boolean exist() {
         return file.exists();
     }
@@ -38,7 +35,7 @@ public class Spawn {
         try {
             config.save(file);
         } catch (IOException e) {
-            getMessage().sendLog(Level.WARNING, e.getMessage());
+            Players.sendLog(Level.WARNING, e.getMessage());
         }
     }
     public Location getSpawn() {
@@ -60,7 +57,7 @@ public class Spawn {
             try {
                 config.load(file);
             } catch (IOException | InvalidConfigurationException e) {
-                getMessage().sendLog(Level.WARNING, e.getMessage());
+                Players.sendLog(Level.WARNING, e.getMessage());
             }
         } else {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -68,7 +65,7 @@ public class Spawn {
             try {
                 config.save(file);
             } catch (IOException e) {
-                getMessage().sendLog(Level.WARNING, e.getMessage());
+                Players.sendLog(Level.WARNING, e.getMessage());
             }
         }
     }

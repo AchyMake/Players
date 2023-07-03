@@ -1,7 +1,6 @@
 package net.achymake.players.commands;
 
 import net.achymake.players.Players;
-import net.achymake.players.files.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,9 +12,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class HatCommand implements CommandExecutor, TabCompleter {
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
@@ -24,15 +20,15 @@ public class HatCommand implements CommandExecutor, TabCompleter {
                 if (!player.getInventory().getItemInMainHand().getType().isAir()) {
                     if (player.getInventory().getHelmet() == null) {
                         ItemStack heldItem = player.getInventory().getItemInMainHand();
-                        getMessage().send(player, "&6You are now wearing&f " + heldItem.getType());
+                        Players.send(player, "&6You are now wearing&f " + heldItem.getType());
                         ItemStack itemStack = new ItemStack(heldItem.getType(), 1);
                         player.getInventory().setHelmet(itemStack);
                         heldItem.setAmount(heldItem.getAmount() - 1);
                     } else {
-                        getMessage().send(player, "&cYou are already wearing&f " + player.getInventory().getHelmet().getType());
+                        Players.send(player, "&cYou are already wearing&f " + player.getInventory().getHelmet().getType());
                     }
                 } else {
-                    getMessage().send(player, "&cYou have to hold an item");
+                    Players.send(player, "&cYou have to hold an item");
                 }
             }
         }

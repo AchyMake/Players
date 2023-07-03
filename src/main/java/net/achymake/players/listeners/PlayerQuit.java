@@ -2,7 +2,6 @@ package net.achymake.players.listeners;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
-import net.achymake.players.files.Message;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -16,13 +15,10 @@ import java.util.UUID;
 
 public class PlayerQuit implements Listener {
     private FileConfiguration getConfig() {
-        return Players.getInstance().getConfig();
+        return Players.getConfiguration();
     }
     private Database getDatabase() {
         return Players.getDatabase();
-    }
-    private Message getMessage() {
-        return Players.getMessage();
     }
     public PlayerQuit(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -35,7 +31,7 @@ public class PlayerQuit implements Listener {
             event.setQuitMessage(null);
         } else {
             if (getConfig().getBoolean("connection.quit.enable")) {
-                event.setQuitMessage(getMessage().addColor(MessageFormat.format(getConfig().getString("connection.quit.message"), event.getPlayer().getName())));
+                event.setQuitMessage(Players.addColor(MessageFormat.format(getConfig().getString("connection.quit.message"), event.getPlayer().getName())));
                 if (getConfig().getBoolean("connection.quit.sound.enable")) {
                     for (Player players : event.getPlayer().getServer().getOnlinePlayers()) {
                         players.playSound(players, Sound.valueOf(getConfig().getString("connection.quit.sound.type")), Float.valueOf(getConfig().getString("connection.quit.sound.volume")), Float.valueOf(getConfig().getString("connection.quit.sound.pitch")));
@@ -43,7 +39,7 @@ public class PlayerQuit implements Listener {
                 }
             } else {
                 if (event.getPlayer().hasPermission("players.quit-message")) {
-                    event.setQuitMessage(getMessage().addColor(MessageFormat.format(getConfig().getString("connection.quit.message"), event.getPlayer().getName())));
+                    event.setQuitMessage(Players.addColor(MessageFormat.format(getConfig().getString("connection.quit.message"), event.getPlayer().getName())));
                     if (getConfig().getBoolean("connection.quit.sound.enable")) {
                         for (Player players : event.getPlayer().getServer().getOnlinePlayers()) {
                             players.playSound(players, Sound.valueOf(getConfig().getString("connection.quit.sound.type")), Float.valueOf(getConfig().getString("connection.quit.sound.volume")), Float.valueOf(getConfig().getString("connection.quit.sound.pitch")));

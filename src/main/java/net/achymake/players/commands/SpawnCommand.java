@@ -2,7 +2,6 @@ package net.achymake.players.commands;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
-import net.achymake.players.files.Message;
 import net.achymake.players.files.Spawn;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -17,9 +16,6 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
     private Spawn getSpawn() {
         return Players.getSpawn();
     }
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
@@ -30,7 +26,7 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                 } else {
                     if (getSpawn().spawnExist()) {
                         getSpawn().getSpawn().getChunk().load();
-                        getMessage().send(sender, "&6Teleporting to&f spawn");
+                        Players.send(player, "&6Teleporting to&f spawn");
                         player.teleport(getSpawn().getSpawn());
                     }
                 }
@@ -45,9 +41,9 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                         } else {
                             if (getSpawn().spawnExist()) {
                                 getSpawn().getSpawn().getChunk().load();
-                                getMessage().send(target, "&6Teleporting to&f spawn");
+                                Players.send(target, "&6Teleporting to&f spawn");
                                 target.teleport(getSpawn().getSpawn());
-                                getMessage().send(player, "&6You teleported&f " + target.getName() + "&6 to&f spawn");
+                                Players.send(player, "&6You teleported&f " + target.getName() + "&6 to&f spawn");
                             }
                         }
                     }
@@ -56,16 +52,17 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
         }
         if (sender instanceof ConsoleCommandSender) {
             if (args.length == 1) {
-                Player target = sender.getServer().getPlayerExact(args[0]);
+                ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
+                Player target = commandSender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     if (getDatabase().isFrozen(target) || getDatabase().isJailed(target)) {
                         return false;
                     } else {
                         if (getSpawn().spawnExist()) {
                             getSpawn().getSpawn().getChunk().load();
-                            getMessage().send(target, "&6Teleporting to&f spawn");
+                            Players.send(target, "&6Teleporting to&f spawn");
                             target.teleport(getSpawn().getSpawn());
-                            getMessage().send(sender, "You teleported " + target.getName() + " to spawn");
+                            Players.send(commandSender, "You teleported " + target.getName() + " to spawn");
                         }
                     }
                 }

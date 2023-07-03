@@ -15,9 +15,6 @@ public class Jail {
     public Jail(File dataFolder) {
         this.file = new File(dataFolder, "jail.yml");
     }
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     public boolean exist() {
         return file.exists();
     }
@@ -38,7 +35,7 @@ public class Jail {
         try {
             config.save(file);
         } catch (IOException e) {
-            getMessage().sendLog(Level.WARNING, e.getMessage());
+            Players.sendLog(Level.WARNING, e.getMessage());
         }
     }
     public Location getJail() {
@@ -60,7 +57,7 @@ public class Jail {
             try {
                 config.load(file);
             } catch (IOException | InvalidConfigurationException e) {
-                getMessage().sendLog(Level.WARNING, e.getMessage());
+                Players.sendLog(Level.WARNING, e.getMessage());
             }
         } else {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -68,7 +65,7 @@ public class Jail {
             try {
                 config.save(file);
             } catch (IOException e) {
-                getMessage().sendLog(Level.WARNING, e.getMessage());
+                Players.sendLog(Level.WARNING, e.getMessage());
             }
         }
     }

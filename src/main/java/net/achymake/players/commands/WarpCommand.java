@@ -2,7 +2,6 @@ package net.achymake.players.commands;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
-import net.achymake.players.files.Message;
 import net.achymake.players.files.Warps;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -17,9 +16,6 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
     private Warps getWarps() {
         return Players.getWarps();
     }
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
@@ -29,11 +25,11 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                     return false;
                 } else {
                     if (getWarps().getWarps().isEmpty()) {
-                        getMessage().send(sender, "&cWarps is currently empty");
+                        Players.send(player, "&cWarps is currently empty");
                     } else {
-                        getMessage().send(sender, "&6Warps:");
+                        Players.send(player, "&6Warps:");
                         for (String warps : getWarps().getWarps()) {
-                            getMessage().send(sender, "- " + warps);
+                            Players.send(player, "- " + warps);
                         }
                     }
                 }
@@ -44,18 +40,18 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                     return false;
                 } else {
                     if (getWarps().getWarps().isEmpty()) {
-                        getMessage().send(sender, "&cWarps is currently empty");
+                        Players.send(player, "&cWarps is currently empty");
                     } else {
-                        getMessage().send(sender, "&6Warps:");
+                        Players.send(player, "&6Warps:");
                         for (String warps : getWarps().getWarps()) {
-                            getMessage().send(sender, "- " + warps);
+                            Players.send(player, "- " + warps);
                         }
                     }
                 }
                 if (player.hasPermission("players.command.warp." + args[0])) {
                     if (getWarps().warpExist(args[0])) {
                         getWarps().getWarp(args[0]).getChunk().load();
-                        getMessage().sendActionBar(player, "&6Teleporting to&f "+ args[0]);
+                        Players.sendActionBar(player, "&6Teleporting to&f "+ args[0]);
                         player.teleport(getWarps().getWarp(args[0]));
                     }
                 }
@@ -71,7 +67,7 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                             } else {
                                 if (getWarps().warpExist(args[0])) {
                                     getWarps().getWarp(args[0]).getChunk().load();
-                                    getMessage().send(target, "&6Teleporting to&f " + args[0]);
+                                    Players.send(target, "&6Teleporting to&f " + args[0]);
                                     target.teleport(getWarps().getWarp(args[0]));
                                 }
                             }
@@ -89,7 +85,7 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                     } else {
                         if (getWarps().warpExist(args[0])) {
                             getWarps().getWarp(args[0]).getChunk().load();
-                            getMessage().send(target, "&6Teleporting to&f " + args[0]);
+                            Players.send(target, "&6Teleporting to&f " + args[0]);
                             target.teleport(getWarps().getWarp(args[0]));
                         }
                     }

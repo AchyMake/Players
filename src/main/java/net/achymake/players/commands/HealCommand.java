@@ -2,11 +2,7 @@ package net.achymake.players.commands;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
-import net.achymake.players.files.Message;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -17,16 +13,13 @@ public class HealCommand implements CommandExecutor, TabCompleter {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     private FileConfiguration getConfig() {
-        return Players.getInstance().getConfig();
+        return Players.getConfiguration();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
-            if (sender instanceof Player) {
+        if (sender instanceof Player) {
+            if (args.length == 0) {
                 Player player = (Player) sender;
                 if (getDatabase().getCommandCooldown().containsKey("heal-" + player.getUniqueId())) {
                     Long timeElapsed = System.currentTimeMillis() - getDatabase().getCommandCooldown().get("heal-" + player.getUniqueId());
@@ -36,27 +29,40 @@ public class HealCommand implements CommandExecutor, TabCompleter {
                         getDatabase().getCommandCooldown().put("heal-" + player.getUniqueId(), System.currentTimeMillis());
                         player.setFoodLevel(20);
                         player.setHealth(player.getMaxHealth());
-                        getMessage().sendActionBar(player, "&6Your health has been satisfied");
+                        Players.sendActionBar(player, "&6Your health has been satisfied");
                     } else {
                         long timer = (integer-timeElapsed);
-                        getMessage().send(player, "&cYou have to wait&f " + String.valueOf(timer).substring(0, String.valueOf(timer).length()-3) + "&c seconds");
+                        Players.send(player, "&cYou have to wait&f " + String.valueOf(timer).substring(0, String.valueOf(timer).length()-3) + "&c seconds");
                     }
                 } else {
                     getDatabase().getCommandCooldown().put("heal-" + player.getUniqueId(), System.currentTimeMillis());
                     player.setFoodLevel(20);
                     player.setHealth(player.getMaxHealth());
-                    getMessage().sendActionBar(player, "&6Your health has been satisfied");
+                    Players.sendActionBar(player, "&6Your health has been satisfied");
+                }
+            }
+            if (args.length == 1) {
+                Player player = (Player) sender;
+                if (player.hasPermission("players.command.heal.others")) {
+                    Player target = player.getServer().getPlayerExact(args[0]);
+                    if (target != null) {
+                        target.setFoodLevel(20);
+                        target.setHealth(target.getMaxHealth());
+                        Players.sendActionBar(target, "&6Your health has been satisfied by&f " + player.getName());
+                        Players.send(player, "&6You satisfied&f " + target.getName() + "&6's health");
+                    }
                 }
             }
         }
-        if (args.length == 1) {
-            if (sender.hasPermission("players.command.heal.others")) {
-                Player target = sender.getServer().getPlayerExact(args[0]);
+        if (sender instanceof ConsoleCommandSender) {
+            if (args.length == 1) {
+                ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
+                Player target = commandSender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     target.setFoodLevel(20);
                     target.setHealth(target.getMaxHealth());
-                    getMessage().sendActionBar(target, "&6Your health has been satisfied by&f " + sender.getName());
-                    getMessage().send(sender, "&6You satisfied&f " + target.getName() + "&6's health");
+                    Players.sendActionBar(target, "&6Your health has been satisfied");
+                    Players.send(commandSender, "You satisfied " + target.getName() + "'s health");
                 }
             }
         }

@@ -3,7 +3,6 @@ package net.achymake.players.commands;
 import net.achymake.players.Players;
 import net.achymake.players.api.EconomyProvider;
 import net.achymake.players.files.Database;
-import net.achymake.players.files.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
@@ -19,34 +18,33 @@ public class BalanceCommand implements CommandExecutor, TabCompleter {
     private EconomyProvider getEconomyProvider() {
         return Players.getEconomyProvider();
     }
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length == 0) {
-                getMessage().send(sender, "&6Balance:&a " + getEconomyProvider().currencyNameSingular() + getEconomyProvider().format(getDatabase().getEconomy((Player) sender)));
+                Player player = (Player) sender;
+                Players.send(player, "&6Balance:&a " + getEconomyProvider().currencyNameSingular() + getEconomyProvider().format(getDatabase().getEconomy((Player) sender)));
             }
             if (args.length == 1) {
                 Player player = (Player) sender;
                 if (player.hasPermission("players.command.balance.others")) {
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
                     if (getDatabase().exist(offlinePlayer)) {
-                        getMessage().send(player, offlinePlayer.getName() + " &6balance:&a " + getEconomyProvider().currencyNameSingular() + getEconomyProvider().format(getDatabase().getEconomy(offlinePlayer)));
+                        Players.send(player, offlinePlayer.getName() + " &6balance:&a " + getEconomyProvider().currencyNameSingular() + getEconomyProvider().format(getDatabase().getEconomy(offlinePlayer)));
                     } else {
-                        getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
+                        Players.send(player, offlinePlayer.getName() + "&c has never joined");
                     }
                 }
             }
         }
         if (sender instanceof ConsoleCommandSender) {
             if (args.length == 1) {
+                ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
                 if (getDatabase().exist(offlinePlayer)) {
-                    getMessage().send(sender, offlinePlayer.getName() + " balance: " + getEconomyProvider().currencyNameSingular() + getEconomyProvider().format(getDatabase().getEconomy(offlinePlayer)));
+                    Players.send(commandSender, offlinePlayer.getName() + " balance: " + getEconomyProvider().currencyNameSingular() + getEconomyProvider().format(getDatabase().getEconomy(offlinePlayer)));
                 } else {
-                    getMessage().send(sender, offlinePlayer.getName() + " has never joined");
+                    Players.send(commandSender, offlinePlayer.getName() + " has never joined");
                 }
             }
         }

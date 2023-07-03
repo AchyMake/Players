@@ -2,7 +2,6 @@ package net.achymake.players.listeners;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
-import net.achymake.players.files.Message;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,9 +18,6 @@ public class PlayerBucketEmpty implements Listener {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     public PlayerBucketEmpty(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
@@ -30,14 +26,12 @@ public class PlayerBucketEmpty implements Listener {
         if (getDatabase().isFrozen(event.getPlayer()) || getDatabase().isJailed(event.getPlayer())) {
             event.setCancelled(true);
         } else {
-            if (getConfig().getBoolean("notification.enable")) {
-                if (getConfig().getStringList("notification.bucket-empty").contains(event.getBucket().toString())) {
-                    for (Player players : event.getPlayer().getServer().getOnlinePlayers()) {
-                        if (players.hasPermission("players.notify.bucket-empty")) {
-                            for (String messages : getConfig().getStringList("notification.message")) {
-                                players.sendMessage(getMessage().addColor(MessageFormat.format(messages, event.getPlayer().getName(), event.getBucket().toString(), event.getBlock().getWorld().getName(), event.getBlock().getLocation().getBlockX(), event.getBlock().getLocation().getBlockY(), event.getBlock().getLocation().getBlockZ())));
-                            }
-                        }
+            if (!getConfig().getBoolean("notification.enable"))return;
+            if (!getConfig().getStringList("notification.bucket-empty").contains(event.getBucket().toString()))return;
+            for (Player players : event.getPlayer().getServer().getOnlinePlayers()) {
+                if (players.hasPermission("players.notify.bucket-empty")) {
+                    for (String messages : getConfig().getStringList("notification.message")) {
+                        players.sendMessage(Players.addColor(MessageFormat.format(messages, event.getPlayer().getName(), event.getBucket().toString(), event.getBlock().getWorld().getName(), event.getBlock().getLocation().getBlockX(), event.getBlock().getLocation().getBlockY(), event.getBlock().getLocation().getBlockZ())));
                     }
                 }
             }

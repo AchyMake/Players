@@ -2,7 +2,6 @@ package net.achymake.players.commands;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
-import net.achymake.players.files.Message;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,9 +16,6 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
@@ -31,9 +27,9 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
                     if (getDatabase().homeExist(player, "home")) {
                         getDatabase().getHome(player, "home").getChunk().load();
                         player.teleport(getDatabase().getHome(player, "home"));
-                        getMessage().sendActionBar(player, "&6Teleporting to&f home");
+                        Players.sendActionBar(player, "&6Teleporting to&f home");
                     } else {
-                        getMessage().send(player, "home&c does not exist");
+                        Players.send(player, "home&c does not exist");
                     }
                 }
                 if (args.length == 1) {
@@ -44,19 +40,19 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
                                 location.setPitch(player.getLocation().getPitch());
                                 location.setYaw(player.getLocation().getYaw());
                                 player.getBedSpawnLocation().getChunk().load();
-                                getMessage().sendActionBar(player, "&6Teleporting to&f " + args[0]);
+                                Players.sendActionBar(player, "&6Teleporting to&f " + args[0]);
                                 player.teleport(location);
                             } else {
-                                getMessage().send(player, args[0] + "&c does not exist");
+                                Players.send(player, args[0] + "&c does not exist");
                             }
                         }
                     } else {
                         if (getDatabase().homeExist(player, args[0])) {
                             getDatabase().getHome(player, args[0]).getChunk().load();
                             player.teleport(getDatabase().getHome(player, args[0]));
-                            getMessage().sendActionBar(player, "&6Teleporting to&f " + args[0]);
+                            Players.sendActionBar(player, "&6Teleporting to&f " + args[0]);
                         } else {
-                            getMessage().send(player, args[0] + "&c does not exist");
+                            Players.send(player, args[0] + "&c does not exist");
                         }
                     }
                 }

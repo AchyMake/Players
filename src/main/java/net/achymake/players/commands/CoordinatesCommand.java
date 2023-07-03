@@ -2,7 +2,6 @@ package net.achymake.players.commands;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
-import net.achymake.players.files.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,9 +15,6 @@ public class CoordinatesCommand implements CommandExecutor, TabCompleter {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
@@ -26,7 +22,7 @@ public class CoordinatesCommand implements CommandExecutor, TabCompleter {
                 Player player = (Player) sender;
                 getDatabase().setBoolean(player, "settings.coordinates", !getDatabase().getConfig(player).getBoolean("settings.coordinates"));
                 if (getDatabase().getConfig(player).getBoolean("settings.coordinates")) {
-                    getMessage().sendActionBar(player, "&6&lY:&f " + player.getLocation().getBlockY());
+                    Players.sendActionBar(player, "&6&lY:&f " + player.getLocation().getBlockY());
                 }
             }
         }

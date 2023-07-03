@@ -1,7 +1,6 @@
 package net.achymake.players.commands;
 
 import net.achymake.players.Players;
-import net.achymake.players.files.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnderChestCommand implements CommandExecutor, TabCompleter {
-    private Message getMessage() {
-        return Players.getMessage();
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
@@ -32,7 +28,7 @@ public class EnderChestCommand implements CommandExecutor, TabCompleter {
                         if (target != null) {
                             if (!target.hasPermission("players.command.enderchest.exempt")) {
                                 player.openInventory(target.getEnderChest());
-                                getMessage().send(sender, "&6Opened enderchest of&f " + target.getName());
+                                Players.send(player, "&6Opened enderchest of&f " + target.getName());
                             }
                         }
                     }
