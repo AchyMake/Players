@@ -39,20 +39,12 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                 if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                     return false;
                 } else {
-                    if (getWarps().getWarps().isEmpty()) {
-                        Players.send(player, "&cWarps is currently empty");
-                    } else {
-                        Players.send(player, "&6Warps:");
-                        for (String warps : getWarps().getWarps()) {
-                            Players.send(player, "- " + warps);
+                    if (player.hasPermission("players.command.warp." + args[0])) {
+                        if (getWarps().warpExist(args[0])) {
+                            getWarps().getWarp(args[0]).getChunk().load();
+                            Players.sendActionBar(player, "&6Teleporting to&f "+ args[0]);
+                            player.teleport(getWarps().getWarp(args[0]));
                         }
-                    }
-                }
-                if (player.hasPermission("players.command.warp." + args[0])) {
-                    if (getWarps().warpExist(args[0])) {
-                        getWarps().getWarp(args[0]).getChunk().load();
-                        Players.sendActionBar(player, "&6Teleporting to&f "+ args[0]);
-                        player.teleport(getWarps().getWarp(args[0]));
                     }
                 }
             }
