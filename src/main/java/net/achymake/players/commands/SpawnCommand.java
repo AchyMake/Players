@@ -24,10 +24,10 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                 if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                     return false;
                 } else {
-                    if (getSpawn().spawnExist()) {
-                        getSpawn().getSpawn().getChunk().load();
+                    if (getSpawn().locationExist()) {
+                        getSpawn().getLocation().getChunk().load();
                         Players.send(player, "&6Teleporting to&f spawn");
-                        player.teleport(getSpawn().getSpawn());
+                        player.teleport(getSpawn().getLocation());
                     } else {
                         Players.send(player, "Spawn&c does not exist");
                     }
@@ -41,10 +41,10 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                         if (getDatabase().isFrozen(target) || getDatabase().isJailed(target)) {
                             return false;
                         } else {
-                            if (getSpawn().spawnExist()) {
-                                getSpawn().getSpawn().getChunk().load();
+                            if (getSpawn().locationExist()) {
+                                getSpawn().getLocation().getChunk().load();
                                 Players.send(target, "&6Teleporting to&f spawn");
-                                target.teleport(getSpawn().getSpawn());
+                                target.teleport(getSpawn().getLocation());
                                 Players.send(player, "&6You teleported&f " + target.getName() + "&6 to&f spawn");
                             } else {
                                 Players.send(player, "Spawn&c does not exist");
@@ -62,10 +62,10 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                     if (getDatabase().isFrozen(target) || getDatabase().isJailed(target)) {
                         return false;
                     } else {
-                        if (getSpawn().spawnExist()) {
-                            getSpawn().getSpawn().getChunk().load();
+                        if (getSpawn().locationExist()) {
+                            getSpawn().getLocation().getChunk().load();
                             Players.send(target, "&6Teleporting to&f spawn");
-                            target.teleport(getSpawn().getSpawn());
+                            target.teleport(getSpawn().getLocation());
                             Players.send(commandSender, "You teleported " + target.getName() + " to spawn");
                         } else {
                             Players.send(commandSender, "Spawn&c does not exist");

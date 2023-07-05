@@ -11,20 +11,23 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 public class Spawn {
-    private final File file;
-    public Spawn(File dataFolder) {
-        this.file = new File(dataFolder, "spawn.yml");
+    private File getDataFolder() {
+        return Players.getFolder();
+    }
+    private File getFile() {
+        return new File(getDataFolder(), "spawn.yml");
     }
     public boolean exist() {
-        return file.exists();
+        return getFile().exists();
     }
     public FileConfiguration getConfig() {
-        return YamlConfiguration.loadConfiguration(file);
+        return YamlConfiguration.loadConfiguration(getFile());
     }
-    public boolean spawnExist() {
+    public boolean locationExist() {
         return getConfig().isConfigurationSection("spawn");
     }
-    public void setSpawn(Location location) {
+    public void setLocation(Location location) {
+        File file = getFile();
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set("spawn.world", location.getWorld().getName());
         config.set("spawn.x", location.getX());
@@ -38,8 +41,8 @@ public class Spawn {
             Players.sendLog(Level.WARNING, e.getMessage());
         }
     }
-    public Location getSpawn() {
-        if (spawnExist()) {
+    public Location getLocation() {
+        if (locationExist()) {
             String worldName = getConfig().getString("spawn.world");
             double x = getConfig().getDouble("spawn.x");
             double y = getConfig().getDouble("spawn.y");
@@ -53,6 +56,7 @@ public class Spawn {
     }
     public void reload() {
         if (exist()) {
+            File file = getFile();
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
@@ -60,6 +64,7 @@ public class Spawn {
                 Players.sendLog(Level.WARNING, e.getMessage());
             }
         } else {
+            File file = getFile();
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             config.options().copyDefaults(true);
             try {

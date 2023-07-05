@@ -11,20 +11,23 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 public class Jail {
-    private final File file;
-    public Jail(File dataFolder) {
-        this.file = new File(dataFolder, "jail.yml");
+    private File getDataFolder() {
+        return Players.getFolder();
+    }
+    private File getFile() {
+        return new File(getDataFolder(), "jail.yml");
     }
     public boolean exist() {
-        return file.exists();
+        return getFile().exists();
     }
     public FileConfiguration getConfig() {
-        return YamlConfiguration.loadConfiguration(file);
+        return YamlConfiguration.loadConfiguration(getFile());
     }
-    public boolean jailExist() {
+    public boolean locationExist() {
         return getConfig().isConfigurationSection("jail");
     }
-    public void setJail(Location location) {
+    public void setLocation(Location location) {
+        File file = getFile();
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set("jail.world",location.getWorld().getName());
         config.set("jail.x",location.getX());
@@ -38,8 +41,8 @@ public class Jail {
             Players.sendLog(Level.WARNING, e.getMessage());
         }
     }
-    public Location getJail() {
-        if (jailExist()) {
+    public Location getLocation() {
+        if (locationExist()) {
             String world = getConfig().getString("jail.world");
             double x = getConfig().getDouble("jail.x");
             double y = getConfig().getDouble("jail.y");
@@ -53,6 +56,7 @@ public class Jail {
     }
     public void reload() {
         if (exist()) {
+            File file = getFile();
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
@@ -60,6 +64,7 @@ public class Jail {
                 Players.sendLog(Level.WARNING, e.getMessage());
             }
         } else {
+            File file = getFile();
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             config.options().copyDefaults(true);
             try {

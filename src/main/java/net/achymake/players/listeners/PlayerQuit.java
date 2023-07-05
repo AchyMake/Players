@@ -72,11 +72,6 @@ public class PlayerQuit implements Listener {
             }
             getDatabase().setString(event.getPlayer(), "tpa.sent", null);
         }
-        event.getPlayer().getServer().getScheduler().runTaskLater(Players.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                getDatabase().resetTabList();
-            }
-        }, 3);
+        getDatabase().resetTabList();
     }
 }

@@ -13,20 +13,23 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class Warps {
-    private final File file;
-    public Warps(File dataFolder) {
-        this.file = new File(dataFolder, "warps.yml");
+    private File getDataFolder() {
+        return Players.getFolder();
+    }
+    private File getFile() {
+        return new File(getDataFolder(), "warps.yml");
     }
     public FileConfiguration getConfig() {
-        return YamlConfiguration.loadConfiguration(file);
+        return YamlConfiguration.loadConfiguration(getFile());
     }
     public boolean exist() {
-        return file.exists();
+        return getFile().exists();
     }
-    public boolean warpExist(String warpName) {
+    public boolean locationExist(String warpName) {
         return getConfig().isConfigurationSection(warpName);
     }
-    public void setWarp(String warpName, Location location) {
+    public void setLocation(String warpName, Location location) {
+        File file = getFile();
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set(warpName + ".world", location.getWorld().getName());
         config.set(warpName + ".x", location.getX());
@@ -40,8 +43,8 @@ public class Warps {
             Players.sendLog(Level.WARNING, e.getMessage());
         }
     }
-    public Location getWarp(String warpName) {
-        if (warpExist(warpName)) {
+    public Location getLocation(String warpName) {
+        if (locationExist(warpName)) {
             String worldName = getConfig().getString(warpName + ".world");
             double x = getConfig().getDouble(warpName + ".x");
             double y = getConfig().getDouble(warpName + ".y");
@@ -57,7 +60,8 @@ public class Warps {
         return new ArrayList<>(getConfig().getKeys(false));
     }
     public void delWarp(String warpName) {
-        if (warpExist(warpName)) {
+        if (locationExist(warpName)) {
+            File file = getFile();
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             config.set(warpName, null);
             try {
@@ -69,6 +73,7 @@ public class Warps {
     }
     public void reload() {
         if (exist()) {
+            File file = getFile();
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
@@ -76,6 +81,7 @@ public class Warps {
                 Players.sendLog(Level.WARNING, e.getMessage());
             }
         } else {
+            File file = getFile();
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             config.options().copyDefaults(true);
             try {

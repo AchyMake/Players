@@ -27,7 +27,7 @@ public class JailCommand implements CommandExecutor, TabCompleter {
                 Player player = (Player) sender;
                 Player target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    if (getJail().jailExist()) {
+                    if (getJail().locationExist()) {
                         if (target == player) {
                             if (getDatabase().isJailed(target)) {
                                 getDatabase().getLocation(target, "jail").getChunk().load();
@@ -37,9 +37,9 @@ public class JailCommand implements CommandExecutor, TabCompleter {
                                 Players.send(player, "&6You freed&f " + target.getName());
                                 getDatabase().setString(target, "locations.jail", null);
                             } else {
-                                getJail().getJail().getChunk().load();
+                                getJail().getLocation().getChunk().load();
                                 getDatabase().setLocation(target, "jail");
-                                target.teleport(getJail().getJail());
+                                target.teleport(getJail().getLocation());
                                 getDatabase().setBoolean(target, "jailed", true);
                                 Players.send(target, "&cYou got jailed by&f " + player.getName());
                                 Players.send(player, "&6You jailed&f " + target.getName());
@@ -53,9 +53,9 @@ public class JailCommand implements CommandExecutor, TabCompleter {
                                 Players.send(player, "&6You freed&f " + target.getName());
                                 getDatabase().setString(target, "locations.jail", null);
                             } else {
-                                getJail().getJail().getChunk().load();
+                                getJail().getLocation().getChunk().load();
                                 getDatabase().setLocation(target, "jail");
-                                target.teleport(getJail().getJail());
+                                target.teleport(getJail().getLocation());
                                 getDatabase().setBoolean(target, "jailed", true);
                                 Players.send(target, "&cYou got jailed by&f " + player.getName());
                                 Players.send(player, "&6You jailed&f " + target.getName());
@@ -76,7 +76,7 @@ public class JailCommand implements CommandExecutor, TabCompleter {
                 ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
                 Player target = commandSender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    if (getJail().jailExist()) {
+                    if (getJail().locationExist()) {
                         if (getDatabase().isJailed(target)) {
                             getDatabase().getLocation(target, "jail").getChunk().load();
                             target.teleport(getDatabase().getLocation(target, "jail"));
@@ -85,9 +85,9 @@ public class JailCommand implements CommandExecutor, TabCompleter {
                             Players.send(commandSender, "&6You freed&f " + target.getName());
                             getDatabase().setString(target, "locations.jail", null);
                         } else {
-                            getJail().getJail().getChunk().load();
+                            getJail().getLocation().getChunk().load();
                             getDatabase().setLocation(target, "jail");
-                            target.teleport(getJail().getJail());
+                            target.teleport(getJail().getLocation());
                             getDatabase().setBoolean(target, "jailed", true);
                             Players.send(target, "&cYou got jailed by&f " + commandSender.getName());
                             Players.send(commandSender, "&6You jailed&f " + target.getName());

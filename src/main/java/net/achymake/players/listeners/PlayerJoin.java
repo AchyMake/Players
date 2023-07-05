@@ -14,8 +14,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import java.text.MessageFormat;
 
 public class PlayerJoin implements Listener {
-    private Players getPlugin() {
-        return Players.getInstance();
+    private FileConfiguration getConfig() {
+        return Players.getConfiguration();
     }
     private Database getDatabase() {
         return Players.getDatabase();
@@ -29,7 +29,7 @@ public class PlayerJoin implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (event.getPlayer().hasPermission("players.command.reload")) {
-            getPlugin().getUpdate(event.getPlayer());
+            Players.getUpdate(event.getPlayer());
         }
         if (getDatabase().isVanished(event.getPlayer())) {
             getDatabase().setVanish(event.getPlayer(), true);
@@ -37,18 +37,17 @@ public class PlayerJoin implements Listener {
             Players.send(event.getPlayer(), "&6You joined back vanished");
         } else {
             getDatabase().hideVanished(event.getPlayer());
-            FileConfiguration config = Players.getInstance().getConfig();
-            if (config.getBoolean("connection.join.enable")) {
-                event.setJoinMessage(Players.addColor(MessageFormat.format(config.getString("connection.join.message"), event.getPlayer().getName())));
+            if (getConfig().getBoolean("connection.join.enable")) {
+                event.setJoinMessage(Players.addColor(MessageFormat.format(getConfig().getString("connection.join.message"), event.getPlayer().getName())));
                 for (Player players : event.getPlayer().getServer().getOnlinePlayers()) {
-                    players.playSound(players, Sound.valueOf(config.getString("connection.join.sound.type")), Float.valueOf(config.getString("connection.join.sound.volume")), Float.valueOf(config.getString("connection.join.sound.pitch")));
+                    players.playSound(players, Sound.valueOf(getConfig().getString("connection.join.sound.type")), Float.valueOf(getConfig().getString("connection.join.sound.volume")), Float.valueOf(getConfig().getString("connection.join.sound.pitch")));
                 }
             } else {
                 if (event.getPlayer().hasPermission("players.join-message")) {
-                    event.setJoinMessage(Players.addColor(MessageFormat.format(config.getString("connection.join.message"), event.getPlayer().getName())));
-                    if (config.getBoolean("connection.join.sound.enable")) {
+                    event.setJoinMessage(Players.addColor(MessageFormat.format(getConfig().getString("connection.join.message"), event.getPlayer().getName())));
+                    if (getConfig().getBoolean("connection.join.sound.enable")) {
                         for (Player players : event.getPlayer().getServer().getOnlinePlayers()) {
-                            players.playSound(players, Sound.valueOf(config.getString("connection.join.sound.type")), Float.valueOf(config.getString("connection.join.sound.volume")), Float.valueOf(config.getString("connection.join.sound.pitch")));
+                            players.playSound(players, Sound.valueOf(getConfig().getString("connection.join.sound.type")), Float.valueOf(getConfig().getString("connection.join.sound.volume")), Float.valueOf(getConfig().getString("connection.join.sound.pitch")));
                         }
                     }
                 } else {

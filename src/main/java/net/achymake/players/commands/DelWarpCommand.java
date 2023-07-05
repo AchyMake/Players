@@ -21,7 +21,7 @@ public class DelWarpCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 1) {
                 Player player = (Player) sender;
-                if (getWarps().warpExist(args[0])) {
+                if (getWarps().locationExist(args[0])) {
                     getWarps().delWarp(args[0]);
                     Players.send(player, args[0] + "&6 has been deleted");
                 }
@@ -34,7 +34,7 @@ public class DelWarpCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 1) {
                 ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
-                if (getWarps().warpExist(args[0])) {
+                if (getWarps().locationExist(args[0])) {
                     getWarps().delWarp(args[0]);
                     Players.send(commandSender, args[0] + " has been deleted");
                 }

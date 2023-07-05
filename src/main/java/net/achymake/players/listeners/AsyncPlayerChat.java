@@ -16,7 +16,7 @@ public class AsyncPlayerChat implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onAsyncPlayerChat (AsyncPlayerChatEvent event) {
+    public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         if (getDatabase().isMuted(event.getPlayer())) {
             event.setCancelled(true);
         } else {

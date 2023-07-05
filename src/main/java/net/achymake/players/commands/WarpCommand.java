@@ -40,10 +40,10 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                     return false;
                 } else {
                     if (player.hasPermission("players.command.warp." + args[0])) {
-                        if (getWarps().warpExist(args[0])) {
-                            getWarps().getWarp(args[0]).getChunk().load();
+                        if (getWarps().locationExist(args[0])) {
+                            getWarps().getLocation(args[0]).getChunk().load();
                             Players.sendActionBar(player, "&6Teleporting to&f "+ args[0]);
-                            player.teleport(getWarps().getWarp(args[0]));
+                            player.teleport(getWarps().getLocation(args[0]));
                         } else {
                             Players.send(player, args[0] + "&c does not exist");
                         }
@@ -59,10 +59,10 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                             if (getDatabase().isFrozen(target) || getDatabase().isJailed(target)) {
                                 return false;
                             } else {
-                                if (getWarps().warpExist(args[0])) {
-                                    getWarps().getWarp(args[0]).getChunk().load();
+                                if (getWarps().locationExist(args[0])) {
+                                    getWarps().getLocation(args[0]).getChunk().load();
                                     Players.send(target, "&6Teleporting to&f " + args[0]);
-                                    target.teleport(getWarps().getWarp(args[0]));
+                                    target.teleport(getWarps().getLocation(args[0]));
                                 } else {
                                     Players.send(player, args[0] + "&c does not exist");
                                 }
@@ -80,10 +80,10 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                     if (getDatabase().isFrozen(target) || getDatabase().isJailed(target)) {
                         return false;
                     } else {
-                        if (getWarps().warpExist(args[0])) {
-                            getWarps().getWarp(args[0]).getChunk().load();
+                        if (getWarps().locationExist(args[0])) {
+                            getWarps().getLocation(args[0]).getChunk().load();
                             Players.send(target, "&6Teleporting to&f " + args[0]);
-                            target.teleport(getWarps().getWarp(args[0]));
+                            target.teleport(getWarps().getLocation(args[0]));
                         } else {
                             Players.send(commandSender, args[0] + " does not exist");
                         }

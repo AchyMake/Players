@@ -20,11 +20,11 @@ public class SetJailCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             if (args.length == 0) {
                 Player player = (Player) sender;
-                if (getJail().jailExist()) {
-                    getJail().setJail(player.getLocation());
+                if (getJail().locationExist()) {
+                    getJail().setLocation(player.getLocation());
                     Players.send(player, "&6Jail relocated");
                 } else {
-                    getJail().setJail(player.getLocation());
+                    getJail().setLocation(player.getLocation());
                     Players.send(player, "&6Jail has been set");
                 }
             }

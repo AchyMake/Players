@@ -29,6 +29,10 @@ public final class Players extends JavaPlugin {
     public static Players getInstance() {
         return instance;
     }
+    private static File folder;
+    public static File getFolder() {
+        return folder;
+    }
     private static FileConfiguration configuration;
     public static FileConfiguration getConfiguration() {
         return configuration;
@@ -68,8 +72,9 @@ public final class Players extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        configuration = getConfig();
         logger = getLogger();
+        folder = getDataFolder();
+        configuration = getConfig();
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             getServer().getPluginManager().disablePlugin(this);
             sendLog(Level.WARNING, "You have to install 'Vault'");
@@ -85,12 +90,12 @@ public final class Players extends JavaPlugin {
             new PlaceholderProvider().register();
             sendLog(Level.INFO, "Hooked to 'PlaceholderAPI'");
         }
-        database = new Database(getDataFolder());
-        jail = new Jail(getDataFolder());
-        kits = new Kits(getDataFolder());
-        motd = new Motd(getDataFolder());
-        spawn = new Spawn(getDataFolder());
-        warps = new Warps(getDataFolder());
+        database = new Database();
+        jail = new Jail();
+        kits = new Kits();
+        motd = new Motd();
+        spawn = new Spawn();
+        warps = new Warps();
         reload();
         commands();
         events();
@@ -194,20 +199,24 @@ public final class Players extends JavaPlugin {
         new PrepareAnvil(this);
         new SignChange(this);
     }
-    public void reload() {
-        File file = new File(getDataFolder(), "config.yml");
+    public static void reload() {
+        File file = new File(getFolder(), "config.yml");
         if (file.exists()) {
             try {
-                getConfig().load(file);
+                getConfiguration().load(file);
+                getConfiguration().save(file);
                 sendLog(Level.INFO, "loaded config.yml");
             } catch (IOException | InvalidConfigurationException e) {
                 sendLog(Level.WARNING, e.getMessage());
             }
-            saveConfig();
         } else {
-            getConfig().options().copyDefaults(true);
-            saveConfig();
-            sendLog(Level.INFO, "created config.yml");
+            getConfiguration().options().copyDefaults(true);
+            try {
+                getConfiguration().save(file);
+                sendLog(Level.INFO, "created config.yml");
+            } catch (IOException e) {
+                sendLog(Level.WARNING, e.getMessage());
+            }
         }
         getJail().reload();
         getKits().reload();
@@ -216,14 +225,14 @@ public final class Players extends JavaPlugin {
         getWarps().reload();
         getDatabase().resetTabList();
         getDatabase().getCommandCooldown().clear();
-        getDatabase().reload(getServer().getOfflinePlayers());
+        getDatabase().reload(getInstance().getServer().getOfflinePlayers());
     }
-    public void getUpdate(Player player) {
+    public static void getUpdate(Player player) {
         if (notifyUpdate()) {
             getLatest((latest) -> {
-                if (!getDescription().getVersion().equals(latest)) {
-                    send(player,"&6" + getName() + " Update:&f " + latest);
-                    send(player,"&6Current Version: &f" + getDescription().getVersion());
+                if (!getInstance().getDescription().getVersion().equals(latest)) {
+                    send(player,"&6" + getInstance().getName() + " Update:&f " + latest);
+                    send(player,"&6Current Version: &f" + getInstance().getDescription().getVersion());
                 }
             });
         }
@@ -246,7 +255,7 @@ public final class Players extends JavaPlugin {
             });
         }
     }
-    public void getLatest(Consumer<String> consumer) {
+    public static void getLatest(Consumer<String> consumer) {
         try {
             InputStream inputStream = (new URL("https://api.spigotmc.org/legacy/update.php?resource=" + 110266)).openStream();
             Scanner scanner = new Scanner(inputStream);
@@ -261,8 +270,8 @@ public final class Players extends JavaPlugin {
             sendLog(Level.WARNING, e.getMessage());
         }
     }
-    private boolean notifyUpdate() {
-        return getConfig().getBoolean("notify-update.enable");
+    private static boolean notifyUpdate() {
+        return getConfiguration().getBoolean("notify-update.enable");
     }
     public static void send(ConsoleCommandSender sender, String message) {
         sender.sendMessage(message);

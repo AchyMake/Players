@@ -21,7 +21,7 @@ public class PlayersCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 Player player = (Player) sender;
                 if (args[0].equalsIgnoreCase("reload")) {
-                    getPlugin().reload();
+                    Players.reload();
                     Players.send(player, "&6Players:&f files reloaded");
                 }
                 if (args[0].equalsIgnoreCase("discord")) {
@@ -38,7 +38,7 @@ public class PlayersCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
                 if (args[0].equalsIgnoreCase("reload")) {
-                    getPlugin().reload();
+                    Players.reload();
                     Players.send(commandSender, "Players: config files reloaded");
                 }
                 if (args[0].equalsIgnoreCase("discord")) {

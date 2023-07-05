@@ -2,7 +2,6 @@ package net.achymake.players.listeners;
 
 import net.achymake.players.Players;
 import net.achymake.players.files.Database;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -17,13 +16,8 @@ public class BlockFertilize implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFertilize(BlockFertilizeEvent event) {
-        if (!isCancelled(event.getPlayer()))return;
-        event.setCancelled(true);
-    }
-    private boolean isCancelled(Player player) {
-        if (getDatabase().isFrozen(player)) {
-            return true;
+        if (getDatabase().isFrozen(event.getPlayer()) || getDatabase().isJailed(event.getPlayer())) {
+            event.setCancelled(true);
         }
-        return getDatabase().isJailed(player);
     }
 }

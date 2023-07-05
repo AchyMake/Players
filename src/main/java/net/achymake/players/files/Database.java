@@ -20,9 +20,8 @@ import java.util.Random;
 import java.util.logging.Level;
 
 public class Database {
-    private final File dataFolder;
-    public Database(File dataFolder) {
-        this.dataFolder = dataFolder;
+    private File getDataFolder() {
+        return Players.getFolder();
     }
     private final HashMap<String, Long> commandCooldown = new HashMap<>();
     private final List<Player> vanished = new ArrayList<>();
@@ -33,15 +32,15 @@ public class Database {
         return Players.getConfiguration();
     }
     public boolean exist(OfflinePlayer offlinePlayer) {
-        return new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
+        return new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
     }
     public FileConfiguration getConfig(OfflinePlayer offlinePlayer) {
-        return YamlConfiguration.loadConfiguration(new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml"));
+        return YamlConfiguration.loadConfiguration(new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml"));
     }
     public void setup(OfflinePlayer offlinePlayer) {
         if (exist(offlinePlayer)) {
             if (!getConfig(offlinePlayer).getString("name").equals(offlinePlayer.getName())) {
-                File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+                File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
                 FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(file);
                 playerConfig.set("name", offlinePlayer.getName());
                 try {
@@ -51,7 +50,7 @@ public class Database {
                 }
             }
         } else {
-            File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+            File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
             FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(file);
             playerConfig.set("name", offlinePlayer.getName());
             playerConfig.set("display-name", offlinePlayer.getName());
@@ -83,7 +82,7 @@ public class Database {
         }
     }
     public void setInt(OfflinePlayer offlinePlayer, String path, int value) {
-        File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+        File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -93,7 +92,7 @@ public class Database {
         }
     }
     public void setDouble(OfflinePlayer offlinePlayer, String path, double value) {
-        File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+        File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -103,7 +102,7 @@ public class Database {
         }
     }
     public void setFloat(OfflinePlayer offlinePlayer, String path, float value) {
-        File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+        File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -113,7 +112,7 @@ public class Database {
         }
     }
     public void setString(OfflinePlayer offlinePlayer, String path, String value) {
-        File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+        File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -123,7 +122,7 @@ public class Database {
         }
     }
     public void setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
-        File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+        File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -133,7 +132,7 @@ public class Database {
         }
     }
     public void setBoolean(OfflinePlayer offlinePlayer, String path, boolean value) {
-        File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+        File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -301,11 +300,16 @@ public class Database {
     }
     public void resetTabList() {
         if (getConfig().getBoolean("tablist.enable")) {
-            for (Player players : getPlugin().getServer().getOnlinePlayers()) {
-                players.setPlayerListHeader(Players.addColor(getConfig().getString("tablist.header")));
-                players.setPlayerListName(prefix(players) + nickname(players) + suffix(players));
-                players.setPlayerListFooter(Players.addColor(MessageFormat.format(getConfig().getString("tablist.footer"), players.getServer().getOnlinePlayers().size() - vanished.size(), players.getServer().getMaxPlayers())));
-            }
+            getPlugin().getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
+                @Override
+                public void run() {
+                    for (Player players : getPlugin().getServer().getOnlinePlayers()) {
+                        players.setPlayerListHeader(Players.addColor(getConfig().getString("tablist.header")));
+                        players.setPlayerListName(prefix(players) + nickname(players) + suffix(players));
+                        players.setPlayerListFooter(Players.addColor(MessageFormat.format(getConfig().getString("tablist.footer"), players.getServer().getOnlinePlayers().size() - vanished.size(), players.getServer().getMaxPlayers())));
+                    }
+                }
+            }, 3);
         }
     }
     public void teleportBack(Player player) {
@@ -363,7 +367,7 @@ public class Database {
     public void reload(OfflinePlayer[] offlinePlayers) {
         for (OfflinePlayer offlinePlayer : offlinePlayers) {
             if (exist(offlinePlayer)) {
-                File file = new File(dataFolder, "userdata/" + offlinePlayer.getUniqueId() + ".yml");
+                File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 try {
                     config.load(file);

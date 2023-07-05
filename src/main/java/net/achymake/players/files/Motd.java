@@ -15,15 +15,17 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class Motd {
-    private final File file;
-    public Motd(File dataFolder) {
-        this.file = new File(dataFolder, "motd.yml");
+    private File getDataFolder() {
+        return Players.getFolder();
+    }
+    private File getFile() {
+        return new File(getDataFolder(), "motd.yml");
     }
     public boolean exist() {
-        return file.exists();
+        return getFile().exists();
     }
     public FileConfiguration getConfig() {
-        return YamlConfiguration.loadConfiguration(file);
+        return YamlConfiguration.loadConfiguration(getFile());
     }
     public boolean motdExist(String motd) {
         return getConfig().isList(motd);
@@ -55,6 +57,7 @@ public class Motd {
     }
     public void reload() {
         if (exist()) {
+            File file = getFile();
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
@@ -62,6 +65,7 @@ public class Motd {
                 Players.sendLog(Level.WARNING, e.getMessage());
             }
         } else {
+            File file = getFile();
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             List<String> motd = new ArrayList<>();
             motd.add("&6Welcome back&f %player%");

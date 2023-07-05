@@ -18,34 +18,38 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class Kits {
-    private final File file;
-    public Kits(File dataFolder) {
-        this.file = new File(dataFolder, "kits.yml");
+    private File getDataFolder() {
+        return Players.getFolder();
+    }
+    private File getFile() {
+        return new File(getDataFolder(), "kits.yml");
     }
     public boolean exist() {
-        return file.exists();
+        return getFile().exists();
+    }
+    private Database getDatabase() {
+        return Players.getDatabase();
     }
     public FileConfiguration getConfig() {
-        return YamlConfiguration.loadConfiguration(file);
+        return YamlConfiguration.loadConfiguration(getFile());
     }
     public List<String> getKits() {
         return new ArrayList<>(getConfig().getKeys(false));
     }
     public void giveKitWithCooldown(Player player, String kitName) {
-        Database database = Players.getDatabase();
         if (player.hasPermission("players.command.kit.cooldown-exempt")) {
             giveKit(player, kitName);
             Players.send(player, "&6You received &f" + kitName + "&6 kit");
-        } else if (!database.getCommandCooldown().containsKey(kitName + "-" + player.getUniqueId())) {
-            database.getCommandCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
+        } else if (!getDatabase().getCommandCooldown().containsKey(kitName + "-" + player.getUniqueId())) {
+            getDatabase().getCommandCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
             giveKit(player, kitName);
             Players.send(player, "&6You received &f" + kitName + "&6 kit");
         } else {
-            Long timeElapsed = System.currentTimeMillis() - database.getCommandCooldown().get(kitName + "-" + player.getUniqueId());
+            Long timeElapsed = System.currentTimeMillis() - getDatabase().getCommandCooldown().get(kitName + "-" + player.getUniqueId());
             String cooldownTimer = getConfig().getString(kitName + ".cooldown");
             Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
             if (timeElapsed > integer) {
-                database.getCommandCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
+                getDatabase().getCommandCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
                 giveKit(player, kitName);
                 Players.send(player, "&6You received &f" + kitName + "&6 kit");
             } else {
@@ -90,6 +94,7 @@ public class Kits {
     }
     public void reload() {
         if (exist()) {
+            File file = getFile();
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
@@ -97,6 +102,7 @@ public class Kits {
                 Players.sendLog(Level.WARNING, e.getMessage());
             }
         } else {
+            File file = getFile();
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             List<String> lore = new ArrayList<>();
             lore.add("&9from");

@@ -22,8 +22,8 @@ public class PlayerSpawnLocation implements Listener {
     public void onPlayerSpawnLocation(PlayerSpawnLocationEvent event) {
         if (!getDatabase().exist(event.getPlayer())) {
             getDatabase().setup(event.getPlayer());
-            if (getSpawn().spawnExist()) {
-                event.setSpawnLocation(getSpawn().getSpawn());
+            if (getSpawn().locationExist()) {
+                event.setSpawnLocation(getSpawn().getLocation());
             } else {
                 event.setSpawnLocation(getDatabase().getLocation(event.getPlayer(), "spawn"));
             }

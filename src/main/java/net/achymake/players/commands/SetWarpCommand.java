@@ -24,11 +24,11 @@ public class SetWarpCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 1) {
                 Player player = (Player) sender;
-                if (getWarps().warpExist(args[0])) {
-                    getWarps().setWarp(args[0], player.getLocation());
+                if (getWarps().locationExist(args[0])) {
+                    getWarps().setLocation(args[0], player.getLocation());
                     Players.send(player, args[0] + "&6 has been relocated");
                 } else {
-                    getWarps().setWarp(args[0], player.getLocation());
+                    getWarps().setLocation(args[0], player.getLocation());
                     Players.send(player, args[0] + "&6 has been set");
                 }
             }

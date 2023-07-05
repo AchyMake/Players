@@ -37,8 +37,8 @@ public class PlayerRespawn implements Listener {
         if (getDatabase().locationExist(event.getPlayer(), "spawn")) {
             event.setRespawnLocation(getDatabase().getLocation(event.getPlayer(), "spawn"));
         } else {
-            if (getSpawn().spawnExist()) {
-                event.setRespawnLocation(getSpawn().getSpawn());
+            if (getSpawn().locationExist()) {
+                event.setRespawnLocation(getSpawn().getLocation());
             }
         }
     }

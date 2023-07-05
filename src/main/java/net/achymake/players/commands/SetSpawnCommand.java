@@ -25,11 +25,11 @@ public class SetSpawnCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             if (args.length == 0) {
                 Player player = (Player) sender;
-                if (getSpawn().spawnExist()) {
-                    getSpawn().setSpawn(player.getLocation());
+                if (getSpawn().locationExist()) {
+                    getSpawn().setLocation(player.getLocation());
                     Players.send(player, "&6Spawn relocated");
                 } else {
-                    getSpawn().setSpawn(player.getLocation());
+                    getSpawn().setLocation(player.getLocation());
                     Players.send(player, "&6Spawn has been set");
                 }
             }
