@@ -300,16 +300,11 @@ public class Database {
     }
     public void resetTabList() {
         if (getConfig().getBoolean("tablist.enable")) {
-            getPlugin().getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
-                @Override
-                public void run() {
-                    for (Player players : getPlugin().getServer().getOnlinePlayers()) {
-                        players.setPlayerListHeader(Players.addColor(getConfig().getString("tablist.header")));
-                        players.setPlayerListName(prefix(players) + nickname(players) + suffix(players));
-                        players.setPlayerListFooter(Players.addColor(MessageFormat.format(getConfig().getString("tablist.footer"), players.getServer().getOnlinePlayers().size() - vanished.size(), players.getServer().getMaxPlayers())));
-                    }
-                }
-            }, 3);
+            for (Player players : getPlugin().getServer().getOnlinePlayers()) {
+                players.setPlayerListHeader(Players.addColor(getConfig().getString("tablist.header")));
+                players.setPlayerListName(prefix(players) + nickname(players) + suffix(players));
+                players.setPlayerListFooter(Players.addColor(MessageFormat.format(getConfig().getString("tablist.footer"), players.getServer().getOnlinePlayers().size() - getVanished().size(), players.getServer().getMaxPlayers())));
+            }
         }
     }
     public void teleportBack(Player player) {

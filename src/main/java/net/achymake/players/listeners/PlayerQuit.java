@@ -72,6 +72,13 @@ public class PlayerQuit implements Listener {
             }
             getDatabase().setString(event.getPlayer(), "tpa.sent", null);
         }
-        getDatabase().resetTabList();
+        resetTablist(event.getPlayer());
+    }
+    private void resetTablist(Player player) {
+        for (Player players : player.getServer().getOnlinePlayers()) {
+            players.setPlayerListHeader(Players.addColor(getConfig().getString("tablist.header")));
+            players.setPlayerListName(getDatabase().prefix(players) + getDatabase().nickname(players) + getDatabase().suffix(players));
+            players.setPlayerListFooter(Players.addColor(MessageFormat.format(getConfig().getString("tablist.footer"), players.getServer().getOnlinePlayers().size() - getDatabase().getVanished().size() - 1, players.getServer().getMaxPlayers())));
+        }
     }
 }
