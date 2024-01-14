@@ -18,15 +18,12 @@ public class EntityDamageByArrow implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamageByArrow(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Arrow) {
-            Arrow arrow = (Arrow) event.getDamager();
-            if (arrow.getShooter() instanceof Player) {
-                Player player = (Player) arrow.getShooter();
+        if (event.getDamager() instanceof Arrow arrow) {
+            if (arrow.getShooter() instanceof Player player) {
                 if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                     event.setCancelled(true);
                 } else {
-                    if (event.getEntity() instanceof Player) {
-                        Player target = (Player) event.getEntity();
+                    if (event.getEntity() instanceof Player target) {
                         if (!getDatabase().isPVP(player)) {
                             event.setCancelled(true);
                             Players.sendActionBar(player, "&cError:&7 Your PVP is Disabled");

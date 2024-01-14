@@ -17,13 +17,11 @@ public class EntityDamageByPlayer implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamageByPlayer(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Player) {
-            Player player = (Player) event.getDamager();
+        if (event.getDamager() instanceof Player player) {
             if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                 event.setCancelled(true);
             } else {
-                if (event.getEntity() instanceof Player) {
-                    Player target = (Player) event.getEntity();
+                if (event.getEntity() instanceof Player target) {
                     if (!getDatabase().isPVP(player)) {
                         event.setCancelled(true);
                         Players.sendActionBar(player,"&cError:&7 Your PVP is Disabled");

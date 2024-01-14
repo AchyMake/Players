@@ -18,8 +18,7 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                     return false;
@@ -53,8 +52,7 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        if (sender instanceof ConsoleCommandSender) {
-            ConsoleCommandSender consoleCommandSender = (ConsoleCommandSender) sender;
+        if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 Player target = consoleCommandSender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
@@ -78,8 +76,7 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> commands = new ArrayList<>();
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("players.command.spawn.others")) {
                     for (Player players : player.getServer().getOnlinePlayers()) {

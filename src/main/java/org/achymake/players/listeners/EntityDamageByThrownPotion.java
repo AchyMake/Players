@@ -18,15 +18,12 @@ public class EntityDamageByThrownPotion implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamageByThrownPotion(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof ThrownPotion) {
-            ThrownPotion thrownPotion = (ThrownPotion) event.getDamager();
-            if (thrownPotion.getShooter() instanceof Player) {
-                Player player = (Player) thrownPotion.getShooter();
+        if (event.getDamager() instanceof ThrownPotion thrownPotion) {
+            if (thrownPotion.getShooter() instanceof Player player) {
                 if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                     event.setCancelled(true);
                 } else {
-                    if (event.getEntity() instanceof Player) {
-                        Player target = (Player) event.getEntity();
+                    if (event.getEntity() instanceof Player target) {
                         if (!getDatabase().isPVP(player)) {
                             event.setCancelled(true);
                             Players.sendActionBar(player, "&cError:&7 Your PVP is Disabled");

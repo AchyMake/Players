@@ -18,15 +18,12 @@ public class EntityDamageBySpectralArrow implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamageBySpectralArrow(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof SpectralArrow) {
-            SpectralArrow spectralArrow = (SpectralArrow) event.getDamager();
-            if (spectralArrow.getShooter() instanceof Player) {
-                Player player = (Player) spectralArrow.getShooter();
+        if (event.getDamager() instanceof SpectralArrow spectralArrow) {
+            if (spectralArrow.getShooter() instanceof Player player) {
                 if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                     event.setCancelled(true);
                 } else {
-                    if (event.getEntity() instanceof Player) {
-                        Player target = (Player) event.getEntity();
+                    if (event.getEntity() instanceof Player target) {
                         if (!getDatabase().isPVP(player)) {
                             event.setCancelled(true);
                             Players.sendActionBar(player, "&cError:&7 Your PVP is Disabled");

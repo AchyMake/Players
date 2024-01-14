@@ -18,8 +18,7 @@ public class JailCommand implements CommandExecutor, TabCompleter {
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (args.length == 0) {
                 Players.send(player, "&cUsage:&f /jail target");
             }
@@ -66,8 +65,7 @@ public class JailCommand implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        if (sender instanceof ConsoleCommandSender) {
-            ConsoleCommandSender consoleCommandSender = (ConsoleCommandSender) sender;
+        if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 0) {
                 Players.send(consoleCommandSender, "Usage: /jail target");
             }
@@ -101,8 +99,7 @@ public class JailCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> commands = new ArrayList<>();
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (args.length == 1) {
                 for (Player players : player.getServer().getOnlinePlayers()) {
                     if (!players.hasPermission("players.command.jail.exempt")) {

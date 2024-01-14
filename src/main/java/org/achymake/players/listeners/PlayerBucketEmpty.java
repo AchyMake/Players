@@ -23,7 +23,7 @@ public class PlayerBucketEmpty implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-        if (getDatabase().isFrozen(event.getPlayer()) || getDatabase().isJailed(event.getPlayer())) {
+        if (isFrozenOrJailed(event.getPlayer())) {
             event.setCancelled(true);
         } else {
             if (!getConfig().getBoolean("notification.enable"))return;
@@ -36,5 +36,8 @@ public class PlayerBucketEmpty implements Listener {
                 }
             }
         }
+    }
+    private boolean isFrozenOrJailed(Player player) {
+        return getDatabase().isFrozen(player) || getDatabase().isJailed(player);
     }
 }

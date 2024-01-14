@@ -18,15 +18,12 @@ public class EntityDamageBySnowball implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamageBySnowball(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Snowball) {
-            Snowball snowball = (Snowball) event.getDamager();
-            if (snowball.getShooter() instanceof Player) {
-                Player player = (Player) snowball.getShooter();
+        if (event.getDamager() instanceof Snowball snowball) {
+            if (snowball.getShooter() instanceof Player player) {
                 if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                     event.setCancelled(true);
                 } else {
-                    if (event.getEntity() instanceof Player) {
-                        Player target = (Player) event.getEntity();
+                    if (event.getEntity() instanceof Player target) {
                         if (!getDatabase().isPVP(player)) {
                             event.setCancelled(true);
                             Players.sendActionBar(player, "&cError:&7 Your PVP is Disabled");

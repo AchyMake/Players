@@ -42,8 +42,7 @@ public class RulesCommand implements CommandExecutor, TabCompleter {
         return commands;
     }
     private void sendRules(CommandSender sender) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (getConfig().isList("rules")) {
                 for (String message : getConfig().getStringList("rules")) {
                     Players.send(player, message.replaceAll("%player%", player.getName()));
@@ -52,8 +51,7 @@ public class RulesCommand implements CommandExecutor, TabCompleter {
                 Players.send(player, getConfig().getString("rules").replaceAll("%player%", player.getName()));
             }
         }
-        if (sender instanceof ConsoleCommandSender) {
-            ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
+        if (sender instanceof ConsoleCommandSender commandSender) {
             if (getConfig().isList("rules")) {
                 for (String message : getConfig().getStringList("rules")) {
                     Players.send(commandSender, message.replaceAll("%player%", commandSender.getName()));

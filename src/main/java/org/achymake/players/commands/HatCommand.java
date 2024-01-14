@@ -14,8 +14,7 @@ import java.util.List;
 public class HatCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (!player.getInventory().getItemInMainHand().getType().isAir()) {
                     if (player.getInventory().getHelmet() == null) {

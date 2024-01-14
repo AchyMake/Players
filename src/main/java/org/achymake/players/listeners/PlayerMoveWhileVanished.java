@@ -7,23 +7,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-public class PlayerMove implements Listener {
+public class PlayerMoveWhileVanished implements Listener {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    public PlayerMove(Players plugin) {
+    public PlayerMoveWhileVanished(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (getDatabase().isFrozen(event.getPlayer())) {
-            event.setCancelled(true);
-        }
-        if (getDatabase().isVanished(event.getPlayer())) {
-            Players.sendActionBar(event.getPlayer(), "&6&lVanish:&a Enabled");
-        }
-        if (getDatabase().getConfig(event.getPlayer()).getBoolean("settings.coordinates")) {
-            Players.sendActionBar(event.getPlayer(), "&6&lY:&f " + event.getPlayer().getLocation().getBlockY());
-        }
+        if (!getDatabase().isVanished(event.getPlayer()))return;
+        Players.sendActionBar(event.getPlayer(), "&6&lVanish:&a Enabled");
     }
 }

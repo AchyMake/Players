@@ -2,6 +2,7 @@ package org.achymake.players.listeners;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,8 +17,10 @@ public class PlayerHarvestBlock implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerHarvestBlock(PlayerHarvestBlockEvent event) {
-        if (getDatabase().isFrozen(event.getPlayer()) || getDatabase().isJailed(event.getPlayer())) {
-            event.setCancelled(true);
-        }
+        if (!isFrozenOrJailed(event.getPlayer()))return;
+        event.setCancelled(true);
+    }
+    private boolean isFrozenOrJailed(Player player) {
+        return getDatabase().isFrozen(player) || getDatabase().isJailed(player);
     }
 }

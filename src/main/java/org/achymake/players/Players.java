@@ -185,7 +185,8 @@ public final class Players extends JavaPlugin {
         new PlayerLeashEntity(this);
         new PlayerLogin(this);
         new PlayerMount(this);
-        new PlayerMove(this);
+        new PlayerMoveWhileFrozen(this);
+        new PlayerMoveWhileVanished(this);
         new PlayerQuit(this);
         new PlayerQuitWhileTPA(this);
         new PlayerQuitWhileVanished(this);

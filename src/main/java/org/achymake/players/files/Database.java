@@ -217,8 +217,6 @@ public class Database {
                         setFloat(player, "homes." + homeName + ".pitch", player.getLocation().getPitch());
                         return true;
                     }
-                } else {
-                    return false;
                 }
             }
         }
@@ -274,9 +272,6 @@ public class Database {
             if (offlinePlayer.isOnline()) {
                 Player player = offlinePlayer.getPlayer();
                 getVanished().add(player);
-                if (getConfig(player).getBoolean("settings.coordinates")) {
-                    setBoolean(player, "settings.coordinates", false);
-                }
                 for (Player onlinePlayers : getPlugin().getServer().getOnlinePlayers()) {
                     onlinePlayers.hidePlayer(getPlugin(), player);
                 }

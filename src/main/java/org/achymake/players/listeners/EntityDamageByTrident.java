@@ -18,15 +18,12 @@ public class EntityDamageByTrident implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamageByTrident(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Trident) {
-            Trident trident = (Trident) event.getDamager();
-            if (trident.getShooter() instanceof Player) {
-                Player player = (Player) trident.getShooter();
+        if (event.getDamager() instanceof Trident trident) {
+            if (trident.getShooter() instanceof Player player) {
                 if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                     event.setCancelled(true);
                 } else {
-                    if (event.getEntity() instanceof Player) {
-                        Player target = (Player) event.getEntity();
+                    if (event.getEntity() instanceof Player target) {
                         if (!getDatabase().isPVP(player)) {
                             event.setCancelled(true);
                             Players.sendActionBar(player, "&cError:&7 Your PVP is Disabled");

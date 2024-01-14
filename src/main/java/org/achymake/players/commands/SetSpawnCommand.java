@@ -22,8 +22,7 @@ public class SetSpawnCommand implements CommandExecutor, TabCompleter {
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (getSpawn().locationExist()) {
                     getSpawn().setLocation(player.getLocation());
@@ -53,8 +52,7 @@ public class SetSpawnCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> commands = new ArrayList<>();
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("players.command.setspawn.others")) {
                     for (OfflinePlayer offlinePlayer : player.getServer().getOfflinePlayers()) {

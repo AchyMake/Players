@@ -18,8 +18,7 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
                 return false;
             } else {
@@ -63,8 +62,7 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> commands = new ArrayList<>();
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("players.commands.home.bed")) {
                     commands.add("bed");

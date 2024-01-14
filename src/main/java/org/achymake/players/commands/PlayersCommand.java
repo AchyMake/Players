@@ -13,13 +13,11 @@ public class PlayersCommand implements CommandExecutor, TabCompleter {
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
+        if (sender instanceof Player player) {
             if (args.length == 0) {
-                Player player = (Player) sender;
                 Players.send(player, "&6" + getPlugin().getName() + " " + getPlugin().getDescription().getVersion());
             }
             if (args.length == 1) {
-                Player player = (Player) sender;
                 if (args[0].equalsIgnoreCase("reload")) {
                     Players.reload();
                     Players.send(player, "&6Players:&f files reloaded");
@@ -30,20 +28,18 @@ public class PlayersCommand implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        if (sender instanceof ConsoleCommandSender) {
+        if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 0) {
-                ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
-                Players.send(commandSender, getPlugin().getName() + " " + getPlugin().getDescription().getVersion());
+                Players.send(consoleCommandSender, getPlugin().getName() + " " + getPlugin().getDescription().getVersion());
             }
             if (args.length == 1) {
-                ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
                 if (args[0].equalsIgnoreCase("reload")) {
                     Players.reload();
-                    Players.send(commandSender, "Players: config files reloaded");
+                    Players.send(consoleCommandSender, "Players: config files reloaded");
                 }
                 if (args[0].equalsIgnoreCase("discord")) {
-                    Players.send(commandSender, "Developers Discord");
-                    Players.send(commandSender, "https://discord.com/invite/aMtQFeJKyB");
+                    Players.send(consoleCommandSender, "Developers Discord");
+                    Players.send(consoleCommandSender, "https://discord.com/invite/aMtQFeJKyB");
                 }
             }
         }

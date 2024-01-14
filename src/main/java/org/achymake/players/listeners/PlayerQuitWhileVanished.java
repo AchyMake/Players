@@ -2,16 +2,12 @@ package org.achymake.players.listeners;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerQuitWhileVanished implements Listener {
-    private FileConfiguration getConfig() {
-        return Players.getConfiguration();
-    }
     private Database getDatabase() {
         return Players.getDatabase();
     }

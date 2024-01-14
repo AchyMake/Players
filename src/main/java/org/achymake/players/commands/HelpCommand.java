@@ -30,10 +30,10 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> commands = new ArrayList<>();
-        if (sender instanceof Player) {
+        if (sender instanceof Player player) {
             if (args.length == 1) {
-                if (sender.hasPermission("players.command.rules.others")) {
-                    for (Player players : sender.getServer().getOnlinePlayers()) {
+                if (player.hasPermission("players.command.rules.others")) {
+                    for (Player players : player.getServer().getOnlinePlayers()) {
                         commands.add(players.getName());
                     }
                 }
@@ -42,8 +42,7 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
         return commands;
     }
     private void sendHelp(CommandSender sender) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (getConfig().isList("help")) {
                 for (String message : getConfig().getStringList("help")) {
                     Players.send(player, message.replaceAll("%player%", player.getName()));
@@ -52,8 +51,7 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
                 Players.send(player, getConfig().getString("help").replaceAll("%player%", player.getName()));
             }
         }
-        if (sender instanceof ConsoleCommandSender) {
-            ConsoleCommandSender commandSender = (ConsoleCommandSender) sender;
+        if (sender instanceof ConsoleCommandSender commandSender) {
             if (getConfig().isList("help")) {
                 for (String message : getConfig().getStringList("help")) {
                     Players.send(commandSender, message.replaceAll("%player%", commandSender.getName()));

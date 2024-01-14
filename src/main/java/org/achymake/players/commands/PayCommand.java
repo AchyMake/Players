@@ -23,8 +23,7 @@ public class PayCommand implements CommandExecutor, TabCompleter {
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (args.length == 0 || args.length == 1) {
                 Players.send(player, "&cUsage:&f /pay target amount");
             }
@@ -48,8 +47,7 @@ public class PayCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> commands = new ArrayList<>();
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (args.length == 1) {
                 for (Player players : player.getServer().getOnlinePlayers()) {
                     commands.add(players.getName());
