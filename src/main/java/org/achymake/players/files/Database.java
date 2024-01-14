@@ -358,7 +358,7 @@ public class Database {
         }
     }
     public Block highestRandomBlock() {
-        return getPlugin().getServer().getWorld(getConfig().getString("commands.rtp.world")).getHighestBlockAt(new Random().nextInt(getConfig().getInt("commands.rtp.spread")), new Random().nextInt(getConfig().getInt("commands.rtp.spread")));
+        return getPlugin().getServer().getWorld(getConfig().getString("commands.rtp.world")).getHighestBlockAt(new Random().nextInt(0, getConfig().getInt("commands.rtp.spread")), new Random().nextInt(0, getConfig().getInt("commands.rtp.spread")));
     }
     public Location randomLocation() {
         Block block = highestRandomBlock();
