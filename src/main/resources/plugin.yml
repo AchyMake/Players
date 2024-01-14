@@ -1,0 +1,9 @@
+name: Players
+version: '${project.version}'
+main: org.achymake.players.Players
+api-version: '1.13'
+prefix: Players
+load: STARTUP
+softdepend: [Vault, PlaceholderAPI]
+authors: [AchyMake]
+description: Provides Economy, Homes, etc.
