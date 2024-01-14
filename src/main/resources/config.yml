@@ -1,0 +1,100 @@
+notify-update: true
+economy:
+  currency: "$"
+  format: "#,##0.00"
+  starter-balance: 0.0
+tablist:
+  enable: false
+  header: "&e--&6--&d--&9--&7[&b&lplay.your-server.org&7]&9--&d--&6--&e--"
+  footer: "&e--&6--&d--&9--&7[&6{0}&7/&6{1}&7]&9--&d--&6--&e--"
+message-of-the-day:
+  welcome:
+    - "&6Welcome %player% to the server!"
+  welcome-back:
+    - "&6Welcome back&f %player%"
+    - "&6We missed you!"
+rules:
+  - "&6Rules:"
+  - "&61.&f No server crashing"
+  - "&62.&f No griefing"
+  - "&63.&f No Monkieng around! uhh?"
+help:
+  - "&6Help:"
+  - "- https://store.your-server.org/help"
+homes:
+  # if player has permission: 'players.command.sethome.multiple.default'
+  default: 3
+  vip: 6
+  staff: 12
+deaths:
+  # if false permission: 'players.death-location'
+  send-location: false
+  drop-player-head:
+    # enable drop player heads
+    enable: true
+    # chance of the drop
+    chance: 30
+connection:
+  join:
+    # if false permission: 'players.join-message'
+    enable: true
+    message: "{0}&e has joined the server [&a+&e]"
+    sound:
+      enable: true
+      type: ENTITY_FOX_AMBIENT
+      volume: 0.75F
+      pitch: 1.0F
+  quit:
+    # if false permission: 'players.quit-message'
+    enable: true
+    message: "{0}&e has left the server [&c-&e]"
+    sound:
+      enable: true
+      type: ENTITY_FOX_AMBIENT
+      volume: 0.75F
+      pitch: 1.0F
+commands:
+  rtp:
+    world: world
+    spread: 1250
+  cooldown:
+    # cooldown for rank commands
+    # these are the only ones which are able to get cooldown
+    feed: 120
+    heal: 120
+    repair: 3600
+    rtp: 3600
+  disable:
+    - icanhasbukkit
+    - version
+    - about
+    - me
+    - stop
+    - reload
+notification:
+  # Permissions
+  # players.notify.block-break
+  # players.notify.bucket-empty
+  # players.notify.block-place
+  #
+  # Placeholders
+  # {0} Player, {1} Material
+  # {2} World, {3} X, {4} Y, {5} Z
+  enable: false
+  block-break:
+    - DIAMOND_ORE
+    - DEEPSLATE_DIAMOND_ORE
+    - EMERALD_ORE
+    - DEEPSLATE_EMERALD_ORE
+    - ANCIENT_DEBRIS
+  bucket-empty:
+    - LAVA_BUCKET
+  block-place:
+    - TNT
+  message:
+    - "&7---------------"
+    - "&cDetected: &f{0}"
+    - "&cMaterial: &f{1}"
+    - "&cLocation:"
+    - "&cWorld:&f {2} &cX: &f{3} &cY: &f{4} &cZ: &f{5}"
+    - "&7---------------"

@@ -1,0 +1,11 @@
+name: name
+display-name: name
+account: 0.0
+settings:
+  pvp: true
+  frozen: false
+  vanished: false
+  banned: false
+  ban-reason: ''
+homes: {}
+locations: {}
