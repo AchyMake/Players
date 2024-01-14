@@ -18,13 +18,13 @@ public class BalanceCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                Players.send(player, getDatabase().getEconomyFormat(getDatabase().getEconomy(player)));
+                Players.send(player, "&6Balance:&a " + getDatabase().getEconomyFormat(getDatabase().getEconomy(player)));
             }
             if (args.length == 1) {
                 if (player.hasPermission("players.command.balance.others")) {
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
                     if (getDatabase().exist(offlinePlayer)) {
-                        Players.send(player, offlinePlayer.getName() + "&6's&f " + getDatabase().getEconomyFormat(getDatabase().getEconomy(offlinePlayer)));
+                        Players.send(player, offlinePlayer.getName() + "&6's balance:&a " + getDatabase().getEconomyFormat(getDatabase().getEconomy(player)));
                     } else {
                         Players.send(player, offlinePlayer.getName() + "&c has never joined");
                     }
@@ -35,7 +35,7 @@ public class BalanceCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
                 if (getDatabase().exist(offlinePlayer)) {
-                    Players.send(consoleCommandSender, offlinePlayer.getName() + "'s " + getDatabase().getEconomyFormat(getDatabase().getEconomy(offlinePlayer)));
+                    Players.send(consoleCommandSender, offlinePlayer.getName() + "'s balance" + getDatabase().getEconomyFormat(getDatabase().getEconomy(offlinePlayer)));
                 } else {
                     Players.send(consoleCommandSender, offlinePlayer.getName() + " has never joined");
                 }

@@ -275,7 +275,7 @@ public final class Players extends JavaPlugin {
         player.sendMessage(addColor(message));
     }
     public static void sendActionBar(Player player, String message) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(addColor(message)));
     }
     public static String addColor(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
