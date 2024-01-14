@@ -275,7 +275,6 @@ public final class Players extends JavaPlugin {
         player.sendMessage(addColor(message));
     }
     public static void sendActionBar(Player player, String message) {
-        //hoat
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
     }
     public static String addColor(String message) {
