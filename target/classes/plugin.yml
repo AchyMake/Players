@@ -1,0 +1,579 @@
+name: Players
+version: '1.20.4-SNAPSHOT'
+main: org.achymake.players.Players
+api-version: '1.13'
+prefix: 'Players'
+load: STARTUP
+softdepend:
+  - Vault
+  - PlaceholderAPI
+author: AchyMake
+description: 'Provides Economy, Homes, etc.'
+commands:
+  announcement:
+    usage: /announcement message
+    description: announce the server
+    permission: players.command.announcement
+    permission-message: You do not have the permission to execute the command
+  back:
+    usage: /back
+    description: teleport back to recent or death location
+    permission: players.command.back
+    permission-message: You do not have the permission to execute the command
+  balance:
+    usage: /balance or /bal
+    description: check user balance
+    permission: players.command.balance
+    permission-message: You do not have the permission to execute the command
+    aliases:
+      - bal
+  color:
+    usage: /color
+    description: check minecraft colors
+    permission: players.command.color
+    permission-message: You do not have the permission to execute the command
+  delhome:
+    usage: /delhome home
+    description: delete home
+    permission: players.command.delhome
+    permission-message: You do not have the permission to execute the command
+  delwarp:
+    usage: /delwarp warpName
+    description: delete warp
+    permission: players.command.delwarp
+    permission-message: You do not have the permission to execute the command
+  eco:
+    usage: /eco add player amount
+    description: change economy of players
+    permission: players.command.eco
+    permission-message: You do not have the permission to execute the command
+  enchant:
+    usage: /enchant enchantment amount
+    description: enchant held item
+    permission: players.command.enchant
+    permission-message: You do not have the permission to execute the command
+  enderchest:
+    usage: /enderchest
+    description: open enderchest by command
+    permission: players.command.enderchest
+    permission-message: You do not have the permission to execute the command
+  feed:
+    usage: /feed
+    description: satisfy starvation by command
+    permission: players.command.feed
+    permission-message: You do not have the permission to execute the command
+  fly:
+    usage: /fly
+    description: fly around the world
+    permission: players.command.fly
+    permission-message: You do not have the permission to execute the command
+  freeze:
+    usage: /freeze target
+    description: freeze player
+    permission: players.command.freeze
+    permission-message: You do not have the permission to execute the command
+  gamemode:
+    usage: /gamemode GameMode
+    description: changes gamemode
+    permission: players.command.gamemode
+    permission-message: You do not have the permission to execute the command
+  gma:
+    usage: /gma
+    description: changes gamemode to adventure
+    permission: players.command.gamemode.adventure
+    permission-message: You do not have the permission to execute the command
+  gmc:
+    usage: /gmc
+    description: changes gamemode to creative
+    permission: players.command.gamemode.creative
+    permission-message: You do not have the permission to execute the command
+  gms:
+    usage: /gms
+    description: changes gamemode to survival
+    permission: players.command.gamemode.survival
+    permission-message: You do not have the permission to execute the command
+  gmsp:
+    usage: /gmsp
+    description: changes gamemode to spectator
+    permission: players.command.gamemode.spectator
+    permission-message: You do not have the permission to execute the command
+  hat:
+    usage: /hat
+    description: allows to wear held item as helmet
+    permission: players.command.hat
+    permission-message: You do not have the permission to execute the command
+  heal:
+    usage: /heal
+    description: satisfy health by command
+    permission: players.command.heal
+    permission-message: You do not have the permission to execute the command
+  help:
+    usage: /help
+    description: list of help messages
+    permission: players.command.help
+    permission-message: You do not have the permission to execute the command
+  home:
+    usage: /home
+    description: teleports home
+    permission: players.command.home
+    permission-message: You do not have the permission to execute the command
+  homes:
+    usage: /homes
+    description: check homes
+    permission: players.command.homes
+    permission-message: You do not have the permission to execute the command
+  inventory:
+    usage: /inventory target
+    description: check player inventory
+    permission: players.command.inventory
+    permission-message: You do not have the permission to execute the command
+  jail:
+    usage: /jail
+    description: toggle jail
+    permission: players.command.jail
+    permission-message: You do not have the permission to execute the command
+  kit:
+    usage: /kit
+    description: receive kit
+    permission: players.command.kit
+    permission-message: You do not have the permission to execute the command
+  motd:
+    usage: /motd
+    description: message of the days
+    permission: players.command.motd
+    permission-message: You do not have the permission to execute the command
+  mute:
+    usage: /mute
+    description: toggle mute
+    permission: players.command.mute
+    permission-message: You do not have the permission to execute the command
+  nickname:
+    usage: /nickname
+    description: changes nickname
+    permission: players.command.nickname
+    permission-message: You do not have the permission to execute the command
+  pay:
+    usage: /pay
+    description: pay players
+    permission: players.command.pay
+    permission-message: You do not have the permission to execute the command
+  players:
+    usage: /players
+    description: main command
+    permission: players.command.reload
+    permission-message: You do not have the permission to execute the command
+  pvp:
+    usage: /pvp
+    description: toggle pvp
+    permission: players.command.pvp
+    permission-message: You do not have the permission to execute the command
+  repair:
+    usage: /repair
+    description: repair held item
+    permission: players.command.repair
+    permission-message: You do not have the permission to execute the command
+  respond:
+    usage: /r message
+    description: responds to latest whisper
+    permission: players.command.respond
+    permission-message: You do not have the permission to execute the command
+  rtp:
+    usage: /rtp
+    description: teleport random location
+    permission: players.command.rtp
+    permission-message: You do not have the permission to execute the command
+  rules:
+    usage: /rules
+    description: check rules
+    permission: players.command.rules
+    permission-message: You do not have the permission to execute the command
+  sethome:
+    usage: /sethome homeName
+    description: sets home
+    permission: players.command.sethome
+    permission-message: You do not have the permission to execute the command
+  setjail:
+    usage: /setjail
+    description: sets jail
+    permission: players.command.setjail
+    permission-message: You do not have the permission to execute the command
+  setspawn:
+    usage: /setspawn
+    description: sets spawn
+    permission: players.command.setspawn
+    permission-message: You do not have the permission to execute the command
+  setwarp:
+    usage: /setwarp
+    description: sets warp
+    permission: players.command.setwarp
+    permission-message: You do not have the permission to execute the command
+  skull:
+    usage: /skull offlinePlayer
+    description: spawns skulls
+    permission: players.command.skull
+    permission-message: You do not have the permission to execute the command
+  spawn:
+    usage: /spawn
+    description: teleport to spawn
+    permission: players.command.spawn
+    permission-message: You do not have the permission to execute the command
+  tpaccept:
+    usage: /tpaccept
+    description: accepts tpa request
+    permission: players.command.tpaccept
+    permission-message: You do not have the permission to execute the command
+  tpa:
+    usage: /tpa
+    description: sends tpa request
+    permission: players.command.tpa
+    permission-message: You do not have the permission to execute the command
+  tpcancel:
+    usage: /tpcancel
+    description: cancels tpa request
+    permission: players.command.tpcancel
+    permission-message: You do not have the permission to execute the command
+  tp:
+    usage: /tp target
+    description: teleport to player
+    permission: players.command.tp
+    permission-message: You do not have the permission to execute the command
+  tpdeny:
+    usage: /tpdeny
+    description: denies tpa request
+    permission: players.command.tpdeny
+    permission-message: You do not have the permission to execute the command
+  tphere:
+    usage: /tphere
+    description: teleports target to sender
+    permission: players.command.tphere
+    permission-message: You do not have the permission to execute the command
+  vanish:
+    usage: /vanish
+    description: toggle vanish
+    permission: players.command.vanish
+    permission-message: You do not have the permission to execute the command
+  warp:
+    usage: /warp
+    description: warps to warpName
+    permission: players.command.warp
+    permission-message: You do not have the permission to execute the command
+  whisper:
+    usage: /whisper
+    description: whispers
+    permission: players.command.whisper
+    permission-message: You do not have the permission to execute the command
+  workbench:
+    usage: /workbench
+    description: opens crafting table by command
+    permission: players.command.workbench
+    permission-message: You do not have the permission to execute the command
+permissions:
+  players.command.announcement:
+    description: announce the server
+    default: op
+  players.command.back:
+    description: message
+    default: op
+  players.command.back.death:
+    description: message
+    default: op
+  players.command.back.others:
+    description: message
+    default: op
+  players.command.balance:
+    description: message
+    default: op
+  players.command.balance.others:
+    description: message
+    default: op
+  players.command.color:
+    description: message
+    default: op
+  players.command.delhome:
+    description: message
+    default: op
+  players.command.delwarp:
+    description: message
+    default: op
+  players.command.eco:
+    description: message
+    default: op
+  players.command.eco.add:
+    description: message
+    default: op
+  players.command.eco.remove:
+    description: message
+    default: op
+  players.command.eco.reset:
+    description: message
+    default: op
+  players.command.eco.set:
+    description: message
+    default: op
+  players.command.enchant:
+    description: message
+    default: op
+  players.command.enderchest:
+    description: message
+    default: op
+  players.command.enderchest.others:
+    description: message
+    default: op
+  players.command.enderchest.exempt:
+    description: message
+    default: op
+  players.command.feed:
+    description: message
+    default: op
+  players.command.feed.others:
+    description: message
+    default: op
+  players.command.fly:
+    description: message
+    default: op
+  players.command.fly.others:
+    description: message
+    default: op
+  players.command.fly.exempt:
+    description: message
+    default: op
+  players.command.freeze:
+    description: message
+    default: op
+  players.command.freeze.exempt:
+    description: message
+    default: op
+  players.command.gamemode:
+    description: message
+    default: op
+  players.command.gamemode.others:
+    description: message
+    default: op
+  players.command.gamemode.adventure:
+    description: message
+    default: op
+  players.command.gamemode.creative:
+    description: message
+    default: op
+  players.command.gamemode.survival:
+    description: message
+    default: op
+  players.command.gamemode.spectator:
+    description: message
+    default: op
+  players.command.gamemode.exempt:
+    description: message
+    default: op
+  players.command.hat:
+    description: message
+    default: op
+  players.command.heal:
+    description: message
+    default: op
+  players.command.heal.others:
+    description: message
+    default: op
+  players.command.help:
+    description: message
+    default: op
+  players.command.help.others:
+    description: message
+    default: op
+  players.command.home:
+    description: message
+    default: op
+  players.command.home.buy:
+    description: message
+    default: op
+  players.command.home.bed:
+    description: message
+    default: op
+  players.command.homes:
+    description: message
+    default: op
+  players.command.homes.delete:
+    description: message
+    default: op
+  players.command.homes.teleport:
+    description: message
+    default: op
+  players.command.inventory:
+    description: message
+    default: op
+  players.command.inventory.exempt:
+    description: message
+    default: op
+  players.command.jail:
+    description: message
+    default: op
+  players.command.jail.exempt:
+    description: message
+    default: op
+  players.command.kit:
+    description: message
+    default: op
+  players.command.kit.[kitName]:
+    description: message
+    default: op
+  players.command.kit.others:
+    description: message
+    default: op
+  players.command.motd:
+    description: message
+    default: op
+  players.command.motd.others:
+    description: message
+    default: op
+  players.command.mute:
+    description: message
+    default: op
+  players.command.mute.exempt:
+    description: message
+    default: op
+  players.command.nickname:
+    description: message
+    default: op
+  players.command.nickname.others:
+    description: message
+    default: op
+  players.command.pay:
+    description: message
+    default: op
+  players.command.reload:
+    description: message
+    default: op
+  players.command.pvp:
+    description: message
+    default: op
+  players.command.pvp.others:
+    description: message
+    default: op
+  players.command.pvp.exempt:
+    description: message
+    default: op
+  players.command.repair:
+    description: message
+    default: op
+  players.command.respond:
+    description: message
+    default: op
+  players.command.rtp:
+    description: message
+    default: op
+  players.command.rtp.force:
+    description: message
+    default: op
+  players.command.rules:
+    description: message
+    default: op
+  players.command.rules.others:
+    description: message
+    default: op
+  players.command.sethome:
+    description: message
+    default: op
+  players.command.sethome.multiple.default:
+    description: message
+    default: op
+  players.command.sethome.multiple.[rank]:
+    description: message
+    default: false
+  players.command.setjail:
+    description: message
+    default: op
+  players.command.setspawn:
+    description: message
+    default: op
+  players.command.setwarp:
+    description: message
+    default: op
+  players.command.skull:
+    description: message
+    default: op
+  players.command.spawn:
+    description: message
+    default: op
+  players.command.spawn.others:
+    description: message
+    default: op
+  players.command.tpaccept:
+    description: message
+    default: op
+  players.command.tpa:
+    description: message
+    default: op
+  players.command.tpcancel:
+    description: message
+    default: op
+  players.command.tp:
+    description: message
+    default: op
+  players.command.tpdeny:
+    description: message
+    default: op
+  players.command.tphere:
+    description: message
+    default: op
+  players.command.vanish:
+    description: message
+    default: op
+  players.command.vanish.others:
+    description: message
+    default: op
+  players.command.vanish.exempt:
+    description: message
+    default: op
+  players.command.warp:
+    description: message
+    default: op
+  players.command.warp.[warpName]:
+    description: message
+    default: op
+  players.command.warp.others:
+    description: message
+    default: op
+  players.command.whisper:
+    description: message
+    default: op
+  players.command.workbench:
+    description: message
+    default: op
+  players.command.workbench.others:
+    description: message
+    default: op
+  players.chatcolor.anvil:
+    description: message
+    default: op
+  players.chatcolor.chat:
+    description: message
+    default: op
+  players.chatcolor.signs:
+    description: message
+    default: op
+  players.notify.block-break:
+    description: message
+    default: op
+  players.notify.block-place:
+    description: message
+    default: op
+  players.notify.bucket-empty:
+    description: message
+    default: op
+  players.exempt.commands:
+    description: message
+    default: op
+  players.join-message:
+    description: message
+    default: op
+  players.join-full-server:
+    description: message
+    default: op
+  players.quit-message:
+    description: message
+    default: op
+  players.quit-message-sound:
+    description: message
+    default: op
+  players.death-location:
+    description: message
+    default: op
