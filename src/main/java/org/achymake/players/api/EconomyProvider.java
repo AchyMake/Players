@@ -26,7 +26,7 @@ public class EconomyProvider implements Economy {
         return -1;
     }
     public String format(double amount) {
-        return currencyNamePlural() + Players.getDatabase().getEconomyFormat(amount);
+        return Players.getDatabase().getEconomyFormat(amount);
     }
     public String currencyNamePlural() {
         return currencyNameSingular();
