@@ -173,6 +173,7 @@ public final class Players extends JavaPlugin {
         new EntityDamageBySpectralArrow(this);
         new EntityDamageByThrownPotion(this);
         new EntityDamageByTrident(this);
+        new EntityMount(this);
         new PlayerBucketEmpty(this);
         new PlayerBucketEntity(this);
         new PlayerBucketFill(this);
@@ -184,7 +185,6 @@ public final class Players extends JavaPlugin {
         new PlayerJoinWhileVanished(this);
         new PlayerLeashEntity(this);
         new PlayerLogin(this);
-        new PlayerMount(this);
         new PlayerMoveWhileFrozen(this);
         new PlayerMoveWhileVanished(this);
         new PlayerQuit(this);

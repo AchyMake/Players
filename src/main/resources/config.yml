@@ -3,6 +3,7 @@ economy:
   currency: "$"
   format: "#,##0.00"
   starter-balance: 0.0
+  minimum-payment: 0.01
 tablist:
   enable: false
   header: "&e--&6--&d--&9--&7[&b&lplay.your-server.org&7]&9--&d--&6--&e--"

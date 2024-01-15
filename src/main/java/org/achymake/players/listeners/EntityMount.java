@@ -9,15 +9,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityMountEvent;
 
-public class PlayerMount implements Listener {
+public class EntityMount implements Listener {
     private Database getDatabase() {
         return Players.getDatabase();
     }
-    public PlayerMount(Players plugin) {
+    public EntityMount(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerMount(EntityMountEvent event) {
+    public void onEntityMount(EntityMountEvent event) {
         if (!event.getEntity().getType().equals(EntityType.PLAYER))return;
         if (event.getMount().getType().equals(EntityType.ARMOR_STAND))return;
         Player player = (Player) event.getEntity();

@@ -48,8 +48,12 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                 }
                 if (args[0].equalsIgnoreCase("remove")) {
                     if (getDatabase().exist(offlinePlayer)) {
-                        getDatabase().removeEconomy(offlinePlayer, value);
-                        Players.send(player, "&6You removed&a " + getDatabase().getEconomyFormat(value) + "&6 from&f " + offlinePlayer.getName() + "&6 account");
+                        if (getDatabase().getEconomy(offlinePlayer) - value >= 0) {
+                            getDatabase().removeEconomy(offlinePlayer, value);
+                            Players.send(player, "&6You removed&a " + getDatabase().getEconomyFormat(value) + "&6 from&f " + offlinePlayer.getName() + "&6 account");
+                        } else {
+                            Players.send(player, "&cNegative value, try /eco reset");
+                        }
                     } else {
                         Players.send(player, offlinePlayer.getName() + "&c has never joined");
                     }
@@ -92,8 +96,12 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                 }
                 if (args[0].equalsIgnoreCase("remove")) {
                     if (getDatabase().exist(offlinePlayer)) {
-                        getDatabase().removeEconomy(offlinePlayer, value);
-                        Players.send(consoleCommandSender, "&6You removed&a " + getDatabase().getEconomyFormat(value) + "&6 from&f " + offlinePlayer.getName() + "&6 account");
+                        if (getDatabase().getEconomy(offlinePlayer) - value >= 0) {
+                            getDatabase().removeEconomy(offlinePlayer, value);
+                            Players.send(consoleCommandSender, "&6You removed&a " + getDatabase().getEconomyFormat(value) + "&6 from&f " + offlinePlayer.getName() + "&6 account");
+                        } else {
+                            Players.send(consoleCommandSender, "Negative value, try /eco reset");
+                        }
                     } else {
                         Players.send(consoleCommandSender, offlinePlayer.getName() + "&c has never joined");
                     }

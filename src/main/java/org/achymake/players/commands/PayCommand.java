@@ -9,12 +9,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PayCommand implements CommandExecutor, TabCompleter {
+    private FileConfiguration getConfig() {
+        return Players.getConfiguration();
+    }
     private Database getDatabase() {
         return Players.getDatabase();
     }
@@ -29,16 +33,21 @@ public class PayCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 2) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                if (getDatabase().exist(offlinePlayer)) {
-                    if (getEconomyProvider().has(player, Double.parseDouble(args[1]))) {
-                        getEconomyProvider().withdrawPlayer(player, Double.parseDouble(args[1]));
-                        getEconomyProvider().depositPlayer(offlinePlayer, Double.parseDouble(args[1]));
-                        Players.send(player, "&6You paid&f " + offlinePlayer.getName() + "&a " + getEconomyProvider().format(Double.parseDouble(args[1])));
+                double value = Double.parseDouble(args[1]);
+                if (value >= getConfig().getDouble("economy.minimum-payment")) {
+                    if (getDatabase().exist(offlinePlayer)) {
+                        if (getEconomyProvider().has(player, Double.parseDouble(args[1]))) {
+                            getEconomyProvider().withdrawPlayer(player, Double.parseDouble(args[1]));
+                            getEconomyProvider().depositPlayer(offlinePlayer, Double.parseDouble(args[1]));
+                            Players.send(player, "&6You paid&f " + offlinePlayer.getName() + "&a " + getEconomyProvider().format(Double.parseDouble(args[1])));
+                        } else {
+                            Players.send(player, "&cYou don't have&a " + getEconomyProvider().format(Double.parseDouble(args[1])) + "&c to pay&f " + offlinePlayer.getName());
+                        }
                     } else {
-                        Players.send(player, "&cYou don't have&a " + getEconomyProvider().format(Double.parseDouble(args[1])) + "&c to pay&f " + offlinePlayer.getName());
+                        Players.send(player, offlinePlayer.getName() + "&c has never joined");
                     }
-                } else {
-                    Players.send(player, offlinePlayer.getName() + "&c has never joined");
+                }else {
+                    Players.send(player, "&cMinimum payment is " + getDatabase().getEconomyFormat(getConfig().getDouble("economy.minimum-payment")));
                 }
             }
         }
