@@ -27,6 +27,15 @@ public class PlayerJoin implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerJoinVanished(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        if (!getDatabase().isVanished(player))return;
+        getDatabase().setVanish(player, true);
+        event.setJoinMessage(null);
+        Players.send(player, "&6You joined back vanished");
+        getDatabase().sendUpdate(player);
+    }
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (getDatabase().isVanished(player))return;
@@ -48,21 +57,15 @@ public class PlayerJoin implements Listener {
                 event.setJoinMessage(null);
             }
         }
-        if (getDatabase().hasJoined(player)) {
-            sendMotd(player, "welcome-back");
-        } else {
-            sendMotd(player, "welcome");
-        }
-        getDatabase().sendUpdate(player);
+        sendMotd(player);
         getDatabase().resetTabList();
+        getDatabase().sendUpdate(player);
     }
-    private void sendMotd(Player player, String motd) {
-        if (getConfig().isList("message-of-the-day." + motd)) {
-            for (String message : getConfig().getStringList("message-of-the-day." + motd)) {
-                Players.send(player, message.replaceAll("%player%", player.getName()));
-            }
-        } else if (getConfig().isString("message-of-the-day." + motd)) {
-            Players.send(player, getConfig().getString("message-of-the-day." + motd).replaceAll("%player%", player.getName()));
+    private void sendMotd(Player player) {
+        if (getDatabase().hasJoined(player)) {
+            getDatabase().sendMotd(player, "welcome-back");
+        } else {
+            getDatabase().sendMotd(player, "welcome");
         }
     }
 }

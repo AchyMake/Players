@@ -402,6 +402,15 @@ public class Database {
             Players.getUpdate(player);
         }
     }
+    public void sendMotd(Player player, String motd) {
+        if (getConfig().isList("message-of-the-day." + motd)) {
+            for (String message : getConfig().getStringList("message-of-the-day." + motd)) {
+                Players.send(player, message.replaceAll("%player%", player.getName()));
+            }
+        } else if (getConfig().isString("message-of-the-day." + motd)) {
+            Players.send(player, getConfig().getString("message-of-the-day." + motd).replaceAll("%player%", player.getName()));
+        }
+    }
     public HashMap<String, Long> getCommandCooldown() {
         return commandCooldown;
     }

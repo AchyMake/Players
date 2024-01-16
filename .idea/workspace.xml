@@ -1,30 +1,178 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="5076afce-b320-4939-9319-373f8fab1f00" name="Changes" comment="" />
+    <list default="true" id="5076afce-b320-4939-9319-373f8fab1f00" name="Changes" comment="clean up">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Players.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/Players.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/Players.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/files/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/files/Database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/EntityDamageByArrow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/EntityDamageByEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/EntityDamageByPlayer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/EntityDamageBySnowball.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/EntityDamageBySpectralArrow.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/EntityDamageByThrownPotion.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/EntityDamageByTrident.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerJoin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerJoin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerJoinWhileVanished.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerLogin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerQuit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerQuit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerQuitWhileTPA.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerQuitWhileVanished.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/Players-1.20.4-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/Players$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/Players$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/Players.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/Players.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/api/EconomyProvider.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/api/EconomyProvider.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/BalanceCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/BalanceCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/DelWarpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/DelWarpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/EcoCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/EcoCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/EnchantCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/EnchantCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/EnderChestCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/EnderChestCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/FeedCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/FeedCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/FlyCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/FlyCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/FreezeCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/FreezeCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/GMACommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/GMACommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/GMCCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/GMCCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/GMSCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/GMSCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/GMSPCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/GMSPCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/GameModeCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/GameModeCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/HatCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/HatCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/HealCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/HealCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/HelpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/HelpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/HomeCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/HomeCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/HomesCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/HomesCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/InventoryCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/InventoryCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/JailCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/JailCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/KitCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/KitCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/MOTDCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/MOTDCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/MuteCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/MuteCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/NicknameCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/NicknameCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/PVPCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/PVPCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/PayCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/PayCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/PlayersCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/PlayersCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/RTPCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/RTPCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/RepairCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/RepairCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/RespondCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/RespondCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/RulesCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/RulesCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/SetHomeCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/SetHomeCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/SetJailCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/SetJailCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/SetSpawnCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/SetSpawnCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/SetWarpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/SetWarpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/SkullCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/SkullCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/SpawnCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/SpawnCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/TPACommand$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/TPACommand$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/TPACommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/TPACommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/TPAcceptCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/TPAcceptCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/TPCancelCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/TPCancelCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/TPCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/TPCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/TPDenyCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/TPDenyCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/TPHereCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/TPHereCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/VanishCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/VanishCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/WarpCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/WarpCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/WhisperCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/WhisperCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/WorkbenchCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/commands/WorkbenchCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/files/Database.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/files/Database.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/BlockBreak.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/BlockBreak.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/BlockFertilize.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/BlockFertilize.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/BlockPlace.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/BlockPlace.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/EntityDamageByArrow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/EntityDamageByArrow.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/EntityDamageByPlayer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/EntityDamageByPlayer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/EntityDamageBySnowball.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/EntityDamageBySnowball.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/EntityDamageBySpectralArrow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/EntityDamageBySpectralArrow.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/EntityDamageByThrownPotion.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/EntityDamageByThrownPotion.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/EntityDamageByTrident.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/EntityDamageByTrident.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerBucketEmpty.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerBucketEmpty.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerBucketEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerBucketEntity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerBucketFill.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerBucketFill.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerHarvestBlock.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerHarvestBlock.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerInteractPhysical.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerInteractPhysical.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerJoin.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerJoin.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerJoinWhileVanished.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerLeashEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerLeashEntity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerMount.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerMove.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerQuit.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerQuit.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerQuitWhileTPA.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerQuitWhileVanished.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerRespawn.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerRespawn.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerSpawnLocation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/achymake/players/listeners/PlayerSpawnLocation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/original-Players-1.20.4-SNAPSHOT.jar" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;AchyMake&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="b308590e-4319-40a0-9877-139cbbd9179c" />
+        <option name="url" value="https://github.com/AchyMake/Players.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2aviy8zGxsWkWuBaPiewKhLMaKl" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "kotlin-language-version-configured": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.Players package.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.Players.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Anders Johnsen/IdeaProjects/Spigot/Players/src/main/resources&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Anders Johnsen\IdeaProjects\Spigot\Players\src\main\resources" />
+      <recent name="C:\Users\Anders Johnsen\IdeaProjects\Spigot\Players\src\main\java\org\achymake\players" />
+    </key>
+  </component>
   <component name="RunManager">
-    <configuration name="Players package" type="MavenRunConfiguration" factoryName="Maven">
+    <configuration name="Players" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings" />
         <option name="myRunnerSettings" />
@@ -36,6 +184,7 @@
             </option>
             <option name="goals">
               <list>
+                <option value="clean" />
                 <option value="package" />
               </list>
             </option>
@@ -59,6 +208,7 @@
     <attachedChunks>
       <set>
         <option value="jdk-1.8.0_392-corretto-1.8.0_392-f644763e9732-f719d367" />
+        <option value="jdk-17.0.9-corretto-17.0.9-f644763e9732-ebaef533" />
       </set>
     </attachedChunks>
   </component>
@@ -71,6 +221,125 @@
       <option name="presentableId" value="Default" />
       <updated>1705205706886</updated>
     </task>
+    <task id="LOCAL-00001" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1705207840721</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1705207840721</updated>
+    </task>
+    <task id="LOCAL-00002" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1705207957478</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1705207957478</updated>
+    </task>
+    <task id="LOCAL-00003" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1705208041873</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1705208041873</updated>
+    </task>
+    <task id="LOCAL-00004" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1705208123050</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1705208123050</updated>
+    </task>
+    <task id="LOCAL-00005" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1705208463238</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1705208463238</updated>
+    </task>
+    <task id="LOCAL-00006" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1705208936006</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1705208936006</updated>
+    </task>
+    <task id="LOCAL-00007" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1705208989432</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1705208989432</updated>
+    </task>
+    <task id="LOCAL-00008" summary="clean up 2">
+      <option name="closed" value="true" />
+      <created>1705209081723</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1705209081723</updated>
+    </task>
+    <task id="LOCAL-00009" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1705210560441</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1705210560441</updated>
+    </task>
+    <task id="LOCAL-00010" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1705263268474</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1705263268474</updated>
+    </task>
+    <task id="LOCAL-00011" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1705263438016</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1705263438016</updated>
+    </task>
+    <task id="LOCAL-00012" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1705357428128</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1705357428128</updated>
+    </task>
+    <task id="LOCAL-00013" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1705357462400</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1705357462400</updated>
+    </task>
+    <task id="LOCAL-00014" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1705363171982</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1705363171982</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="first commit" />
+    <MESSAGE value="clean up 2" />
+    <MESSAGE value="clean up" />
+    <option name="LAST_COMMIT_MESSAGE" value="clean up" />
   </component>
 </project>

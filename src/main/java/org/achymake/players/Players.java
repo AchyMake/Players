@@ -167,12 +167,7 @@ public final class Players extends JavaPlugin {
         new BlockBreak(this);
         new BlockFertilize(this);
         new BlockPlace(this);
-        new EntityDamageByArrow(this);
-        new EntityDamageByPlayer(this);
-        new EntityDamageBySnowball(this);
-        new EntityDamageBySpectralArrow(this);
-        new EntityDamageByThrownPotion(this);
-        new EntityDamageByTrident(this);
+        new EntityDamageByEntity(this);
         new EntityMount(this);
         new PlayerBucketEmpty(this);
         new PlayerBucketEntity(this);
@@ -182,14 +177,11 @@ public final class Players extends JavaPlugin {
         new PlayerHarvestBlock(this);
         new PlayerInteractPhysical(this);
         new PlayerJoin(this);
-        new PlayerJoinWhileVanished(this);
         new PlayerLeashEntity(this);
         new PlayerLogin(this);
         new PlayerMoveWhileFrozen(this);
         new PlayerMoveWhileVanished(this);
         new PlayerQuit(this);
-        new PlayerQuitWhileTPA(this);
-        new PlayerQuitWhileVanished(this);
         new PlayerRespawn(this);
         new PlayerShearEntity(this);
         new PlayerSpawnLocation(this);
