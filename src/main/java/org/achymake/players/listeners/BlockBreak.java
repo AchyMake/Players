@@ -35,7 +35,7 @@ public class BlockBreak implements Listener {
             if (!getConfig().getBoolean("notification.enable"))return;
             if (!getConfig().getStringList("notification.block-break").contains(event.getBlock().getType().toString()))return;
             for (Player players : event.getPlayer().getServer().getOnlinePlayers()) {
-                if (players.hasPermission("players.notify.block-break")) {
+                if (players.hasPermission("players.event.block-break.notify")) {
                     for (String messages : getConfig().getStringList("notification.message")) {
                         players.sendMessage(getMessage().addColor(MessageFormat.format(messages, event.getPlayer().getName(), event.getBlock().getType().toString(), event.getBlock().getWorld().getName(), event.getBlock().getLocation().getBlockX(), event.getBlock().getLocation().getBlockY(), event.getBlock().getLocation().getBlockZ())));
                     }

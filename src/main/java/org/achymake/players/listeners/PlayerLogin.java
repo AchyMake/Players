@@ -25,7 +25,7 @@ public class PlayerLogin implements Listener {
     public void onPlayerLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
         if (getHost().getOnlinePlayers().size() >= getHost().getMaxPlayers()) {
-            if (player.hasPermission("players.join-full-server")) {
+            if (player.hasPermission("players.event.login.full-server")) {
                 if (getDatabase().exist(player)) {
                     if (getDatabase().isBanned(player)) {
                         event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getDatabase().getBanReason(player));

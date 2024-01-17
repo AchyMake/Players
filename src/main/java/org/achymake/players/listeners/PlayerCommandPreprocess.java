@@ -18,7 +18,7 @@ public class PlayerCommandPreprocess implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        if (event.getPlayer().hasPermission("players.exempt.commands"))return;
+        if (event.getPlayer().hasPermission("players.event.commands.exempt"))return;
         for (String disabled : getConfig().getStringList("commands.disable")) {
             if (event.getMessage().startsWith("/" + disabled)) {
                 event.setCancelled(true);

@@ -49,7 +49,7 @@ public class PlayerJoin implements Listener {
                     players.playSound(players, Sound.valueOf(getConfig().getString("connection.join.sound.type")), Float.valueOf(getConfig().getString("connection.join.sound.volume")), Float.valueOf(getConfig().getString("connection.join.sound.pitch")));
                 }
             } else {
-                if (player.hasPermission("players.join-message")) {
+                if (player.hasPermission("players.event.join.message")) {
                     event.setJoinMessage(getMessage().addColor(MessageFormat.format(getConfig().getString("connection.join.message"), player.getName())));
                     if (getConfig().getBoolean("connection.join.sound.enable")) {
                         for (Player players : getHost().getOnlinePlayers()) {

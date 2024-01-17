@@ -20,7 +20,7 @@ public class SignChange implements Listener {
     public void onSignChange(SignChangeEvent event) {
         for (int i = 0; i < event.getLines().length; i++) {
             if (!event.getLine(i).contains("&"))return;
-            if (!event.getPlayer().hasPermission("players.chatcolor.sign"))return;
+            if (!event.getPlayer().hasPermission("players.event.signs.color"))return;
             event.setLine(i, getMessage().addColor(event.getLine(i)));
         }
     }

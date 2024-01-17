@@ -1,4 +1,6 @@
 notify-update: true
+# if player has permission: 'players.event.join.update'
+# player will receive plugin updates on join events
 economy:
   currency: "$"
   format: "#,##0.00"
@@ -28,7 +30,7 @@ homes:
   vip: 6
   staff: 12
 deaths:
-  # if false permission: 'players.death-location'
+  # if false permission: 'players.event.death.location'
   send-location: false
   drop-player-head:
     # enable drop player heads
@@ -37,7 +39,7 @@ deaths:
     chance: 30
 connection:
   join:
-    # if false permission: 'players.join-message'
+    # if false permission: 'players.event.join.message'
     enable: true
     message: "{0}&e has joined the server [&a+&e]"
     sound:
@@ -46,7 +48,7 @@ connection:
       volume: 0.75F
       pitch: 1.0F
   quit:
-    # if false permission: 'players.quit-message'
+    # if false permission: 'players.event.quit.message'
     enable: true
     message: "{0}&e has left the server [&c-&e]"
     sound:
@@ -74,9 +76,9 @@ commands:
     - reload
 notification:
   # Permissions
-  # players.notify.block-break
-  # players.notify.bucket-empty
-  # players.notify.block-place
+  # players.event.block-break.notify
+  # players.event.block-place.notify
+  # players.event.bucket-empty.notify
   #
   # Placeholders
   # {0} Player, {1} Material

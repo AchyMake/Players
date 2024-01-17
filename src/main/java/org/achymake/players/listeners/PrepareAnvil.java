@@ -19,7 +19,7 @@ public class PrepareAnvil implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPrepareAnvil(PrepareAnvilEvent event) {
-        if (!event.getView().getPlayer().hasPermission("players.chatcolor.anvil"))return;
+        if (!event.getView().getPlayer().hasPermission("players.event.anvil.color"))return;
         if (event.getResult() == null)return;
         if (!event.getResult().hasItemMeta())return;
         ItemMeta resultMeta = event.getResult().getItemMeta();

@@ -35,7 +35,7 @@ public class BlockPlace implements Listener {
             if (!getConfig().getBoolean("notification.enable"))return;
             if (!getConfig().getStringList("notification.block-place").contains(event.getBlockPlaced().getType().toString()))return;
             for (Player players : event.getPlayer().getServer().getOnlinePlayers()) {
-                if (players.hasPermission("players.notify.block-place")) {
+                if (players.hasPermission("players.event.block-place.notify")) {
                     for (String messages : getConfig().getStringList("notification.message")) {
                         players.sendMessage(getMessage().addColor(MessageFormat.format(messages, event.getPlayer().getName(), event.getBlockPlaced().getType().toString(), event.getBlock().getWorld().getName(), event.getBlock().getLocation().getBlockX(), event.getBlock().getLocation().getBlockY(), event.getBlock().getLocation().getBlockZ())));
                     }

@@ -70,7 +70,7 @@ public class PlayerQuit implements Listener {
                     }
                 }
             } else {
-                if (player.hasPermission("players.quit-message")) {
+                if (player.hasPermission("players.event.quit.message")) {
                     event.setQuitMessage(getMessage().addColor(MessageFormat.format(getConfig().getString("connection.quit.message"), player.getName())));
                     if (getConfig().getBoolean("connection.quit.sound.enable")) {
                         for (Player players : getHost().getOnlinePlayers()) {

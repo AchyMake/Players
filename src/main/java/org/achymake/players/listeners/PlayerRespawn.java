@@ -46,7 +46,7 @@ public class PlayerRespawn implements Listener {
         if (getConfig().getBoolean("deaths.send-location")) {
             sendLocation(player);
         } else {
-            if (player.hasPermission("players.death-location")) {
+            if (player.hasPermission("players.event.death.location")) {
                 sendLocation(player);
             }
         }

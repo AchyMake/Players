@@ -35,7 +35,7 @@ public class PlayerBucketEmpty implements Listener {
             if (!getConfig().getBoolean("notification.enable"))return;
             if (!getConfig().getStringList("notification.bucket-empty").contains(event.getBucket().toString()))return;
             for (Player players : event.getPlayer().getServer().getOnlinePlayers()) {
-                if (players.hasPermission("players.notify.bucket-empty")) {
+                if (players.hasPermission("players.event.bucket-empty.notify")) {
                     for (String messages : getConfig().getStringList("notification.message")) {
                         players.sendMessage(getMessage().addColor(MessageFormat.format(messages, event.getPlayer().getName(), event.getBucket().toString(), event.getBlock().getWorld().getName(), event.getBlock().getLocation().getBlockX(), event.getBlock().getLocation().getBlockY(), event.getBlock().getLocation().getBlockZ())));
                     }

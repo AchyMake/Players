@@ -26,7 +26,7 @@ public class AsyncPlayerChat implements Listener {
         if (getDatabase().isMuted(event.getPlayer())) {
             event.setCancelled(true);
         } else {
-            if (event.getPlayer().hasPermission("players.chatcolor.chat")) {
+            if (event.getPlayer().hasPermission("players.event.chat.color")) {
                 event.setMessage(getMessage().addColor(event.getMessage()));
             }
             event.setFormat(getDatabase().prefix(event.getPlayer()) + getDatabase().getDisplayName(event.getPlayer()) + ChatColor.WHITE + getDatabase().suffix(event.getPlayer()) + ChatColor.WHITE + ": " + event.getMessage());

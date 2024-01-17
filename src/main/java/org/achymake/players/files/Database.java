@@ -367,7 +367,7 @@ public class Database {
         return getConfig(player).getString("settings.ban-reason");
     }
     public void sendUpdate(Player player) {
-        if (player.hasPermission("players.command.reload")) {
+        if (player.hasPermission("players.event.join.update")) {
             plugin.getUpdate(player);
         }
     }
