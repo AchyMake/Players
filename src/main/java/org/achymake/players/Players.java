@@ -197,7 +197,6 @@ public final class Players extends JavaPlugin {
             try {
                 getConfig().load(file);
                 getConfig().save(file);
-                getMessage().sendLog(Level.INFO, "loaded config.yml");
             } catch (IOException | InvalidConfigurationException e) {
                 getMessage().sendLog(Level.WARNING, e.getMessage());
             }
@@ -205,7 +204,6 @@ public final class Players extends JavaPlugin {
             getConfig().options().copyDefaults(true);
             try {
                 getConfig().save(file);
-                getMessage().sendLog(Level.INFO, "created config.yml");
             } catch (IOException e) {
                 getMessage().sendLog(Level.WARNING, e.getMessage());
             }
