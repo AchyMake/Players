@@ -9,11 +9,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEntityEvent;
 
 public class PlayerBucketEntity implements Listener {
+    private final Players plugin;
     private Database getDatabase() {
-        return Players.getDatabase();
+        return plugin.getDatabase();
     }
     public PlayerBucketEntity(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEntity(PlayerBucketEntityEvent event) {

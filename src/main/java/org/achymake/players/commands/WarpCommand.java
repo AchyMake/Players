@@ -2,6 +2,7 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
 import org.achymake.players.files.Warps;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -10,11 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WarpCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private Database getDatabase() {
-        return Players.getDatabase();
+        return getPlugin().getDatabase();
     }
     private Warps getWarps() {
-        return Players.getWarps();
+        return getPlugin().getWarps();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -24,11 +31,11 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                     return false;
                 } else {
                     if (getWarps().getWarps().isEmpty()) {
-                        Players.send(player, "&cWarps is currently empty");
+                        getMessage().send(player, "&cWarps is currently empty");
                     } else {
-                        Players.send(player, "&6Warps:");
+                        getMessage().send(player, "&6Warps:");
                         for (String warps : getWarps().getWarps()) {
-                            Players.send(player, "- " + warps);
+                            getMessage().send(player, "- " + warps);
                         }
                     }
                 }
@@ -40,10 +47,10 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                     if (player.hasPermission("players.command.warp." + args[0])) {
                         if (getWarps().locationExist(args[0])) {
                             getWarps().getLocation(args[0]).getChunk().load();
-                            Players.sendActionBar(player, "&6Teleporting to&f "+ args[0]);
+                            getMessage().sendActionBar(player, "&6Teleporting to&f "+ args[0]);
                             player.teleport(getWarps().getLocation(args[0]));
                         } else {
-                            Players.send(player, args[0] + "&c does not exist");
+                            getMessage().send(player, args[0] + "&c does not exist");
                         }
                     }
                 }
@@ -58,10 +65,10 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                             } else {
                                 if (getWarps().locationExist(args[0])) {
                                     getWarps().getLocation(args[0]).getChunk().load();
-                                    Players.send(target, "&6Teleporting to&f " + args[0]);
+                                    getMessage().send(target, "&6Teleporting to&f " + args[0]);
                                     target.teleport(getWarps().getLocation(args[0]));
                                 } else {
-                                    Players.send(player, args[0] + "&c does not exist");
+                                    getMessage().send(player, args[0] + "&c does not exist");
                                 }
                             }
                         }
@@ -78,10 +85,10 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                     } else {
                         if (getWarps().locationExist(args[0])) {
                             getWarps().getLocation(args[0]).getChunk().load();
-                            Players.send(target, "&6Teleporting to&f " + args[0]);
+                            getMessage().send(target, "&6Teleporting to&f " + args[0]);
                             target.teleport(getWarps().getLocation(args[0]));
                         } else {
-                            Players.send(consoleCommandSender, args[0] + " does not exist");
+                            getMessage().send(consoleCommandSender, args[0] + " does not exist");
                         }
                     }
                 }

@@ -2,6 +2,7 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -15,14 +16,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SkullCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private Database getDatabase() {
-        return Players.getDatabase();
+        return getPlugin().getDatabase();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                Players.send(player, "&cUsage:&f /skull offlinePlayer");
+                getMessage().send(player, "&cUsage:&f /skull offlinePlayer");
             }
             if (args.length == 1) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
@@ -31,7 +38,7 @@ public class SkullCommand implements CommandExecutor, TabCompleter {
                 } else {
                     player.getWorld().dropItem(player.getLocation(), getDatabase().getOfflinePlayerHead(offlinePlayer, 1));
                 }
-                Players.send(player, "&6You received&f " + offlinePlayer.getName() + "&6's skull");
+                getMessage().send(player, "&6You received&f " + offlinePlayer.getName() + "&6's skull");
             }
         }
         return true;

@@ -2,6 +2,7 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
@@ -11,8 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PVPCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private Database getDatabase() {
-        return Players.getDatabase();
+        return getPlugin().getDatabase();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -20,9 +27,9 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
             if (args.length == 0) {
                 getDatabase().setBoolean(player, "settings.pvp", !getDatabase().isPVP(player));
                 if (getDatabase().isPVP(player)) {
-                    Players.sendActionBar(player, "&6&lPVP:&a Enabled");
+                    getMessage().sendActionBar(player, "&6&lPVP:&a Enabled");
                 } else {
-                    Players.sendActionBar(player, "&6&lPVP:&c Disabled");
+                    getMessage().sendActionBar(player, "&6&lPVP:&c Disabled");
                 }
             }
             if (args.length == 1) {
@@ -31,22 +38,22 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
                     if (target == player) {
                         getDatabase().setBoolean(target, "settings.pvp", !getDatabase().isPVP(target));
                         if (getDatabase().isPVP(target)) {
-                            Players.sendActionBar(target, "&6&lPVP:&a Enabled");
+                            getMessage().sendActionBar(target, "&6&lPVP:&a Enabled");
                         } else {
-                            Players.sendActionBar(target, "&6&lPVP:&c Disabled");
+                            getMessage().sendActionBar(target, "&6&lPVP:&c Disabled");
                         }
                     } else {
                         if (target != null) {
                             if (!target.hasPermission("players.command.pvp.exempt")) {
                                 getDatabase().setBoolean(target, "settings.pvp", !getDatabase().isPVP(target));
                                 if (getDatabase().isPVP(target)) {
-                                    Players.send(target, player.getName() + "&6 enabled pvp for you");
-                                    Players.sendActionBar(target, "&6&lPVP:&a Enabled");
-                                    Players.send(player, "&6You enabled pvp for&f " + target.getName());
+                                    getMessage().send(target, player.getName() + "&6 enabled pvp for you");
+                                    getMessage().sendActionBar(target, "&6&lPVP:&a Enabled");
+                                    getMessage().send(player, "&6You enabled pvp for&f " + target.getName());
                                 } else {
-                                    Players.send(target, player.getName() + "&6 disabled pvp for you");
-                                    Players.sendActionBar(target, "&6&lPVP:&c Disabled");
-                                    Players.send(player, "&6You disabled pvp for&f " + target.getName());
+                                    getMessage().send(target, player.getName() + "&6 disabled pvp for you");
+                                    getMessage().sendActionBar(target, "&6&lPVP:&c Disabled");
+                                    getMessage().send(player, "&6You disabled pvp for&f " + target.getName());
                                 }
                             }
                         } else {
@@ -54,12 +61,12 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
                             if (getDatabase().exist(offlinePlayer)) {
                                 getDatabase().setBoolean(offlinePlayer, "settings.pvp", !getDatabase().isPVP(offlinePlayer));
                                 if (getDatabase().isPVP(offlinePlayer)) {
-                                    Players.send(player, "&6You enabled pvp for&f " + offlinePlayer.getName());
+                                    getMessage().send(player, "&6You enabled pvp for&f " + offlinePlayer.getName());
                                 } else {
-                                    Players.send(player, "&6You disabled pvp for&f " + offlinePlayer.getName());
+                                    getMessage().send(player, "&6You disabled pvp for&f " + offlinePlayer.getName());
                                 }
                             } else {
-                                Players.send(player, offlinePlayer.getName() + "&c has never joined");
+                                getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
                             }
                         }
                     }
@@ -72,25 +79,25 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
                 if (target != null) {
                     getDatabase().setBoolean(target, "settings.pvp", !getDatabase().isPVP(target));
                     if (getDatabase().isPVP(target)) {
-                        Players.send(target, consoleCommandSender.getName() + "&6 enabled pvp for you");
-                        Players.sendActionBar(target, "&6&lPVP:&a Enabled");
-                        Players.send(consoleCommandSender, "You enabled pvp for " + target.getName());
+                        getMessage().send(target, consoleCommandSender.getName() + "&6 enabled pvp for you");
+                        getMessage().sendActionBar(target, "&6&lPVP:&a Enabled");
+                        getMessage().send(consoleCommandSender, "You enabled pvp for " + target.getName());
                     } else {
-                        Players.send(target, consoleCommandSender.getName() + "&6 disabled pvp for you");
-                        Players.sendActionBar(target, "&6&lPVP:&c Disabled");
-                        Players.send(consoleCommandSender, "You disabled pvp for " + target.getName());
+                        getMessage().send(target, consoleCommandSender.getName() + "&6 disabled pvp for you");
+                        getMessage().sendActionBar(target, "&6&lPVP:&c Disabled");
+                        getMessage().send(consoleCommandSender, "You disabled pvp for " + target.getName());
                     }
                 } else {
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
                     if (getDatabase().exist(offlinePlayer)) {
                         getDatabase().setBoolean(offlinePlayer, "settings.pvp", !getDatabase().isPVP(offlinePlayer));
                         if (getDatabase().isPVP(offlinePlayer)) {
-                            Players.send(consoleCommandSender, "You enabled pvp for " + offlinePlayer.getName());
+                            getMessage().send(consoleCommandSender, "You enabled pvp for " + offlinePlayer.getName());
                         } else {
-                            Players.send(consoleCommandSender, "You disabled pvp for " + offlinePlayer.getName());
+                            getMessage().send(consoleCommandSender, "You disabled pvp for " + offlinePlayer.getName());
                         }
                     } else {
-                        Players.send(consoleCommandSender, offlinePlayer.getName() + " has never joined");
+                        getMessage().send(consoleCommandSender, offlinePlayer.getName() + " has never joined");
                     }
                 }
             }

@@ -2,6 +2,7 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,14 +14,20 @@ import java.util.List;
 import java.util.UUID;
 
 public class RespondCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private Database getDatabase() {
-        return Players.getDatabase();
+        return getPlugin().getDatabase();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                Players.send(player, "&cUsage:&f /r message");
+                getMessage().send(player, "&cUsage:&f /r message");
             }
             if (!getDatabase().isMuted(player)) {
                 if (args.length > 0) {
@@ -32,12 +39,12 @@ public class RespondCommand implements CommandExecutor, TabCompleter {
                                 stringBuilder.append(words);
                                 stringBuilder.append(" ");
                             }
-                            Players.send(player, "&7You > " + target.getName() + ": " + stringBuilder.toString().strip());
-                            Players.send(target, "&7" + player.getName() + " > You: " + stringBuilder.toString().strip());
+                            getMessage().send(player, "&7You > " + target.getName() + ": " + stringBuilder.toString().strip());
+                            getMessage().send(target, "&7" + player.getName() + " > You: " + stringBuilder.toString().strip());
                             getDatabase().setString(target, "last-whisper", player.getUniqueId().toString());
                             for (Player players : sender.getServer().getOnlinePlayers()) {
                                 if (players.hasPermission("players.notify.whispers")) {
-                                    Players.send(players, "&7" + player.getName() + " > " + target.getName() + ": " + stringBuilder.toString().strip());
+                                    getMessage().send(players, "&7" + player.getName() + " > " + target.getName() + ": " + stringBuilder.toString().strip());
                                 }
                             }
                         }

@@ -10,14 +10,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 public class PlayerLogin implements Listener {
+    private final Players plugin;
     private Database getDatabase() {
-        return Players.getDatabase();
+        return plugin.getDatabase();
     }
     private Server getHost() {
-        return Players.getHost();
+        return plugin.getServer();
     }
     public PlayerLogin(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerLogin(PlayerLoginEvent event) {

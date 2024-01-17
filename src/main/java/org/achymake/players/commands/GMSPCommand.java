@@ -1,6 +1,7 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
+import org.achymake.players.files.Message;
 import org.bukkit.GameMode;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -9,15 +10,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GMSPCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (player.getGameMode().equals(GameMode.SPECTATOR)) {
-                    Players.send(player, "&cYou are already in&f Spectator&c mode");
+                    getMessage().send(player, "&cYou are already in&f Spectator&c mode");
                 } else {
                     player.setGameMode(GameMode.SPECTATOR);
-                    Players.send(player, "&6You changed gamemode to&f Spectator");
+                    getMessage().send(player, "&6You changed gamemode to&f Spectator");
                 }
             }
             if (args.length == 1) {
@@ -26,26 +33,26 @@ public class GMSPCommand implements CommandExecutor, TabCompleter {
                     if (target == player) {
                         if (!target.getGameMode().equals(GameMode.SPECTATOR)) {
                             target.setGameMode(GameMode.SPECTATOR);
-                            Players.send(target, player.getName() + "&6 has changed your gamemode to&f Spectator");
-                            Players.send(player, "&6You changed&f " + target.getName() + "&6 gamemode to&f Spectator");
+                            getMessage().send(target, player.getName() + "&6 has changed your gamemode to&f Spectator");
+                            getMessage().send(player, "&6You changed&f " + target.getName() + "&6 gamemode to&f Spectator");
                         }
                     } else {
                         if (target != null) {
                             if (target.hasPermission("players.command.gamemode.exempt")) {
-                                Players.send(player, "&cYou are not allowed to change gamemode of&f " + target.getName());
+                                getMessage().send(player, "&cYou are not allowed to change gamemode of&f " + target.getName());
                             } else {
                                 if (target.getGameMode().equals(GameMode.SPECTATOR)) {
-                                    Players.send(player, target.getName() + "&c is already in&f Spectator&c mode");
+                                    getMessage().send(player, target.getName() + "&c is already in&f Spectator&c mode");
                                 } else {
                                     target.setGameMode(GameMode.SPECTATOR);
-                                    Players.send(target, player.getName() + "&6 has changed your gamemode to&f Spectator");
-                                    Players.send(player, "&6You changed&f " + target.getName() + "&6 gamemode to&f Spectator");
+                                    getMessage().send(target, player.getName() + "&6 has changed your gamemode to&f Spectator");
+                                    getMessage().send(player, "&6You changed&f " + target.getName() + "&6 gamemode to&f Spectator");
                                 }
                             }
                         }
                     }
                 } else {
-                    Players.send(player, "&cError:&7 You do not have the permissions to execute the command");
+                    getMessage().send(player, "&cError:&7 You do not have the permissions to execute the command");
                 }
             }
         }
@@ -55,8 +62,8 @@ public class GMSPCommand implements CommandExecutor, TabCompleter {
                 if (target != null) {
                     if (!target.getGameMode().equals(GameMode.SPECTATOR)) {
                         target.setGameMode(GameMode.SPECTATOR);
-                        Players.send(target, "&6Your gamemode has changed to&f Spectator");
-                        Players.send(consoleCommandSender, "You changed " + target.getName() + " gamemode to Spectator");
+                        getMessage().send(target, "&6Your gamemode has changed to&f Spectator");
+                        getMessage().send(consoleCommandSender, "You changed " + target.getName() + " gamemode to Spectator");
                     }
                 }
             }

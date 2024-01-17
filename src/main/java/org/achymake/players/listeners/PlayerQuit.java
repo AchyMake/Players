@@ -2,6 +2,8 @@ package org.achymake.players.listeners;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
+import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -14,69 +16,72 @@ import java.text.MessageFormat;
 import java.util.UUID;
 
 public class PlayerQuit implements Listener {
+    private final Players plugin;
     private FileConfiguration getConfig() {
-        return Players.getConfiguration();
+        return plugin.getConfig();
     }
     private Database getDatabase() {
-        return Players.getDatabase();
+        return plugin.getDatabase();
+    }
+    private Server getHost() {
+        return plugin.getServer();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
     }
     public PlayerQuit(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerQuitWhileVanished(PlayerQuitEvent event) {
-        if (!getDatabase().isVanished(event.getPlayer()))return;
-        getDatabase().setLocation(event.getPlayer(), "quit");
-        getDatabase().getVanished().remove(event.getPlayer());
-        event.setQuitMessage(null);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        if (getDatabase().isVanished(event.getPlayer()))return;
-        getDatabase().setLocation(event.getPlayer(), "quit");
-        if (getConfig().getBoolean("connection.quit.enable")) {
-            event.setQuitMessage(Players.addColor(MessageFormat.format(getConfig().getString("connection.quit.message"), event.getPlayer().getName())));
-            if (getConfig().getBoolean("connection.quit.sound.enable")) {
-                for (Player players : event.getPlayer().getServer().getOnlinePlayers()) {
-                    players.playSound(players, Sound.valueOf(getConfig().getString("connection.quit.sound.type")), Float.valueOf(getConfig().getString("connection.quit.sound.volume")), Float.valueOf(getConfig().getString("connection.quit.sound.pitch")));
+        Player player = event.getPlayer();
+        getDatabase().setLocation(player, "quit");
+        if (getDatabase().getConfig(player).isString("tpa.from")) {
+            Player target = getHost().getPlayer(UUID.fromString(getDatabase().getConfig(player).getString("tpa.from")));
+            if (target != null) {
+                getDatabase().setString(target, "tpa.sent", null);
+                if (getHost().getScheduler().isQueued(getDatabase().getConfig(target).getInt("task.tpa"))) {
+                    getHost().getScheduler().cancelTask(getDatabase().getConfig(target).getInt("task.tpa"));
+                    getDatabase().setString(player, "tpa.from", null);
+                }
+                getDatabase().setString(target, "task.tpa", null);
+            }
+        } else if (getDatabase().getConfig(player).isString("tpa.sent")) {
+            Player target = getHost().getPlayer(UUID.fromString(getDatabase().getConfig(player).getString("tpa.sent")));
+            if (target != null) {
+                getDatabase().setString(target, "tpa.from", null);
+                if (getHost().getScheduler().isQueued(getDatabase().getConfig(player).getInt("task.tpa"))) {
+                    getHost().getScheduler().cancelTask(getDatabase().getConfig(player).getInt("task.tpa"));
+                    getDatabase().setString(player, "task.tpa", null);
                 }
             }
+            getDatabase().setString(player, "tpa.sent", null);
+        }
+        if (getDatabase().isVanished(player)) {
+            getDatabase().getVanished().remove(player);
+            event.setQuitMessage(null);
         } else {
-            if (event.getPlayer().hasPermission("players.quit-message")) {
-                event.setQuitMessage(Players.addColor(MessageFormat.format(getConfig().getString("connection.quit.message"), event.getPlayer().getName())));
+            if (getConfig().getBoolean("connection.quit.enable")) {
+                event.setQuitMessage(getMessage().addColor(MessageFormat.format(getConfig().getString("connection.quit.message"), player.getName())));
                 if (getConfig().getBoolean("connection.quit.sound.enable")) {
-                    for (Player players : event.getPlayer().getServer().getOnlinePlayers()) {
+                    for (Player players : getHost().getOnlinePlayers()) {
                         players.playSound(players, Sound.valueOf(getConfig().getString("connection.quit.sound.type")), Float.valueOf(getConfig().getString("connection.quit.sound.volume")), Float.valueOf(getConfig().getString("connection.quit.sound.pitch")));
                     }
                 }
             } else {
-                event.setQuitMessage(null);
+                if (player.hasPermission("players.quit-message")) {
+                    event.setQuitMessage(getMessage().addColor(MessageFormat.format(getConfig().getString("connection.quit.message"), player.getName())));
+                    if (getConfig().getBoolean("connection.quit.sound.enable")) {
+                        for (Player players : getHost().getOnlinePlayers()) {
+                            players.playSound(players, Sound.valueOf(getConfig().getString("connection.quit.sound.type")), Float.valueOf(getConfig().getString("connection.quit.sound.volume")), Float.valueOf(getConfig().getString("connection.quit.sound.pitch")));
+                        }
+                    }
+                } else {
+                    event.setQuitMessage(null);
+                }
             }
         }
         getDatabase().resetTabList();
-    }
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerQuitWhileTPA(PlayerQuitEvent event) {
-        if (getDatabase().getConfig(event.getPlayer()).isString("tpa.from")) {
-            Player target = event.getPlayer().getServer().getPlayer(UUID.fromString(getDatabase().getConfig(event.getPlayer()).getString("tpa.from")));
-            if (target != null) {
-                getDatabase().setString(target, "tpa.sent", null);
-                if (event.getPlayer().getServer().getScheduler().isQueued(getDatabase().getConfig(target).getInt("task.tpa"))) {
-                    event.getPlayer().getServer().getScheduler().cancelTask(getDatabase().getConfig(target).getInt("task.tpa"));
-                    getDatabase().setString(event.getPlayer(), "tpa.from", null);
-                }
-                getDatabase().setString(target, "task.tpa", null);
-            }
-        } else if (getDatabase().getConfig(event.getPlayer()).isString("tpa.sent")) {
-            Player target = event.getPlayer().getServer().getPlayer(UUID.fromString(getDatabase().getConfig(event.getPlayer()).getString("tpa.sent")));
-            if (target != null) {
-                getDatabase().setString(target, "tpa.from", null);
-                if (event.getPlayer().getServer().getScheduler().isQueued(getDatabase().getConfig(event.getPlayer()).getInt("task.tpa"))) {
-                    event.getPlayer().getServer().getScheduler().cancelTask(getDatabase().getConfig(event.getPlayer()).getInt("task.tpa"));
-                    getDatabase().setString(event.getPlayer(), "task.tpa", null);
-                }
-            }
-            getDatabase().setString(event.getPlayer(), "tpa.sent", null);
-        }
     }
 }

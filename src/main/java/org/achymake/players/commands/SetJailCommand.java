@@ -2,6 +2,7 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Jail;
+import org.achymake.players.files.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,8 +13,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class SetJailCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private Jail getJail() {
-        return Players.getJail();
+        return getPlugin().getJail();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -21,10 +28,10 @@ public class SetJailCommand implements CommandExecutor, TabCompleter {
             if (args.length == 0) {
                 if (getJail().locationExist()) {
                     getJail().setLocation(player.getLocation());
-                    Players.send(player, "&6Jail relocated");
+                    getMessage().send(player, "&6Jail relocated");
                 } else {
                     getJail().setLocation(player.getLocation());
-                    Players.send(player, "&6Jail has been set");
+                    getMessage().send(player, "&6Jail has been set");
                 }
             }
         }

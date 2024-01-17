@@ -36,18 +36,23 @@ public class PlaceholderProvider extends PlaceholderExpansion {
     public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
         if (player == null) {
             return "";
-        }
-        if (params.equals("name")) {
-            return Players.getDatabase().getConfig(player).getString("name");
-        }
-        if (params.equals("display-name")) {
-            return Players.getDatabase().getConfig(player).getString("display-name");
-        }
-        if (params.equals("vanished")) {
-            return String.valueOf(Players.getDatabase().isVanished(player));
-        }
-        if (params.equals("online_players")) {
-            return String.valueOf(player.getServer().getOnlinePlayers().size() - Players.getDatabase().getVanished().size());
+        } else {
+            if (params.equals("name")) {
+                Players players = Players.getInstance();
+                return players.getDatabase().getConfig(player).getString("name");
+            }
+            if (params.equals("display-name")) {
+                Players players = Players.getInstance();
+                return players.getDatabase().getConfig(player).getString("display-name");
+            }
+            if (params.equals("vanished")) {
+                Players players = Players.getInstance();
+                return String.valueOf(players.getDatabase().isVanished(player));
+            }
+            if (params.equals("online_players")) {
+                Players players = Players.getInstance();
+                return String.valueOf(player.getServer().getOnlinePlayers().size() - players.getDatabase().getVanished().size());
+            }
         }
         return super.onPlaceholderRequest(player, params);
     }

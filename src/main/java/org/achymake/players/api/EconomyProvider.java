@@ -26,7 +26,7 @@ public class EconomyProvider implements Economy {
         return -1;
     }
     public String format(double amount) {
-        return Players.getDatabase().getEconomyFormat(amount);
+        return plugin.getDatabase().getEconomyFormat(amount);
     }
     public String currencyNamePlural() {
         return currencyNameSingular();
@@ -35,10 +35,10 @@ public class EconomyProvider implements Economy {
         return plugin.getConfig().getString("economy.currency");
     }
     public boolean hasAccount(OfflinePlayer offlinePlayer) {
-        return Players.getDatabase().exist(offlinePlayer);
+        return plugin.getDatabase().exist(offlinePlayer);
     }
     public boolean hasAccount(String playerName) {
-        return Players.getDatabase().exist(plugin.getServer().getOfflinePlayer(playerName));
+        return plugin.getDatabase().exist(plugin.getServer().getOfflinePlayer(playerName));
     }
     public boolean hasAccount(String playerName, String worldName) {
         return hasAccount(playerName);
@@ -47,10 +47,10 @@ public class EconomyProvider implements Economy {
         return hasAccount(player);
     }
     public double getBalance(OfflinePlayer offlinePlayer) {
-        return Players.getDatabase().getEconomy(offlinePlayer);
+        return plugin.getDatabase().getEconomy(offlinePlayer);
     }
     public double getBalance(String playerName) {
-        return Players.getDatabase().getEconomy(plugin.getServer().getOfflinePlayer(playerName));
+        return plugin.getDatabase().getEconomy(plugin.getServer().getOfflinePlayer(playerName));
     }
     public double getBalance(String playerName, String world) {
         return getBalance(playerName);
@@ -59,10 +59,10 @@ public class EconomyProvider implements Economy {
         return getBalance(player);
     }
     public boolean has(OfflinePlayer offlinePlayer, double amount) {
-        return Players.getDatabase().getEconomy(offlinePlayer) >= amount;
+        return plugin.getDatabase().getEconomy(offlinePlayer) >= amount;
     }
     public boolean has(String playerName, double amount) {
-        return Players.getDatabase().getEconomy(plugin.getServer().getOfflinePlayer(playerName)) >= amount;
+        return plugin.getDatabase().getEconomy(plugin.getServer().getOfflinePlayer(playerName)) >= amount;
     }
     public boolean has(String playerName, String worldName, double amount) {
         return has(playerName, amount);
@@ -77,7 +77,7 @@ public class EconomyProvider implements Economy {
         } else if (amount < 0.0) {
             return new EconomyResponse(0.0, 0.0, EconomyResponse.ResponseType.FAILURE, "Cannot withdraw negative funds!");
         } else {
-            Players.getDatabase().removeEconomy(offlinePlayer, amount);
+            plugin.getDatabase().removeEconomy(offlinePlayer, amount);
             return new EconomyResponse(amount, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, null);
         }
     }
@@ -87,7 +87,7 @@ public class EconomyProvider implements Economy {
         } else if (amount < 0.0) {
             return new EconomyResponse(0.0, 0.0, EconomyResponse.ResponseType.FAILURE, "Cannot withdraw negative funds!");
         } else {
-            Players.getDatabase().removeEconomy(plugin.getServer().getOfflinePlayer(playerName), amount);
+            plugin.getDatabase().removeEconomy(plugin.getServer().getOfflinePlayer(playerName), amount);
             return new EconomyResponse(amount, getBalance(playerName), EconomyResponse.ResponseType.SUCCESS, null);
         }
     }
@@ -103,7 +103,7 @@ public class EconomyProvider implements Economy {
         } else if (amount < 0.0) {
             return new EconomyResponse(0.0, 0.0, EconomyResponse.ResponseType.FAILURE, "Cannot deposit negative funds");
         } else {
-            Players.getDatabase().addEconomy(offlinePlayer, amount);
+            plugin.getDatabase().addEconomy(offlinePlayer, amount);
             return new EconomyResponse(amount, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, null);
         }
     }
@@ -113,7 +113,7 @@ public class EconomyProvider implements Economy {
         } else if (amount < 0.0) {
             return new EconomyResponse(0.0, 0.0, EconomyResponse.ResponseType.FAILURE, "Cannot deposit negative funds");
         } else {
-            Players.getDatabase().addEconomy(plugin.getServer().getOfflinePlayer(playerName), amount);
+            plugin.getDatabase().addEconomy(plugin.getServer().getOfflinePlayer(playerName), amount);
             return new EconomyResponse(amount, getBalance(playerName), EconomyResponse.ResponseType.SUCCESS, null);
         }
     }
@@ -124,11 +124,11 @@ public class EconomyProvider implements Economy {
         return depositPlayer(player, amount);
     }
     public boolean createPlayerAccount(OfflinePlayer offlinePlayer) {
-        Players.getDatabase().setup(offlinePlayer);
+        plugin.getDatabase().setup(offlinePlayer);
         return true;
     }
     public boolean createPlayerAccount(String playerName) {
-        Players.getDatabase().setup(plugin.getServer().getOfflinePlayer(playerName));
+        plugin.getDatabase().setup(plugin.getServer().getOfflinePlayer(playerName));
         return true;
     }
     public boolean createPlayerAccount(String playerName, String worldName) {

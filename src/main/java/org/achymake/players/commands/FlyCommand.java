@@ -1,6 +1,7 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
+import org.achymake.players.files.Message;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -8,15 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FlyCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 player.setAllowFlight(!player.getAllowFlight());
                 if (player.getAllowFlight()) {
-                    Players.sendActionBar(player, "&6&lFly:&a Enabled");
+                    getMessage().sendActionBar(player, "&6&lFly:&a Enabled");
                 } else {
-                    Players.sendActionBar(player, "&6&lFly:&c Disabled");
+                    getMessage().sendActionBar(player, "&6&lFly:&c Disabled");
                 }
             }
             if (args.length == 1) {
@@ -25,20 +32,20 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
                     if (target == player) {
                         target.setAllowFlight(!target.getAllowFlight());
                         if (target.getAllowFlight()) {
-                            Players.sendActionBar(target, "&6&lFly:&a Enabled");
+                            getMessage().sendActionBar(target, "&6&lFly:&a Enabled");
                         } else {
-                            Players.sendActionBar(target, "&6&lFly:&c Disabled");
+                            getMessage().sendActionBar(target, "&6&lFly:&c Disabled");
                         }
                     } else {
                         if (target != null) {
                             if (!target.hasPermission("players.command.fly.exempt")) {
                                 target.setAllowFlight(!target.getAllowFlight());
                                 if (target.getAllowFlight()) {
-                                    Players.sendActionBar(target, "&6&lFly:&a Enabled");
-                                    Players.send(player, "&6You enabled fly for&f " + target.getName());
+                                    getMessage().sendActionBar(target, "&6&lFly:&a Enabled");
+                                    getMessage().send(player, "&6You enabled fly for&f " + target.getName());
                                 } else {
-                                    Players.sendActionBar(target, "&6&lFly:&c Disabled");
-                                    Players.send(player, "&6You disabled fly for&f " + target.getName());
+                                    getMessage().sendActionBar(target, "&6&lFly:&c Disabled");
+                                    getMessage().send(player, "&6You disabled fly for&f " + target.getName());
                                 }
                             }
                         }
@@ -52,11 +59,11 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
                 if (target != null) {
                     target.setAllowFlight(!target.getAllowFlight());
                     if (target.getAllowFlight()) {
-                        Players.sendActionBar(target, "&6&lFly:&a Enabled");
-                        Players.send(consoleCommandSender, "You enabled fly for " + target.getName());
+                        getMessage().sendActionBar(target, "&6&lFly:&a Enabled");
+                        getMessage().send(consoleCommandSender, "You enabled fly for " + target.getName());
                     } else {
-                        Players.sendActionBar(target, "&6&lFly:&c Disabled");
-                        Players.send(consoleCommandSender, "You disabled fly for " + target.getName());
+                        getMessage().sendActionBar(target, "&6&lFly:&c Disabled");
+                        getMessage().send(consoleCommandSender, "You disabled fly for " + target.getName());
                     }
                 }
             }

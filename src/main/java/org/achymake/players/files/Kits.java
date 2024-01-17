@@ -18,17 +18,24 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class Kits {
+    private final Players plugin;
     private File getDataFolder() {
-        return Players.getFolder();
+        return plugin.getDataFolder();
     }
-    private File getFile() {
+    private Database getDatabase() {
+        return plugin.getDatabase();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
+    public Kits(Players plugin) {
+        this.plugin = plugin;
+    }
+    public File getFile() {
         return new File(getDataFolder(), "kits.yml");
     }
     public boolean exist() {
         return getFile().exists();
-    }
-    private Database getDatabase() {
-        return Players.getDatabase();
     }
     public FileConfiguration getConfig() {
         return YamlConfiguration.loadConfiguration(getFile());
@@ -39,11 +46,11 @@ public class Kits {
     public void giveKitWithCooldown(Player player, String kitName) {
         if (player.hasPermission("players.command.kit.cooldown-exempt")) {
             giveKit(player, kitName);
-            Players.send(player, "&6You received &f" + kitName + "&6 kit");
+            getMessage().send(player, "&6You received &f" + kitName + "&6 kit");
         } else if (!getDatabase().getCommandCooldown().containsKey(kitName + "-" + player.getUniqueId())) {
             getDatabase().getCommandCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
             giveKit(player, kitName);
-            Players.send(player, "&6You received &f" + kitName + "&6 kit");
+            getMessage().send(player, "&6You received &f" + kitName + "&6 kit");
         } else {
             Long timeElapsed = System.currentTimeMillis() - getDatabase().getCommandCooldown().get(kitName + "-" + player.getUniqueId());
             String cooldownTimer = getConfig().getString(kitName + ".cooldown");
@@ -51,10 +58,10 @@ public class Kits {
             if (timeElapsed > integer) {
                 getDatabase().getCommandCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
                 giveKit(player, kitName);
-                Players.send(player, "&6You received &f" + kitName + "&6 kit");
+                getMessage().send(player, "&6You received &f" + kitName + "&6 kit");
             } else {
                 long timer = (integer-timeElapsed);
-                Players.sendActionBar(player, "&cYou have to wait&f " + String.valueOf(timer).substring(0, String.valueOf(timer).length()-3) + "&c seconds");
+                getMessage().sendActionBar(player, "&cYou have to wait&f " + String.valueOf(timer).substring(0, String.valueOf(timer).length()-3) + "&c seconds");
             }
         }
     }
@@ -64,12 +71,12 @@ public class Kits {
             ItemStack item = new ItemStack(Material.valueOf(getConfig().getString(kitName + ".materials." + items + ".type")), getConfig().getInt(kitName + ".materials." + items + ".amount"));
             ItemMeta itemMeta = item.getItemMeta();
             if (getConfig().getKeys(true).contains(kitName+".materials." + items + ".name")) {
-                itemMeta.setDisplayName(Players.addColor(getConfig().getString(kitName + ".materials." + items + ".name")));
+                itemMeta.setDisplayName(getMessage().addColor(getConfig().getString(kitName + ".materials." + items + ".name")));
             }
             if (getConfig().getKeys(true).contains(kitName+".materials." + items + ".lore")) {
                 List<String> lore = new ArrayList<>();
                 for (String listedLore : getConfig().getStringList(kitName + ".materials." + items + ".lore")) {
-                    lore.add(Players.addColor(listedLore));
+                    lore.add(getMessage().addColor(listedLore));
                 }
                 itemMeta.setLore(lore);
             }
@@ -99,7 +106,7 @@ public class Kits {
             try {
                 config.load(file);
             } catch (IOException | InvalidConfigurationException e) {
-                Players.sendLog(Level.WARNING, e.getMessage());
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         } else {
             File file = getFile();
@@ -141,7 +148,7 @@ public class Kits {
             try {
                 config.save(file);
             } catch (IOException e) {
-                Players.sendLog(Level.WARNING, e.getMessage());
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         }
     }

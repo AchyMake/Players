@@ -2,6 +2,7 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,8 +14,14 @@ import java.util.List;
 import java.util.UUID;
 
 public class TPDenyCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private Database getDatabase() {
-        return Players.getDatabase();
+        return getPlugin().getDatabase();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -25,15 +32,15 @@ public class TPDenyCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (player.getServer().getScheduler().isQueued(getDatabase().getConfig(target).getInt("task.tpa"))) {
                             player.getServer().getScheduler().cancelTask(getDatabase().getConfig(target).getInt("task.tpa"));
-                            Players.send(target, player.getName() + "&6 denied tpa request");
-                            Players.send(player, "&6You denied tpa request");
+                            getMessage().send(target, player.getName() + "&6 denied tpa request");
+                            getMessage().send(player, "&6You denied tpa request");
                             getDatabase().setString(target, "tpa.sent", null);
                             getDatabase().setString(target, "task.tpa", null);
                             getDatabase().setString(player, "tpa.from", null);
                         }
                     }
                 } else {
-                    Players.send(player, "&cYou haven't have any tpa request");
+                    getMessage().send(player, "&cYou haven't have any tpa request");
                 }
             }
         }

@@ -8,11 +8,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerTeleport implements Listener {
+    private final Players plugin;
     private Database getDatabase() {
-        return Players.getDatabase();
+        return plugin.getDatabase();
     }
     public PlayerTeleport(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {

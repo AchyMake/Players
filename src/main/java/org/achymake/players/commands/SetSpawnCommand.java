@@ -2,6 +2,7 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
 import org.achymake.players.files.Spawn;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -14,11 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SetSpawnCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private Database getDatabase() {
-        return Players.getDatabase();
+        return getPlugin().getDatabase();
     }
     private Spawn getSpawn() {
-        return Players.getSpawn();
+        return getPlugin().getSpawn();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -26,10 +33,10 @@ public class SetSpawnCommand implements CommandExecutor, TabCompleter {
             if (args.length == 0) {
                 if (getSpawn().locationExist()) {
                     getSpawn().setLocation(player.getLocation());
-                    Players.send(player, "&6Spawn relocated");
+                    getMessage().send(player, "&6Spawn relocated");
                 } else {
                     getSpawn().setLocation(player.getLocation());
-                    Players.send(player, "&6Spawn has been set");
+                    getMessage().send(player, "&6Spawn has been set");
                 }
             }
             if (args.length == 1) {
@@ -37,13 +44,13 @@ public class SetSpawnCommand implements CommandExecutor, TabCompleter {
                 if (getDatabase().exist(offlinePlayer)) {
                     if (getDatabase().locationExist(offlinePlayer, "spawn")) {
                         getDatabase().setLocation(offlinePlayer, "spawn", player.getLocation());
-                        Players.send(player, offlinePlayer.getName() + "&6's spawn relocated");
+                        getMessage().send(player, offlinePlayer.getName() + "&6's spawn relocated");
                     } else {
                         getDatabase().setLocation(offlinePlayer, "spawn", player.getLocation());
-                        Players.send(player, offlinePlayer.getName() + "&6's spawn set");
+                        getMessage().send(player, offlinePlayer.getName() + "&6's spawn set");
                     }
                 } else {
-                    Players.send(player, offlinePlayer.getName() + "&c has never joined");
+                    getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
                 }
             }
         }

@@ -1,6 +1,7 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
+import org.achymake.players.files.Message;
 import org.bukkit.command.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -9,8 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HelpCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private FileConfiguration getConfig() {
-        return Players.getConfiguration();
+        return getPlugin().getConfig();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -45,19 +52,19 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (getConfig().isList("help")) {
                 for (String message : getConfig().getStringList("help")) {
-                    Players.send(player, message.replaceAll("%player%", player.getName()));
+                    getMessage().send(player, message.replaceAll("%player%", player.getName()));
                 }
             } else if (getConfig().isString("help")) {
-                Players.send(player, getConfig().getString("help").replaceAll("%player%", player.getName()));
+                getMessage().send(player, getConfig().getString("help").replaceAll("%player%", player.getName()));
             }
         }
         if (sender instanceof ConsoleCommandSender commandSender) {
             if (getConfig().isList("help")) {
                 for (String message : getConfig().getStringList("help")) {
-                    Players.send(commandSender, message.replaceAll("%player%", commandSender.getName()));
+                    getMessage().send(commandSender, message.replaceAll("%player%", commandSender.getName()));
                 }
             } else if (getConfig().isString("help")) {
-                Players.send(commandSender, getConfig().getString("help").replaceAll("%player%", commandSender.getName()));
+                getMessage().send(commandSender, getConfig().getString("help").replaceAll("%player%", commandSender.getName()));
             }
         }
     }

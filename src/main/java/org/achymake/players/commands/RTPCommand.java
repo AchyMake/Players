@@ -2,6 +2,7 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,11 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RTPCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private FileConfiguration getConfig() {
-        return Players.getConfiguration();
+        return getPlugin().getConfig();
     }
     private Database getDatabase() {
-        return Players.getDatabase();
+        return getPlugin().getDatabase();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -30,22 +37,22 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
                     Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
                     if (timeElapsed > integer) {
                         getDatabase().getCommandCooldown().put("rtp-" + player.getUniqueId(), System.currentTimeMillis());
-                        Players.sendActionBar(player, "&6Finding safe locations...");
+                        getMessage().sendActionBar(player, "&6Finding safe locations...");
                         randomTeleport(player);
                     } else {
                         long timer = (integer-timeElapsed);
-                        Players.send(player, "&cYou have to wait&f " + String.valueOf(timer).substring(0, String.valueOf(timer).length() - 3) + "&c seconds");
+                        getMessage().send(player, "&cYou have to wait&f " + String.valueOf(timer).substring(0, String.valueOf(timer).length() - 3) + "&c seconds");
                     }
                 } else {
                     getDatabase().getCommandCooldown().put("rtp-" + player.getUniqueId(), System.currentTimeMillis());
-                    Players.sendActionBar(player, "&6Finding safe locations...");
+                    getMessage().sendActionBar(player, "&6Finding safe locations...");
                     randomTeleport(player);
                 }
             }
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("force")) {
                     if (player.hasPermission("players.command.rtp.force")) {
-                        Players.sendActionBar(player, "&6Finding safe locations...");
+                        getMessage().sendActionBar(player, "&6Finding safe locations...");
                         randomTeleport(player);
                     }
                 }
@@ -56,11 +63,11 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
     public void randomTeleport(Player player) {
         Block block = getDatabase().highestRandomBlock();
         if (block.isLiquid()) {
-            Players.sendActionBar(player, "&cFinding new location due to liquid block");
+            getMessage().sendActionBar(player, "&cFinding new location due to liquid block");
             randomTeleport(player);
         } else {
             block.getChunk().load();
-            Players.sendActionBar(player, "&6Teleporting");
+            getMessage().sendActionBar(player, "&6Teleporting");
             player.teleport(block.getLocation().add(0.5, 1.0, 0.5));
         }
     }

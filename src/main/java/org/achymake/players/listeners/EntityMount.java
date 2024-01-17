@@ -10,11 +10,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityMountEvent;
 
 public class EntityMount implements Listener {
+    private final Players plugin;
     private Database getDatabase() {
-        return Players.getDatabase();
+        return plugin.getDatabase();
     }
     public EntityMount(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityMount(EntityMountEvent event) {

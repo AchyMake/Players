@@ -2,6 +2,7 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
 import org.achymake.players.files.Spawn;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -10,11 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpawnCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private Database getDatabase() {
-        return Players.getDatabase();
+        return getPlugin().getDatabase();
     }
     private Spawn getSpawn() {
-        return Players.getSpawn();
+        return getPlugin().getSpawn();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -25,10 +32,10 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                 } else {
                     if (getSpawn().locationExist()) {
                         getSpawn().getLocation().getChunk().load();
-                        Players.send(player, "&6Teleporting to&f spawn");
+                        getMessage().send(player, "&6Teleporting to&f spawn");
                         player.teleport(getSpawn().getLocation());
                     } else {
-                        Players.send(player, "Spawn&c does not exist");
+                        getMessage().send(player, "Spawn&c does not exist");
                     }
                 }
             }
@@ -41,11 +48,11 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                         } else {
                             if (getSpawn().locationExist()) {
                                 getSpawn().getLocation().getChunk().load();
-                                Players.send(target, "&6Teleporting to&f spawn");
+                                getMessage().send(target, "&6Teleporting to&f spawn");
                                 target.teleport(getSpawn().getLocation());
-                                Players.send(player, "&6You teleported&f " + target.getName() + "&6 to&f spawn");
+                                getMessage().send(player, "&6You teleported&f " + target.getName() + "&6 to&f spawn");
                             } else {
-                                Players.send(player, "Spawn&c does not exist");
+                                getMessage().send(player, "Spawn&c does not exist");
                             }
                         }
                     }
@@ -61,11 +68,11 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                     } else {
                         if (getSpawn().locationExist()) {
                             getSpawn().getLocation().getChunk().load();
-                            Players.send(target, "&6Teleporting to&f spawn");
+                            getMessage().send(target, "&6Teleporting to&f spawn");
                             target.teleport(getSpawn().getLocation());
-                            Players.send(consoleCommandSender, "You teleported " + target.getName() + " to spawn");
+                            getMessage().send(consoleCommandSender, "You teleported " + target.getName() + " to spawn");
                         } else {
-                            Players.send(consoleCommandSender, "Spawn&c does not exist");
+                            getMessage().send(consoleCommandSender, "Spawn&c does not exist");
                         }
                     }
                 }

@@ -9,14 +9,16 @@ import org.bukkit.event.Listener;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 public class PlayerSpawnLocation implements Listener {
+    private final Players plugin;
     private Database getDatabase() {
-        return Players.getDatabase();
+        return plugin.getDatabase();
     }
     private Spawn getSpawn() {
-        return Players.getSpawn();
+        return plugin.getSpawn();
     }
     public PlayerSpawnLocation(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerSpawnLocation(PlayerSpawnLocationEvent event) {

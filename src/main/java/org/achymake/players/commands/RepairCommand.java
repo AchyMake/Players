@@ -2,6 +2,7 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,27 +14,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RepairCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private Database getDatabase() {
-        return Players.getDatabase();
+        return getPlugin().getDatabase();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (player.getInventory().getItemInMainHand().getType().isAir()) {
-                    Players.send(player,"&cYou have to hold an item");
+                    getMessage().send(player,"&cYou have to hold an item");
                 } else {
                     if (getDatabase().hasCooldown(player, "repair")) {
-                        Players.sendActionBar(player, "&cYou have to wait&f " + getDatabase().getCooldown(player, "repair") + "&c seconds");
+                        getMessage().sendActionBar(player, "&cYou have to wait&f " + getDatabase().getCooldown(player, "repair") + "&c seconds");
                     } else {
                         Damageable damageable = (Damageable) player.getInventory().getItemInMainHand().getItemMeta();
                         if (damageable.hasDamage()) {
                             damageable.setDamage(0);
                             player.getInventory().getItemInMainHand().setItemMeta(damageable);
-                            Players.send(player, "&6You repaired&f " + player.getInventory().getItemInMainHand().getType());
+                            getMessage().send(player, "&6You repaired&f " + player.getInventory().getItemInMainHand().getType());
                             getDatabase().addCooldown(player, "repair");
                         } else {
-                            Players.send(player, "&cThe item is fully repaired");
+                            getMessage().send(player, "&cThe item is fully repaired");
                         }
                     }
                 }
@@ -42,15 +49,15 @@ public class RepairCommand implements CommandExecutor, TabCompleter {
                 if (player.hasPermission("players.command.repair.force")) {
                     if (args[0].equalsIgnoreCase("force")) {
                         if (player.getInventory().getItemInMainHand().getType().isAir()) {
-                            Players.send(player,"&cYou have to hold an item");
+                            getMessage().send(player,"&cYou have to hold an item");
                         } else {
                             Damageable damageable = (Damageable) player.getInventory().getItemInMainHand().getItemMeta();
                             if (damageable.hasDamage()) {
                                 damageable.setDamage(0);
                                 player.getInventory().getItemInMainHand().setItemMeta(damageable);
-                                Players.send(player, "&6You repaired&f " + player.getInventory().getItemInMainHand().getType());
+                                getMessage().send(player, "&6You repaired&f " + player.getInventory().getItemInMainHand().getType());
                             } else {
-                                Players.send(player, "&cThe item is fully repaired");
+                                getMessage().send(player, "&cThe item is fully repaired");
                             }
                         }
                     }

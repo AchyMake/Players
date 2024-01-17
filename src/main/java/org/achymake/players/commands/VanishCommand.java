@@ -2,6 +2,7 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -10,8 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VanishCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private Database getDatabase() {
-        return Players.getDatabase();
+        return getPlugin().getDatabase();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -29,11 +36,11 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                             if (!target.hasPermission("players.command.vanish.exempt")) {
                                 getDatabase().setVanish(target, !getDatabase().isVanished(target));
                                 if (getDatabase().isVanished(target)) {
-                                    Players.send(target, player.getName() + "&6 made you vanish");
-                                    Players.send(player, target.getName() + "&6 is now vanished");
+                                    getMessage().send(target, player.getName() + "&6 made you vanish");
+                                    getMessage().send(player, target.getName() + "&6 is now vanished");
                                 } else {
-                                    Players.send(target, player.getName() + "&6 made you no longer vanish");
-                                    Players.send(player, target.getName() + "&6 is no longer vanished");
+                                    getMessage().send(target, player.getName() + "&6 made you no longer vanish");
+                                    getMessage().send(player, target.getName() + "&6 is no longer vanished");
                                 }
                             }
                         }
@@ -42,12 +49,12 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                         if (getDatabase().exist(offlinePlayer)) {
                             getDatabase().setVanish(offlinePlayer, !getDatabase().isVanished(offlinePlayer));
                             if (getDatabase().isVanished(offlinePlayer)) {
-                                Players.send(player, offlinePlayer.getName() + "&6 is now vanished");
+                                getMessage().send(player, offlinePlayer.getName() + "&6 is now vanished");
                             } else {
-                                Players.send(player, offlinePlayer.getName() + "&6 is no longer vanished");
+                                getMessage().send(player, offlinePlayer.getName() + "&6 is no longer vanished");
                             }
                         } else {
-                            Players.send(player, offlinePlayer.getName() + "&c has never joined");
+                            getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
                         }
                     }
                 }
@@ -63,8 +70,8 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                             } else {
                                 if (!target.hasPermission("players.command.vanish.exempt")) {
                                     getDatabase().setVanish(target, true);
-                                    Players.send(target, player.getName() + "&6 made you vanish");
-                                    Players.send(player, target.getName() + "&6 is now vanished");
+                                    getMessage().send(target, player.getName() + "&6 made you vanish");
+                                    getMessage().send(player, target.getName() + "&6 is now vanished");
                                 }
                             }
                         }
@@ -74,13 +81,13 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                             if (!getDatabase().isVanished(offlinePlayer)) {
                                 getDatabase().setVanish(offlinePlayer, true);
                                 if (getDatabase().isVanished(offlinePlayer)) {
-                                    Players.send(player, offlinePlayer.getName() + "&6 is now vanished");
+                                    getMessage().send(player, offlinePlayer.getName() + "&6 is now vanished");
                                 } else {
-                                    Players.send(player, offlinePlayer.getName() + "&6 is no longer vanished");
+                                    getMessage().send(player, offlinePlayer.getName() + "&6 is no longer vanished");
                                 }
                             }
                         } else {
-                            Players.send(player, offlinePlayer.getName() + "&c has never joined");
+                            getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
                         }
                     }
                 } else {
@@ -91,8 +98,8 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                             } else {
                                 if (!target.hasPermission("players.command.vanish.exempt")) {
                                     getDatabase().setVanish(target, false);
-                                    Players.send(target, player.getName() + "&6 made you no longer vanish");
-                                    Players.send(player, target.getName() + "&6 is no longer vanished");
+                                    getMessage().send(target, player.getName() + "&6 made you no longer vanish");
+                                    getMessage().send(player, target.getName() + "&6 is no longer vanished");
                                 }
                             }
                         }
@@ -102,13 +109,13 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                             if (getDatabase().isVanished(offlinePlayer)) {
                                 getDatabase().setVanish(offlinePlayer, false);
                                 if (getDatabase().isVanished(offlinePlayer)) {
-                                    Players.send(player, offlinePlayer.getName() + "&6 is now vanished");
+                                    getMessage().send(player, offlinePlayer.getName() + "&6 is now vanished");
                                 } else {
-                                    Players.send(player, offlinePlayer.getName() + "&6 is no longer vanished");
+                                    getMessage().send(player, offlinePlayer.getName() + "&6 is no longer vanished");
                                 }
                             }
                         } else {
-                            Players.send(player, offlinePlayer.getName() + "&c has never joined");
+                            getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
                         }
                     }
                 }
@@ -120,21 +127,21 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                 if (target != null) {
                     getDatabase().setVanish(target, !getDatabase().isVanished(target));
                     if (getDatabase().isVanished(target)) {
-                        Players.send(consoleCommandSender, target.getName() + " is now vanished");
+                        getMessage().send(consoleCommandSender, target.getName() + " is now vanished");
                     } else {
-                        Players.send(consoleCommandSender, target.getName() + " is no longer vanished");
+                        getMessage().send(consoleCommandSender, target.getName() + " is no longer vanished");
                     }
                 } else {
                     OfflinePlayer offlinePlayer = consoleCommandSender.getServer().getOfflinePlayer(args[0]);
                     if (getDatabase().exist(offlinePlayer)) {
                         getDatabase().setVanish(offlinePlayer, !getDatabase().isVanished(offlinePlayer));
                         if (getDatabase().isVanished(offlinePlayer)) {
-                            Players.send(consoleCommandSender, offlinePlayer.getName() + " is now vanished");
+                            getMessage().send(consoleCommandSender, offlinePlayer.getName() + " is now vanished");
                         } else {
-                            Players.send(consoleCommandSender, offlinePlayer.getName() + " is no longer vanished");
+                            getMessage().send(consoleCommandSender, offlinePlayer.getName() + " is no longer vanished");
                         }
                     } else {
-                        Players.send(consoleCommandSender, offlinePlayer.getName() + " has never joined");
+                        getMessage().send(consoleCommandSender, offlinePlayer.getName() + " has never joined");
                     }
                 }
             }
@@ -145,7 +152,7 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (!getDatabase().isVanished(target)) {
                             getDatabase().setVanish(target, true);
-                            Players.send(consoleCommandSender, target.getName() + " is now vanished");
+                            getMessage().send(consoleCommandSender, target.getName() + " is now vanished");
                         }
                     } else {
                         OfflinePlayer offlinePlayer = consoleCommandSender.getServer().getOfflinePlayer(args[0]);
@@ -153,20 +160,20 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                             if (!getDatabase().isVanished(offlinePlayer)) {
                                 getDatabase().setVanish(offlinePlayer, true);
                                 if (getDatabase().isVanished(offlinePlayer)) {
-                                    Players.send(consoleCommandSender, offlinePlayer.getName() + " is now vanished");
+                                    getMessage().send(consoleCommandSender, offlinePlayer.getName() + " is now vanished");
                                 } else {
-                                    Players.send(consoleCommandSender, offlinePlayer.getName() + " is no longer vanished");
+                                    getMessage().send(consoleCommandSender, offlinePlayer.getName() + " is no longer vanished");
                                 }
                             }
                         } else {
-                            Players.send(consoleCommandSender, offlinePlayer.getName() + " has never joined");
+                            getMessage().send(consoleCommandSender, offlinePlayer.getName() + " has never joined");
                         }
                     }
                 } else {
                     if (target != null) {
                         if (getDatabase().isVanished(target)) {
                             getDatabase().setVanish(target, false);
-                            Players.send(consoleCommandSender, target.getName() + " is no longer vanished");
+                            getMessage().send(consoleCommandSender, target.getName() + " is no longer vanished");
                         }
                     } else {
                         OfflinePlayer offlinePlayer = consoleCommandSender.getServer().getOfflinePlayer(args[0]);
@@ -174,13 +181,13 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                             if (getDatabase().isVanished(offlinePlayer)) {
                                 getDatabase().setVanish(offlinePlayer, false);
                                 if (getDatabase().isVanished(offlinePlayer)) {
-                                    Players.send(consoleCommandSender, offlinePlayer.getName() + " is now vanished");
+                                    getMessage().send(consoleCommandSender, offlinePlayer.getName() + " is now vanished");
                                 } else {
-                                    Players.send(consoleCommandSender, offlinePlayer.getName() + " is no longer vanished");
+                                    getMessage().send(consoleCommandSender, offlinePlayer.getName() + " is no longer vanished");
                                 }
                             }
                         } else {
-                            Players.send(consoleCommandSender, offlinePlayer.getName() + " has never joined");
+                            getMessage().send(consoleCommandSender, offlinePlayer.getName() + " has never joined");
                         }
                     }
                 }

@@ -1,6 +1,7 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
+import org.achymake.players.files.Message;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -11,35 +12,38 @@ public class PlayersCommand implements CommandExecutor, TabCompleter {
     private Players getPlugin() {
         return Players.getInstance();
     }
+    private Message getMessage() {
+        return getPlugin().getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                Players.send(player, "&6" + getPlugin().getName() + " " + getPlugin().getDescription().getVersion());
+                getMessage().send(player, "&6" + getPlugin().getName() + " " + getPlugin().getDescription().getVersion());
             }
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("reload")) {
-                    Players.reload();
-                    Players.send(player, "&6Players:&f files reloaded");
+                    getPlugin().reload();
+                    getMessage().send(player, "&6Players:&f files reloaded");
                 }
                 if (args[0].equalsIgnoreCase("discord")) {
-                    Players.send(player, "&9Developers Discord");
-                    Players.send(player, "https://discord.com/invite/aMtQFeJKyB");
+                    getMessage().send(player, "&9Developers Discord");
+                    getMessage().send(player, "https://discord.com/invite/aMtQFeJKyB");
                 }
             }
         }
         if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 0) {
-                Players.send(consoleCommandSender, getPlugin().getName() + " " + getPlugin().getDescription().getVersion());
+                getMessage().send(consoleCommandSender, getPlugin().getName() + " " + getPlugin().getDescription().getVersion());
             }
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("reload")) {
-                    Players.reload();
-                    Players.send(consoleCommandSender, "Players: config files reloaded");
+                    getPlugin().reload();
+                    getMessage().send(consoleCommandSender, "Players: config files reloaded");
                 }
                 if (args[0].equalsIgnoreCase("discord")) {
-                    Players.send(consoleCommandSender, "Developers Discord");
-                    Players.send(consoleCommandSender, "https://discord.com/invite/aMtQFeJKyB");
+                    getMessage().send(consoleCommandSender, "Developers Discord");
+                    getMessage().send(consoleCommandSender, "https://discord.com/invite/aMtQFeJKyB");
                 }
             }
         }

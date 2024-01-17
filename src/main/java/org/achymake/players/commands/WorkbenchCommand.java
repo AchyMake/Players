@@ -1,6 +1,7 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
+import org.achymake.players.files.Message;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -8,6 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkbenchCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
@@ -22,8 +29,8 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
                     } else {
                         if (target != null) {
                             target.openWorkbench(target.getLocation(), true);
-                            Players.send(target, player.getName() + "&6 opened crafting table for you");
-                            Players.send(player, "&6You opened crafting table for " + target.getName());
+                            getMessage().send(target, player.getName() + "&6 opened crafting table for you");
+                            getMessage().send(player, "&6You opened crafting table for " + target.getName());
                         }
                     }
                 }
@@ -34,7 +41,7 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
                 Player target = consoleCommandSender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     target.openWorkbench(target.getLocation(), true);
-                    Players.send(consoleCommandSender, "You opened crafting table for " + target.getName());
+                    getMessage().send(consoleCommandSender, "You opened crafting table for " + target.getName());
                 }
             }
         }

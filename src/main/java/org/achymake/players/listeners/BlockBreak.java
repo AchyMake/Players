@@ -2,6 +2,7 @@ package org.achymake.players.listeners;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,14 +13,19 @@ import org.bukkit.event.block.BlockBreakEvent;
 import java.text.MessageFormat;
 
 public class BlockBreak implements Listener {
+    private final Players plugin;
     private Database getDatabase() {
-        return Players.getDatabase();
+        return plugin.getDatabase();
     }
     private FileConfiguration getConfig() {
-        return Players.getConfiguration();
+        return plugin.getConfig();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
     }
     public BlockBreak(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {
@@ -31,7 +37,7 @@ public class BlockBreak implements Listener {
             for (Player players : event.getPlayer().getServer().getOnlinePlayers()) {
                 if (players.hasPermission("players.notify.block-break")) {
                     for (String messages : getConfig().getStringList("notification.message")) {
-                        players.sendMessage(Players.addColor(MessageFormat.format(messages, event.getPlayer().getName(), event.getBlock().getType().toString(), event.getBlock().getWorld().getName(), event.getBlock().getLocation().getBlockX(), event.getBlock().getLocation().getBlockY(), event.getBlock().getLocation().getBlockZ())));
+                        players.sendMessage(getMessage().addColor(MessageFormat.format(messages, event.getPlayer().getName(), event.getBlock().getType().toString(), event.getBlock().getWorld().getName(), event.getBlock().getLocation().getBlockX(), event.getBlock().getLocation().getBlockY(), event.getBlock().getLocation().getBlockZ())));
                     }
                 }
             }

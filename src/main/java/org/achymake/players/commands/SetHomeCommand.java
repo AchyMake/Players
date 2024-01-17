@@ -2,6 +2,7 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,28 +13,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SetHomeCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private Database getDatabase() {
-        return Players.getDatabase();
+        return getPlugin().getDatabase();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (getDatabase().setHome(player, "home")) {
-                    Players.send(player, "home&6 has been set");
+                    getMessage().send(player, "home&6 has been set");
                 } else {
-                    Players.send(player, "&cYou have reach your limit of&f " + getDatabase().getHomes(player).size() + "&c homes");
+                    getMessage().send(player, "&cYou have reach your limit of&f " + getDatabase().getHomes(player).size() + "&c homes");
                 }
             }
             if (args.length == 1) {
                 String homeName = args[0];
                 if (homeName.equalsIgnoreCase("bed")) {
-                    Players.send(player, "&cYou can't set home for&f " + homeName);
+                    getMessage().send(player, "&cYou can't set home for&f " + homeName);
                 } else {
                     if (getDatabase().setHome(player, homeName)) {
-                        Players.send(player, homeName + "&6 has been set");
+                        getMessage().send(player, homeName + "&6 has been set");
                     } else {
-                        Players.send(player, "&cYou have reach your limit of&f " + getDatabase().getHomes(player).size() + "&c homes");
+                        getMessage().send(player, "&cYou have reach your limit of&f " + getDatabase().getHomes(player).size() + "&c homes");
                     }
                 }
             }

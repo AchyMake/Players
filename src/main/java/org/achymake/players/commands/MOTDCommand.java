@@ -1,6 +1,7 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
+import org.achymake.players.files.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,8 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MOTDCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private FileConfiguration getConfig() {
-        return Players.getConfiguration();
+        return getPlugin().getConfig();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -55,11 +62,11 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
     private void sendMotd(Player player, String motd) {
         if (getConfig().isList("message-of-the-day." + motd)) {
             for (String message : getConfig().getStringList("message-of-the-day." + motd)) {
-                Players.send(player, message.replaceAll("%player%", player.getName()));
+                getMessage().send(player, message.replaceAll("%player%", player.getName()));
             }
         }
         if (getConfig().isString("message-of-the-day." + motd)) {
-            Players.send(player, getConfig().getString("message-of-the-day." + motd).replaceAll("%player%", player.getName()));
+            getMessage().send(player, getConfig().getString("message-of-the-day." + motd).replaceAll("%player%", player.getName()));
         }
     }
 }

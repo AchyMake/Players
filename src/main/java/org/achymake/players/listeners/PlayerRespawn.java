@@ -2,6 +2,7 @@ package org.achymake.players.listeners;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
 import org.achymake.players.files.Spawn;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,17 +13,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class PlayerRespawn implements Listener {
+    private final Players plugin;
     private Database getDatabase() {
-        return Players.getDatabase();
+        return plugin.getDatabase();
     }
     private Spawn getSpawn() {
-        return Players.getSpawn();
+        return plugin.getSpawn();
     }
     private FileConfiguration getConfig() {
-        return Players.getConfiguration();
+        return plugin.getConfig();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
     }
     public PlayerRespawn(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
@@ -52,7 +58,7 @@ public class PlayerRespawn implements Listener {
         int x = location.getBlockX();
         int y = location.getBlockY();
         int z = location.getBlockZ();
-        Players.send(player, "&6Death location:");
-        Players.send(player, "&6World:&f " + world + "&6 X:&f " + x + "&6 Y:&f " + y + "&6 Z:&f " + z);
+        getMessage().send(player, "&6Death location:");
+        getMessage().send(player, "&6World:&f " + world + "&6 X:&f " + x + "&6 Y:&f " + y + "&6 Z:&f " + z);
     }
 }

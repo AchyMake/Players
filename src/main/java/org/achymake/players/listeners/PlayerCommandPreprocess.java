@@ -8,11 +8,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class PlayerCommandPreprocess implements Listener {
+    private final Players plugin;
     private FileConfiguration getConfig() {
-        return Players.getConfiguration();
+        return plugin.getConfig();
     }
     public PlayerCommandPreprocess(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {

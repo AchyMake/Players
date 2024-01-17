@@ -12,14 +12,16 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import java.util.Random;
 
 public class PlayerDeath implements Listener {
+    private final Players plugin;
     private FileConfiguration getConfig() {
-        return Players.getConfiguration();
+        return plugin.getConfig();
     }
     private Database getDatabase() {
-        return Players.getDatabase();
+        return plugin.getDatabase();
     }
     public PlayerDeath(Players plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerDeath(PlayerDeathEvent event) {

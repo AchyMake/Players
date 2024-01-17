@@ -2,6 +2,7 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.files.Database;
+import org.achymake.players.files.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -14,19 +15,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomesCommand implements CommandExecutor, TabCompleter {
+    private Players getPlugin() {
+        return Players.getInstance();
+    }
     private Database getDatabase() {
-        return Players.getDatabase();
+        return getPlugin().getDatabase();
+    }
+    private Message getMessage() {
+        return getPlugin().getMessage();
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (getDatabase().getHomes(player).isEmpty()) {
-                    Players.send(player, "&cYou haven't set any homes yet");
+                    getMessage().send(player, "&cYou haven't set any homes yet");
                 } else {
-                    Players.send(player, "&6Homes:");
+                    getMessage().send(player, "&6Homes:");
                     for (String listedHomes : getDatabase().getHomes(player)) {
-                        Players.send(player, "- " + listedHomes);
+                        getMessage().send(player, "- " + listedHomes);
                     }
                 }
             }
@@ -40,12 +47,12 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                         if (getDatabase().exist(offlinePlayer)) {
                             if (getDatabase().getHomes(offlinePlayer).contains(targetHome)) {
                                 getDatabase().setString(offlinePlayer, "homes." + targetHome, null);
-                                Players.send(player, "&6Deleted&f " + targetHome + "&6 of&f " + target);
+                                getMessage().send(player, "&6Deleted&f " + targetHome + "&6 of&f " + target);
                             } else {
-                                Players.send(player, target + "&c doesn't have&f " + targetHome);
+                                getMessage().send(player, target + "&c doesn't have&f " + targetHome);
                             }
                         } else {
-                            Players.send(player, target + "&c has never joined");
+                            getMessage().send(player, target + "&c has never joined");
                         }
                     }
                 }
@@ -56,19 +63,19 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                             if (targetHome.equalsIgnoreCase("bed")) {
                                 if (offlinePlayer.getBedSpawnLocation() != null) {
                                     player.teleport(offlinePlayer.getBedSpawnLocation());
-                                    Players.send(player, "&6Teleporting&f " + targetHome + "&6 of&f " + target);
+                                    getMessage().send(player, "&6Teleporting&f " + targetHome + "&6 of&f " + target);
                                 }
                             } else {
                                 if (getDatabase().getHomes(offlinePlayer).contains(targetHome)) {
                                     getDatabase().getHome(offlinePlayer, targetHome).getChunk().load();
                                     player.teleport(getDatabase().getHome(offlinePlayer, targetHome));
-                                    Players.send(player, "&6Teleporting&f " + targetHome + "&6 of&f " + target);
+                                    getMessage().send(player, "&6Teleporting&f " + targetHome + "&6 of&f " + target);
                                 } else {
-                                    Players.send(player, target + "&c doesn't have&f " + targetHome);
+                                    getMessage().send(player, target + "&c doesn't have&f " + targetHome);
                                 }
                             }
                         } else {
-                            Players.send(player, target + "&c has never joined");
+                            getMessage().send(player, target + "&c has never joined");
                         }
                     }
                 }

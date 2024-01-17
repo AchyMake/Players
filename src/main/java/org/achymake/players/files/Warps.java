@@ -2,6 +2,7 @@ package org.achymake.players.files;
 
 import org.achymake.players.Players;
 import org.bukkit.Location;
+import org.bukkit.Server;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,10 +14,20 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class Warps {
+    private final Players plugin;
     private File getDataFolder() {
-        return Players.getFolder();
+        return plugin.getDataFolder();
     }
-    private File getFile() {
+    private Server getHost() {
+        return plugin.getServer();
+    }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
+    public Warps(Players plugin) {
+        this.plugin = plugin;
+    }
+    public File getFile() {
         return new File(getDataFolder(), "warps.yml");
     }
     public FileConfiguration getConfig() {
@@ -40,7 +51,7 @@ public class Warps {
         try {
             config.save(file);
         } catch (IOException e) {
-            Players.sendLog(Level.WARNING, e.getMessage());
+            getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
     public Location getLocation(String warpName) {
@@ -51,7 +62,7 @@ public class Warps {
             double z = getConfig().getDouble(warpName + ".z");
             float yaw = getConfig().getLong(warpName + ".yaw");
             float pitch = getConfig().getLong(warpName + ".pitch");
-            return new Location(Players.getInstance().getServer().getWorld(worldName), x, y, z, yaw, pitch);
+            return new Location(getHost().getWorld(worldName), x, y, z, yaw, pitch);
         } else {
             return null;
         }
@@ -67,7 +78,7 @@ public class Warps {
             try {
                 config.save(file);
             } catch (IOException e) {
-                Players.sendLog(Level.WARNING, e.getMessage());
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         }
     }
@@ -78,7 +89,7 @@ public class Warps {
             try {
                 config.load(file);
             } catch (IOException | InvalidConfigurationException e) {
-                Players.sendLog(Level.WARNING, e.getMessage());
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         } else {
             File file = getFile();
@@ -87,7 +98,7 @@ public class Warps {
             try {
                 config.save(file);
             } catch (IOException e) {
-                Players.sendLog(Level.WARNING, e.getMessage());
+                getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         }
     }
