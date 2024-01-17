@@ -10,6 +10,9 @@ tablist:
   enable: false
   header: "&e--&6--&d--&9--&7[&b&lplay.your-server.org&7]&9--&d--&6--&e--"
   footer: "&e--&6--&d--&9--&7[&6{0}&7/&6{1}&7]&9--&d--&6--&e--"
+disable-trample:
+  FARMLAND: true
+#  TURTLE_EGG: true
 message-of-the-day:
   welcome:
     - "&6Welcome %player% to the server!"
