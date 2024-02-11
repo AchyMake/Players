@@ -2,19 +2,24 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.data.Message;
-import org.bukkit.*;
+import org.achymake.players.data.Userdata;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BanCommand implements CommandExecutor, TabCompleter {
     private final Players plugin;
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
+    }
     private Message getMessage() {
         return plugin.getMessage();
     }
@@ -29,34 +34,21 @@ public class BanCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                if (offlinePlayer.isBanned()) {
+                if (getUserdata().isBanned(offlinePlayer)) {
                     getMessage().send(player, offlinePlayer.getName() + "&c is already banned");
                 } else {
-                    long days = 2;
-                    BanList banList = getServer().getBanList(BanList.Type.PROFILE);
-                    banList.addBan(offlinePlayer, "&6You have been banned with no reason&7 by: " + player.getName(), Duration.ofDays(days), null);
-                    getMessage().send(player, "You have banned " + offlinePlayer.getName() + " for no reason");
+                    getUserdata().setBoolean(offlinePlayer, "settings.banned", true);
+                    getUserdata().setString(offlinePlayer, "settings.ban-reason", "None&6:&7 by " + player.getName());
+                    getMessage().send(player, "You banned " + offlinePlayer.getName() + " for no reason");
                 }
             }
-            if (args.length == 2) {
+            if (args.length > 1) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
                 if (offlinePlayer.isBanned()) {
                     getMessage().send(player, offlinePlayer.getName() + "&c is already banned");
                 } else {
-                    long days = Long.parseLong(args[1]);
-                    BanList banList = getServer().getBanList(BanList.Type.PROFILE);
-                    banList.addBan(offlinePlayer, "&6You have been banned with no reason&7 by: " + player.getName(), Duration.ofDays(days), null);
-                    getMessage().send(player, "You have banned " + offlinePlayer.getName() + " for no reason");
-                }
-            }
-            if (args.length > 2) {
-                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                if (offlinePlayer.isBanned()) {
-                    getMessage().send(player, offlinePlayer.getName() + "&c is already banned");
-                } else {
-                    long days = Long.parseLong(args[1]);
-                    BanList banList = getServer().getBanList(BanList.Type.PROFILE);
-                    banList.addBan(offlinePlayer, args(args) + "&7 by: " + player.getName(), Duration.ofDays(days), null);
+                    getUserdata().setBoolean(offlinePlayer, "settings.banned", true);
+                    getUserdata().setString(offlinePlayer, "settings.ban-reason", args(args) + "&6:&7 by " + player.getName());
                     getMessage().send(player, "You have banned " + offlinePlayer.getName() + " for " + args(args));
                 }
             }
@@ -76,15 +68,9 @@ public class BanCommand implements CommandExecutor, TabCompleter {
         List<String> commands = new ArrayList<>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                for (OfflinePlayer offlinePlayer : getServer().getBannedPlayers()) {
+                for (OfflinePlayer offlinePlayer : getServer().getOfflinePlayers()) {
                     commands.add(offlinePlayer.getName());
                 }
-            }
-            if (args.length == 2) {
-                commands.add("griefing");
-                commands.add("hacking");
-                commands.add("advertising");
-                commands.add("");
             }
         }
         return commands;

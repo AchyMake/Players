@@ -2,6 +2,7 @@ package org.achymake.players.commands;
 
 import org.achymake.players.Players;
 import org.achymake.players.data.Message;
+import org.achymake.players.data.Userdata;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -15,6 +16,9 @@ import java.util.List;
 
 public class UnBanCommand implements CommandExecutor, TabCompleter {
     private final Players plugin;
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
+    }
     private Server getServer() {
         return plugin.getServer();
     }
@@ -29,8 +33,9 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 OfflinePlayer offlinePlayer = getServer().getOfflinePlayer(args[0]);
-                if (offlinePlayer.isBanned()) {
-                    getServer().getBannedPlayers().remove(offlinePlayer);
+                if (getUserdata().isBanned(offlinePlayer)) {
+                    getUserdata().setBoolean(offlinePlayer, "settings.banned", false);
+                    getUserdata().setString(offlinePlayer, "settings.ban-reason", null);
                     getMessage().send(player, offlinePlayer.getName() + "&6 is no longer banned");
                 } else {
                     getMessage().send(player, offlinePlayer.getName() + "&c is not banned");
@@ -44,8 +49,10 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
         List<String> commands = new ArrayList<>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                for (OfflinePlayer offlinePlayer : getServer().getBannedPlayers()) {
-                    commands.add(offlinePlayer.getName());
+                for (OfflinePlayer offlinePlayer : getServer().getOfflinePlayers()) {
+                    if (getUserdata().isBanned(offlinePlayer)) {
+                        commands.add(offlinePlayer.getName());
+                    }
                 }
             }
         }

@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5076afce-b320-4939-9319-373f8fab1f00" name="Changes" comment="clean up">
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerDeath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerDeath.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerMove.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerMove.java" afterDir="false" />
-    </list>
+    <list default="true" id="5076afce-b320-4939-9319-373f8fab1f00" name="Changes" comment="clean up" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -289,7 +286,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707667968823</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1707668600759</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1707668600759</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

@@ -1,6 +1,7 @@
 package org.achymake.players.listeners;
 
 import org.achymake.players.Players;
+import org.achymake.players.data.Message;
 import org.achymake.players.data.Userdata;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -16,6 +17,9 @@ public record PlayerLogin(Players plugin) implements Listener {
     private Server getServer() {
         return plugin.getServer();
     }
+    private Message getMessage() {
+        return plugin.getMessage();
+    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
@@ -23,7 +27,7 @@ public record PlayerLogin(Players plugin) implements Listener {
             if (player.hasPermission("players.event.login.full-server")) {
                 if (getUserdata().exist(player)) {
                     if (getUserdata().isBanned(player)) {
-                        event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getUserdata().getBanReason(player));
+                        event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor("Reason: " + getUserdata().getBanReason(player)));
                     } else {
                         event.allow();
                         getUserdata().setup(player);
@@ -36,7 +40,7 @@ public record PlayerLogin(Players plugin) implements Listener {
         } else {
             if (getUserdata().exist(player)) {
                 if (getUserdata().isBanned(player)) {
-                    event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getUserdata().getBanReason(player));
+                    event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor("Reason: " + getUserdata().getBanReason(player)));
                 } else {
                     event.allow();
                     getUserdata().setup(player);
