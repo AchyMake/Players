@@ -1,8 +1,8 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Jail;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Jail;
+import org.achymake.players.data.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,14 +13,15 @@ import java.util.Collections;
 import java.util.List;
 
 public class SetJailCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
+    private final Players plugin;
     private Jail getJail() {
-        return getPlugin().getJail();
+        return plugin.getJail();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    public SetJailCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

@@ -2,6 +2,7 @@ package org.achymake.players.api;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.achymake.players.Players;
+import org.achymake.players.data.Economy;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +19,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
     }
     @Override
     public String getVersion() {
-        return "1.10.0";
+        return "42";
     }
     @Override
     public boolean canRegister() {
@@ -38,20 +39,20 @@ public class PlaceholderProvider extends PlaceholderExpansion {
             return "";
         } else {
             if (params.equals("name")) {
-                Players players = Players.getInstance();
-                return players.getDatabase().getConfig(player).getString("name");
+                return Players.getInstance().getUserdata().getConfig(player).getString("name");
             }
             if (params.equals("display-name")) {
-                Players players = Players.getInstance();
-                return players.getDatabase().getConfig(player).getString("display-name");
+                return Players.getInstance().getUserdata().getConfig(player).getString("display-name");
             }
             if (params.equals("vanished")) {
-                Players players = Players.getInstance();
-                return String.valueOf(players.getDatabase().isVanished(player));
+                return String.valueOf(Players.getInstance().getVanished().contains(player));
             }
             if (params.equals("online_players")) {
-                Players players = Players.getInstance();
-                return String.valueOf(player.getServer().getOnlinePlayers().size() - players.getDatabase().getVanished().size());
+                return String.valueOf(player.getServer().getOnlinePlayers().size() - Players.getInstance().getVanished().size());
+            }
+            if (params.equals("account")) {
+                Economy economy = Players.getInstance().getEconomy();
+                return economy.currency() + economy.format(economy.get(player));
             }
         }
         return super.onPlaceholderRequest(player, params);

@@ -1,10 +1,11 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Database;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Message;
+import org.achymake.players.data.Userdata;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -12,21 +13,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PVPCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
+    private final Players plugin;
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    private Server getServer() {
+        return plugin.getServer();
+    }
+    public PVPCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                getDatabase().setBoolean(player, "settings.pvp", !getDatabase().isPVP(player));
-                if (getDatabase().isPVP(player)) {
+                getUserdata().setBoolean(player, "settings.pvp", !getUserdata().isPVP(player));
+                if (getUserdata().isPVP(player)) {
                     getMessage().sendActionBar(player, "&6&lPVP:&a Enabled");
                 } else {
                     getMessage().sendActionBar(player, "&6&lPVP:&c Disabled");
@@ -34,10 +39,10 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 1) {
                 if (player.hasPermission("players.command.pvp.others")) {
-                    Player target = player.getServer().getPlayerExact(args[0]);
+                    Player target = getServer().getPlayerExact(args[0]);
                     if (target == player) {
-                        getDatabase().setBoolean(target, "settings.pvp", !getDatabase().isPVP(target));
-                        if (getDatabase().isPVP(target)) {
+                        getUserdata().setBoolean(target, "settings.pvp", !getUserdata().isPVP(target));
+                        if (getUserdata().isPVP(target)) {
                             getMessage().sendActionBar(target, "&6&lPVP:&a Enabled");
                         } else {
                             getMessage().sendActionBar(target, "&6&lPVP:&c Disabled");
@@ -45,8 +50,8 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
                     } else {
                         if (target != null) {
                             if (!target.hasPermission("players.command.pvp.exempt")) {
-                                getDatabase().setBoolean(target, "settings.pvp", !getDatabase().isPVP(target));
-                                if (getDatabase().isPVP(target)) {
+                                getUserdata().setBoolean(target, "settings.pvp", !getUserdata().isPVP(target));
+                                if (getUserdata().isPVP(target)) {
                                     getMessage().send(target, player.getName() + "&6 enabled pvp for you");
                                     getMessage().sendActionBar(target, "&6&lPVP:&a Enabled");
                                     getMessage().send(player, "&6You enabled pvp for&f " + target.getName());
@@ -58,9 +63,9 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
                             }
                         } else {
                             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                            if (getDatabase().exist(offlinePlayer)) {
-                                getDatabase().setBoolean(offlinePlayer, "settings.pvp", !getDatabase().isPVP(offlinePlayer));
-                                if (getDatabase().isPVP(offlinePlayer)) {
+                            if (getUserdata().exist(offlinePlayer)) {
+                                getUserdata().setBoolean(offlinePlayer, "settings.pvp", !getUserdata().isPVP(offlinePlayer));
+                                if (getUserdata().isPVP(offlinePlayer)) {
                                     getMessage().send(player, "&6You enabled pvp for&f " + offlinePlayer.getName());
                                 } else {
                                     getMessage().send(player, "&6You disabled pvp for&f " + offlinePlayer.getName());
@@ -75,10 +80,10 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
         }
         if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                Player target = consoleCommandSender.getServer().getPlayerExact(args[0]);
+                Player target = getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    getDatabase().setBoolean(target, "settings.pvp", !getDatabase().isPVP(target));
-                    if (getDatabase().isPVP(target)) {
+                    getUserdata().setBoolean(target, "settings.pvp", !getUserdata().isPVP(target));
+                    if (getUserdata().isPVP(target)) {
                         getMessage().send(target, consoleCommandSender.getName() + "&6 enabled pvp for you");
                         getMessage().sendActionBar(target, "&6&lPVP:&a Enabled");
                         getMessage().send(consoleCommandSender, "You enabled pvp for " + target.getName());
@@ -89,9 +94,9 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
                     }
                 } else {
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                    if (getDatabase().exist(offlinePlayer)) {
-                        getDatabase().setBoolean(offlinePlayer, "settings.pvp", !getDatabase().isPVP(offlinePlayer));
-                        if (getDatabase().isPVP(offlinePlayer)) {
+                    if (getUserdata().exist(offlinePlayer)) {
+                        getUserdata().setBoolean(offlinePlayer, "settings.pvp", !getUserdata().isPVP(offlinePlayer));
+                        if (getUserdata().isPVP(offlinePlayer)) {
                             getMessage().send(consoleCommandSender, "You enabled pvp for " + offlinePlayer.getName());
                         } else {
                             getMessage().send(consoleCommandSender, "You disabled pvp for " + offlinePlayer.getName());
@@ -110,9 +115,11 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("players.command.pvp.others")) {
-                    for (Player players : player.getServer().getOnlinePlayers()) {
+                    for (Player players : getServer().getOnlinePlayers()) {
                         if (!players.hasPermission("players.command.pvp.exempt")) {
-                            commands.add(players.getName());
+                            if (!plugin.getVanished().contains(players)) {
+                                commands.add(players.getName());
+                            }
                         }
                     }
                     commands.add(player.getName());

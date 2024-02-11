@@ -1,11 +1,12 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.api.EconomyProvider;
-import org.achymake.players.files.Database;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Economy;
+import org.achymake.players.data.Message;
+import org.achymake.players.data.Userdata;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,44 +18,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PayCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
+    private final Players plugin;
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
     private FileConfiguration getConfig() {
-        return getPlugin().getConfig();
+        return plugin.getConfig();
     }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
-    }
-    private EconomyProvider getEconomyProvider() {
-        return getPlugin().getEconomyProvider();
+    private Economy getEconomy() {
+        return plugin.getEconomy();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    private Server getServer() {
+        return plugin.getServer();
+    }
+    public PayCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (args.length == 0 || args.length == 1) {
-                getMessage().send(player, "&cUsage:&f /pay target amount");
-            }
             if (args.length == 2) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                double value = Double.parseDouble(args[1]);
-                if (value >= getConfig().getDouble("economy.minimum-payment")) {
-                    if (getDatabase().exist(offlinePlayer)) {
-                        if (getEconomyProvider().has(player, Double.parseDouble(args[1]))) {
-                            getEconomyProvider().withdrawPlayer(player, Double.parseDouble(args[1]));
-                            getEconomyProvider().depositPlayer(offlinePlayer, Double.parseDouble(args[1]));
-                            getMessage().send(player, "&6You paid&f " + offlinePlayer.getName() + "&a " + getEconomyProvider().format(Double.parseDouble(args[1])));
+                if (getUserdata().exist(offlinePlayer)) {
+                    double amount = Double.parseDouble(args[1]);
+                    if (amount >= getConfig().getDouble("economy.minimum-payment")) {
+                        if (getEconomy().has(player, amount)) {
+                            getEconomy().remove(player, amount);
+                            getEconomy().add(offlinePlayer, amount);
+                            getMessage().send(player, "&6You paid&f " + offlinePlayer.getName() + "&a " + getEconomy().currency() + getEconomy().format(amount));
                         } else {
-                            getMessage().send(player, "&cYou don't have&a " + getEconomyProvider().format(Double.parseDouble(args[1])) + "&c to pay&f " + offlinePlayer.getName());
+                            getMessage().send(player, "&cYou don't have&a " + getEconomy().currency() + getEconomy().format(amount) + "&c to pay&f " + offlinePlayer.getName());
                         }
                     } else {
-                        getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
+                        getMessage().send(player, "&cYou have to pay at least&a " + getEconomy().currency() + getEconomy().format(getConfig().getDouble("economy.minimum-payment")));
                     }
-                }else {
-                    getMessage().send(player, "&cMinimum payment is " + getDatabase().getEconomyFormat(getConfig().getDouble("economy.minimum-payment")));
+                } else {
+                    getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
                 }
             }
         }
@@ -63,10 +65,12 @@ public class PayCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> commands = new ArrayList<>();
-        if (sender instanceof Player player) {
+        if (sender instanceof Player) {
             if (args.length == 1) {
-                for (Player players : player.getServer().getOnlinePlayers()) {
-                    commands.add(players.getName());
+                for (Player players : getServer().getOnlinePlayers()) {
+                    if (!plugin.getVanished().contains(players)) {
+                        commands.add(players.getName());
+                    }
                 }
             }
         }

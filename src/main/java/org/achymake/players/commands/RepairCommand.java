@@ -1,44 +1,47 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Database;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Message;
+import org.achymake.players.data.Userdata;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RepairCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
+    private final Players plugin;
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    public RepairCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                if (player.getInventory().getItemInMainHand().getType().isAir()) {
+                ItemStack itemStack = player.getInventory().getItemInMainHand();
+                if (itemStack.getType().isAir()) {
                     getMessage().send(player,"&cYou have to hold an item");
                 } else {
-                    if (getDatabase().hasCooldown(player, "repair")) {
-                        getMessage().sendActionBar(player, "&cYou have to wait&f " + getDatabase().getCooldown(player, "repair") + "&c seconds");
+                    if (getUserdata().hasCooldown(player, "repair")) {
+                        getMessage().sendActionBar(player, "&cYou have to wait&f " + getUserdata().getCooldown(player, "repair") + "&c seconds");
                     } else {
-                        Damageable damageable = (Damageable) player.getInventory().getItemInMainHand().getItemMeta();
+                        Damageable damageable = (Damageable) itemStack.getItemMeta();
                         if (damageable.hasDamage()) {
                             damageable.setDamage(0);
-                            player.getInventory().getItemInMainHand().setItemMeta(damageable);
-                            getMessage().send(player, "&6You repaired&f " + player.getInventory().getItemInMainHand().getType());
-                            getDatabase().addCooldown(player, "repair");
+                            itemStack.setItemMeta(damageable);
+                            getMessage().send(player, "&6You repaired&f " + itemStack.getType());
+                            getUserdata().addCooldown(player, "repair");
                         } else {
                             getMessage().send(player, "&cThe item is fully repaired");
                         }
@@ -46,16 +49,17 @@ public class RepairCommand implements CommandExecutor, TabCompleter {
                 }
             }
             if (args.length == 1) {
-                if (player.hasPermission("players.command.repair.force")) {
-                    if (args[0].equalsIgnoreCase("force")) {
-                        if (player.getInventory().getItemInMainHand().getType().isAir()) {
+                if (args[0].equalsIgnoreCase("force")) {
+                    if (player.hasPermission("players.command.repair.force")) {
+                        ItemStack itemStack = player.getInventory().getItemInMainHand();
+                        if (itemStack.getType().isAir()) {
                             getMessage().send(player,"&cYou have to hold an item");
                         } else {
-                            Damageable damageable = (Damageable) player.getInventory().getItemInMainHand().getItemMeta();
+                            Damageable damageable = (Damageable) itemStack.getItemMeta();
                             if (damageable.hasDamage()) {
                                 damageable.setDamage(0);
-                                player.getInventory().getItemInMainHand().setItemMeta(damageable);
-                                getMessage().send(player, "&6You repaired&f " + player.getInventory().getItemInMainHand().getType());
+                                itemStack.setItemMeta(damageable);
+                                getMessage().send(player, "&6You repaired&f " + itemStack.getType());
                             } else {
                                 getMessage().send(player, "&cThe item is fully repaired");
                             }

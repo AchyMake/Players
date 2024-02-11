@@ -1,7 +1,7 @@
 package org.achymake.players.listeners;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Database;
+import org.achymake.players.data.Userdata;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,46 +9,41 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 
-public class PlayerLogin implements Listener {
-    private final Players plugin;
-    private Database getDatabase() {
-        return plugin.getDatabase();
+public record PlayerLogin(Players plugin) implements Listener {
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
-    private Server getHost() {
+    private Server getServer() {
         return plugin.getServer();
-    }
-    public PlayerLogin(Players plugin) {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        this.plugin = plugin;
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
-        if (getHost().getOnlinePlayers().size() >= getHost().getMaxPlayers()) {
+        if (getServer().getOnlinePlayers().size() >= getServer().getMaxPlayers()) {
             if (player.hasPermission("players.event.login.full-server")) {
-                if (getDatabase().exist(player)) {
-                    if (getDatabase().isBanned(player)) {
-                        event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getDatabase().getBanReason(player));
+                if (getUserdata().exist(player)) {
+                    if (getUserdata().isBanned(player)) {
+                        event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getUserdata().getBanReason(player));
                     } else {
                         event.allow();
-                        getDatabase().setup(player);
+                        getUserdata().setup(player);
                     }
                 } else {
                     event.allow();
-                    getDatabase().setup(player);
+                    getUserdata().setup(player);
                 }
             }
         } else {
-            if (getDatabase().exist(player)) {
-                if (getDatabase().isBanned(player)) {
-                    event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getDatabase().getBanReason(player));
+            if (getUserdata().exist(player)) {
+                if (getUserdata().isBanned(player)) {
+                    event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getUserdata().getBanReason(player));
                 } else {
                     event.allow();
-                    getDatabase().setup(player);
+                    getUserdata().setup(player);
                 }
             } else {
                 event.allow();
-                getDatabase().setup(player);
+                getUserdata().setup(player);
             }
         }
     }

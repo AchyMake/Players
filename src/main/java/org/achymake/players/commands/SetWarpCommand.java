@@ -1,8 +1,8 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Message;
-import org.achymake.players.files.Warps;
+import org.achymake.players.data.Message;
+import org.achymake.players.data.Warps;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,21 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SetWarpCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
+    private final Players plugin;
     private Warps getWarps() {
-        return getPlugin().getWarps();
+        return plugin.getWarps();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    public SetWarpCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (args.length == 0) {
-                getMessage().send(player, "&cUsage:&f /setwarp warpName");
-            }
             if (args.length == 1) {
                 if (getWarps().locationExist(args[0])) {
                     getWarps().setLocation(args[0], player.getLocation());

@@ -1,9 +1,10 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Database;
-import org.achymake.players.files.Message;
-import org.achymake.players.files.Warps;
+import org.achymake.players.data.Message;
+import org.achymake.players.data.Userdata;
+import org.achymake.players.data.Warps;
+import org.bukkit.Server;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -11,23 +12,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WarpCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
+    private final Players plugin;
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
     private Warps getWarps() {
-        return getPlugin().getWarps();
+        return plugin.getWarps();
+    }
+    private Server getServer() {
+        return plugin.getServer();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    public WarpCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
+                if (getUserdata().isFrozen(player) || getUserdata().isJailed(player)) {
                     return false;
                 } else {
                     if (getWarps().getWarps().isEmpty()) {
@@ -41,14 +46,12 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                 }
             }
             if (args.length == 1) {
-                if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
+                if (getUserdata().isFrozen(player) || getUserdata().isJailed(player)) {
                     return false;
                 } else {
                     if (player.hasPermission("players.command.warp." + args[0])) {
                         if (getWarps().locationExist(args[0])) {
-                            getWarps().getLocation(args[0]).getChunk().load();
-                            getMessage().sendActionBar(player, "&6Teleporting to&f "+ args[0]);
-                            player.teleport(getWarps().getLocation(args[0]));
+                            getUserdata().teleport(player, args[0], getWarps().getLocation(args[0]));
                         } else {
                             getMessage().send(player, args[0] + "&c does not exist");
                         }
@@ -57,19 +60,15 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 2) {
                 if (player.hasPermission("players.command.warp.others")) {
-                    if (player.hasPermission("players.command.warp." + args[0])) {
-                        Player target = player.getServer().getPlayerExact(args[1]);
-                        if (target != null) {
-                            if (getDatabase().isFrozen(target) || getDatabase().isJailed(target)) {
-                                return false;
+                    Player target = getServer().getPlayerExact(args[1]);
+                    if (target != null) {
+                        if (getUserdata().isFrozen(target) || getUserdata().isJailed(target)) {
+                            return false;
+                        } else {
+                            if (getWarps().locationExist(args[0])) {
+                                getUserdata().teleport(target, args[0], getWarps().getLocation(args[0]));
                             } else {
-                                if (getWarps().locationExist(args[0])) {
-                                    getWarps().getLocation(args[0]).getChunk().load();
-                                    getMessage().send(target, "&6Teleporting to&f " + args[0]);
-                                    target.teleport(getWarps().getLocation(args[0]));
-                                } else {
-                                    getMessage().send(player, args[0] + "&c does not exist");
-                                }
+                                getMessage().send(player, args[0] + "&c does not exist");
                             }
                         }
                     }
@@ -78,15 +77,13 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
         }
         if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 2) {
-                Player target = consoleCommandSender.getServer().getPlayerExact(args[1]);
+                Player target = getServer().getPlayerExact(args[1]);
                 if (target != null) {
-                    if (getDatabase().isFrozen(target) || getDatabase().isJailed(target)) {
+                    if (getUserdata().isFrozen(target) || getUserdata().isJailed(target)) {
                         return false;
                     } else {
                         if (getWarps().locationExist(args[0])) {
-                            getWarps().getLocation(args[0]).getChunk().load();
-                            getMessage().send(target, "&6Teleporting to&f " + args[0]);
-                            target.teleport(getWarps().getLocation(args[0]));
+                            getUserdata().teleport(target, args[0], getWarps().getLocation(args[0]));
                         } else {
                             getMessage().send(consoleCommandSender, args[0] + " does not exist");
                         }
@@ -110,7 +107,7 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 2) {
                 if (player.hasPermission("players.command.warp.others")) {
-                    for (Player players : player.getServer().getOnlinePlayers()) {
+                    for (Player players : getServer().getOnlinePlayers()) {
                         commands.add(players.getName());
                     }
                 }

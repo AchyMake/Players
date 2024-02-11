@@ -1,4 +1,4 @@
-package org.achymake.players.files;
+package org.achymake.players.data;
 
 import org.achymake.players.Players;
 import org.bukkit.Location;
@@ -13,28 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-public class Warps {
-    private final Players plugin;
+public record Warps(Players plugin) {
     private File getDataFolder() {
         return plugin.getDataFolder();
-    }
-    private Server getHost() {
-        return plugin.getServer();
     }
     private Message getMessage() {
         return plugin.getMessage();
     }
-    public Warps(Players plugin) {
-        this.plugin = plugin;
+    private Server getServer() {
+        return plugin.getServer();
     }
-    public File getFile() {
+    public boolean exist() {
+        return getFile().exists();
+    }
+    private File getFile() {
         return new File(getDataFolder(), "warps.yml");
     }
     public FileConfiguration getConfig() {
         return YamlConfiguration.loadConfiguration(getFile());
-    }
-    public boolean exist() {
-        return getFile().exists();
     }
     public boolean locationExist(String warpName) {
         return getConfig().isConfigurationSection(warpName);
@@ -62,7 +58,7 @@ public class Warps {
             double z = getConfig().getDouble(warpName + ".z");
             float yaw = getConfig().getLong(warpName + ".yaw");
             float pitch = getConfig().getLong(warpName + ".pitch");
-            return new Location(getHost().getWorld(worldName), x, y, z, yaw, pitch);
+            return new Location(getServer().getWorld(worldName), x, y, z, yaw, pitch);
         } else {
             return null;
         }
@@ -83,17 +79,15 @@ public class Warps {
         }
     }
     public void reload() {
+        File file = getFile();
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         if (exist()) {
-            File file = getFile();
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
             } catch (IOException | InvalidConfigurationException e) {
                 getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         } else {
-            File file = getFile();
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             config.options().copyDefaults(true);
             try {
                 config.save(file);

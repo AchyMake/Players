@@ -1,9 +1,10 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Database;
-import org.achymake.players.files.Message;
-import org.achymake.players.files.Spawn;
+import org.achymake.players.data.Message;
+import org.achymake.players.data.Spawn;
+import org.achymake.players.data.Userdata;
+import org.bukkit.Server;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -11,29 +12,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpawnCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
+    private final Players plugin;
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
     private Spawn getSpawn() {
-        return getPlugin().getSpawn();
+        return plugin.getSpawn();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    private Server getServer() {
+        return plugin.getServer();
+    }
+    public SpawnCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
+                if (getUserdata().isFrozen(player) || getUserdata().isJailed(player)) {
                     return false;
                 } else {
                     if (getSpawn().locationExist()) {
-                        getSpawn().getLocation().getChunk().load();
-                        getMessage().send(player, "&6Teleporting to&f spawn");
-                        player.teleport(getSpawn().getLocation());
+                        getUserdata().teleport(player, "spawn", getSpawn().getLocation());
                     } else {
                         getMessage().send(player, "Spawn&c does not exist");
                     }
@@ -41,16 +44,13 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 1) {
                 if (player.hasPermission("players.command.spawn.others")) {
-                    Player target = player.getServer().getPlayerExact(args[0]);
+                    Player target = getServer().getPlayerExact(args[0]);
                     if (target != null) {
-                        if (getDatabase().isFrozen(target) || getDatabase().isJailed(target)) {
+                        if (getUserdata().isFrozen(target) || getUserdata().isJailed(target)) {
                             return false;
                         } else {
                             if (getSpawn().locationExist()) {
-                                getSpawn().getLocation().getChunk().load();
-                                getMessage().send(target, "&6Teleporting to&f spawn");
-                                target.teleport(getSpawn().getLocation());
-                                getMessage().send(player, "&6You teleported&f " + target.getName() + "&6 to&f spawn");
+                                getUserdata().teleport(player, "spawn", getSpawn().getLocation());
                             } else {
                                 getMessage().send(player, "Spawn&c does not exist");
                             }
@@ -61,16 +61,13 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
         }
         if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                Player target = consoleCommandSender.getServer().getPlayerExact(args[0]);
+                Player target = getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    if (getDatabase().isFrozen(target) || getDatabase().isJailed(target)) {
+                    if (getUserdata().isFrozen(target) || getUserdata().isJailed(target)) {
                         return false;
                     } else {
                         if (getSpawn().locationExist()) {
-                            getSpawn().getLocation().getChunk().load();
-                            getMessage().send(target, "&6Teleporting to&f spawn");
-                            target.teleport(getSpawn().getLocation());
-                            getMessage().send(consoleCommandSender, "You teleported " + target.getName() + " to spawn");
+                            getUserdata().teleport(target, "spawn", getSpawn().getLocation());
                         } else {
                             getMessage().send(consoleCommandSender, "Spawn&c does not exist");
                         }
@@ -86,7 +83,7 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("players.command.spawn.others")) {
-                    for (Player players : player.getServer().getOnlinePlayers()) {
+                    for (Player players : getServer().getOnlinePlayers()) {
                         commands.add(players.getName());
                     }
                 }

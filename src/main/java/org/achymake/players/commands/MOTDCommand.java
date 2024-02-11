@@ -1,7 +1,8 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Message;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,14 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MOTDCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
+    private final Players plugin;
     private FileConfiguration getConfig() {
-        return getPlugin().getConfig();
+        return plugin.getConfig();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    private Server getServer() {
+        return plugin.getServer();
+    }
+    public MOTDCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -34,7 +39,7 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
         }
         if (args.length == 2) {
             if (sender.hasPermission("players.command.motd.others")) {
-                Player target = sender.getServer().getPlayerExact(args[1]);
+                Player target = getServer().getPlayerExact(args[1]);
                 if (target != null) {
                     sendMotd(target, args[0]);
                 }
@@ -51,7 +56,7 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 2) {
                 if (player.hasPermission("players.command.motd.others")) {
-                    for (Player players : player.getServer().getOnlinePlayers()) {
+                    for (Player players : getServer().getOnlinePlayers()) {
                         commands.add(players.getName());
                     }
                 }
@@ -61,8 +66,8 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
     }
     private void sendMotd(Player player, String motd) {
         if (getConfig().isList("message-of-the-day." + motd)) {
-            for (String message : getConfig().getStringList("message-of-the-day." + motd)) {
-                getMessage().send(player, message.replaceAll("%player%", player.getName()));
+            for (String messages : getConfig().getStringList("message-of-the-day." + motd)) {
+                getMessage().send(player, messages.replaceAll("%player%", player.getName()));
             }
         }
         if (getConfig().isString("message-of-the-day." + motd)) {

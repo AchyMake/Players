@@ -1,13 +1,12 @@
 package org.achymake.players;
 
-import net.milkbowl.vault.economy.Economy;
-import org.achymake.players.api.EconomyProvider;
-import org.achymake.players.api.PlaceholderProvider;
+import org.achymake.players.api.*;
 import org.achymake.players.commands.*;
-import org.achymake.players.files.*;
+import org.achymake.players.data.*;
 import org.achymake.players.listeners.*;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,162 +14,196 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
 public final class Players extends JavaPlugin {
     private static Players instance;
-    private static Database database;
-    private static EconomyProvider economyProvider;
+    private static Userdata userdata;
+    private static Economy economy;
     private static Jail jail;
     private static Kits kits;
-    private static Message message;
     private static Spawn spawn;
     private static Warps warps;
+    private static Worth worth;
+    private static Message message;
+    private static PluginManager manager;
+    private final List<Player> vanished = new ArrayList<>();
+    private final HashMap<String, Long> commandCooldown = new HashMap<>();
+    private final HashMap<String, Long> kitCooldown = new HashMap<>();
     @Override
     public void onEnable() {
         instance = this;
         message = new Message(this);
-        database = new Database(this);
-        if (getServer().getPluginManager().getPlugin("Vault") != null) {
-            economyProvider = new EconomyProvider(this);
-            getServer().getServicesManager().register(Economy.class, getEconomyProvider(), this, ServicePriority.Normal);
-            getMessage().sendLog(Level.INFO, "Hooked to 'Vault'");
-        } else {
-            getMessage().sendLog(Level.WARNING, "You have to install 'Vault'");
-            getServer().getPluginManager().disablePlugin(this);
-        }
-        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") == null) {
-            getMessage().sendLog(Level.WARNING, "You have to install 'PlaceholderAPI'");
-            getServer().getPluginManager().disablePlugin(this);
-        } else {
-            new PlaceholderProvider().register();
-            getMessage().sendLog(Level.INFO, "Hooked to 'PlaceholderAPI'");
-        }
+        userdata = new Userdata(this);
+        economy = new Economy(this);
         jail = new Jail(this);
         kits = new Kits(this);
         spawn = new Spawn(this);
         warps = new Warps(this);
+        worth = new Worth(this);
         reload();
-        commands();
-        events();
-        getMessage().sendLog(Level.INFO, "Enabled " + getName() + " " + getDescription().getVersion());
-        getUpdate();
+        manager = getServer().getPluginManager();
+        if (getManager().isPluginEnabled("Vault")) {
+            getServer().getServicesManager().register(net.milkbowl.vault.economy.Economy.class, new VaultEconomyProvider(this), this, ServicePriority.Normal);
+        }
+        new PlaceholderProvider().register();
+        registerCommands();
+        registerEvents();
+        getMessage().sendLog(Level.INFO, "Enabled " + getDescription().getName() + " " + getDescription().getVersion());
+        sendUpdate();
     }
     @Override
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
-        if (new PlaceholderProvider().isRegistered()) {
-            new PlaceholderProvider().unregister();
-        }
-        getMessage().sendLog(Level.INFO, "Disabled " + getName() + " " + getDescription().getVersion());
+        getVanished().clear();
+        getCommandCooldown().clear();
+        getMessage().sendLog(Level.INFO, "Disabled " + getDescription().getName() + " " + getDescription().getVersion());
     }
-    private void commands() {
-        getCommand("announcement").setExecutor(new AnnouncementCommand());
-        getCommand("back").setExecutor(new BackCommand());
-        getCommand("balance").setExecutor(new BalanceCommand());
+    private void registerCommands() {
+        getCommand("announcement").setExecutor(new AnnouncementCommand(this));
+        getCommand("back").setExecutor(new BackCommand(this));
+        getCommand("balance").setExecutor(new BalanceCommand(this));
+        getCommand("ban").setExecutor(new BanCommand(this));
         getCommand("color").setExecutor(new ColorCommand());
-        getCommand("delhome").setExecutor(new DelHomeCommand());
-        getCommand("delwarp").setExecutor(new DelWarpCommand());
-        getCommand("eco").setExecutor(new EcoCommand());
-        getCommand("enchant").setExecutor(new EnchantCommand());
-        getCommand("enderchest").setExecutor(new EnderChestCommand());
-        getCommand("feed").setExecutor(new FeedCommand());
-        getCommand("fly").setExecutor(new FlyCommand());
-        getCommand("freeze").setExecutor(new FreezeCommand());
-        getCommand("gamemode").setExecutor(new GameModeCommand());
-        getCommand("gma").setExecutor(new GMACommand());
-        getCommand("gmc").setExecutor(new GMCCommand());
-        getCommand("gms").setExecutor(new GMSCommand());
-        getCommand("gmsp").setExecutor(new GMSPCommand());
-        getCommand("hat").setExecutor(new HatCommand());
-        getCommand("heal").setExecutor(new HealCommand());
-        getCommand("help").setExecutor(new HelpCommand());
-        getCommand("home").setExecutor(new HomeCommand());
-        getCommand("homes").setExecutor(new HomesCommand());
-        getCommand("inventory").setExecutor(new InventoryCommand());
-        getCommand("jail").setExecutor(new JailCommand());
-        getCommand("kit").setExecutor(new KitCommand());
-        getCommand("motd").setExecutor(new MOTDCommand());
-        getCommand("mute").setExecutor(new MuteCommand());
-        getCommand("nickname").setExecutor(new NicknameCommand());
-        getCommand("pay").setExecutor(new PayCommand());
-        getCommand("players").setExecutor(new PlayersCommand());
-        getCommand("pvp").setExecutor(new PVPCommand());
-        getCommand("repair").setExecutor(new RepairCommand());
-        getCommand("respond").setExecutor(new RespondCommand());
-        getCommand("rtp").setExecutor(new RTPCommand());
-        getCommand("rules").setExecutor(new RulesCommand());
-        getCommand("sethome").setExecutor(new SetHomeCommand());
-        getCommand("setjail").setExecutor(new SetJailCommand());
-        getCommand("setspawn").setExecutor(new SetSpawnCommand());
-        getCommand("setwarp").setExecutor(new SetWarpCommand());
-        getCommand("skull").setExecutor(new SkullCommand());
-        getCommand("spawn").setExecutor(new SpawnCommand());
-        getCommand("tpaccept").setExecutor(new TPAcceptCommand());
-        getCommand("tpa").setExecutor(new TPACommand());
-        getCommand("tpcancel").setExecutor(new TPCancelCommand());
-        getCommand("tp").setExecutor(new TPCommand());
-        getCommand("tpdeny").setExecutor(new TPDenyCommand());
-        getCommand("tphere").setExecutor(new TPHereCommand());
-        getCommand("vanish").setExecutor(new VanishCommand());
-        getCommand("warp").setExecutor(new WarpCommand());
-        getCommand("whisper").setExecutor(new WhisperCommand());
-        getCommand("workbench").setExecutor(new WorkbenchCommand());
+        getCommand("delhome").setExecutor(new DelHomeCommand(this));
+        getCommand("delwarp").setExecutor(new DelWarpCommand(this));
+        getCommand("eco").setExecutor(new EcoCommand(this));
+        getCommand("enchant").setExecutor(new EnchantCommand(this));
+        getCommand("enderchest").setExecutor(new EnderChestCommand(this));
+        getCommand("feed").setExecutor(new FeedCommand(this));
+        getCommand("fly").setExecutor(new FlyCommand(this));
+        getCommand("flyspeed").setExecutor(new FlySpeedCommand(this));
+        getCommand("freeze").setExecutor(new FreezeCommand(this));
+        getCommand("gamemode").setExecutor(new GameModeCommand(this));
+        getCommand("gma").setExecutor(new GMACommand(this));
+        getCommand("gmc").setExecutor(new GMCCommand(this));
+        getCommand("gms").setExecutor(new GMSCommand(this));
+        getCommand("gmsp").setExecutor(new GMSPCommand(this));
+        getCommand("hat").setExecutor(new HatCommand(this));
+        getCommand("heal").setExecutor(new HealCommand(this));
+        getCommand("help").setExecutor(new HelpCommand(this));
+        getCommand("home").setExecutor(new HomeCommand(this));
+        getCommand("homes").setExecutor(new HomesCommand(this));
+        getCommand("information").setExecutor(new InformationCommand(this));
+        getCommand("inventory").setExecutor(new InventoryCommand(this));
+        getCommand("jail").setExecutor(new JailCommand(this));
+        getCommand("kit").setExecutor(new KitCommand(this));
+        getCommand("motd").setExecutor(new MOTDCommand(this));
+        getCommand("mute").setExecutor(new MuteCommand(this));
+        getCommand("nickname").setExecutor(new NicknameCommand(this));
+        getCommand("pay").setExecutor(new PayCommand(this));
+        getCommand("players").setExecutor(new PlayersCommand(this));
+        getCommand("pvp").setExecutor(new PVPCommand(this));
+        getCommand("repair").setExecutor(new RepairCommand(this));
+        getCommand("respond").setExecutor(new RespondCommand(this));
+        getCommand("rtp").setExecutor(new RTPCommand(this));
+        getCommand("rules").setExecutor(new RulesCommand(this));
+        getCommand("sell").setExecutor(new SellCommand(this));
+        getCommand("sethome").setExecutor(new SetHomeCommand(this));
+        getCommand("setjail").setExecutor(new SetJailCommand(this));
+        getCommand("setspawn").setExecutor(new SetSpawnCommand(this));
+        getCommand("setwarp").setExecutor(new SetWarpCommand(this));
+        getCommand("setworth").setExecutor(new SetWorthCommand(this));
+        getCommand("skull").setExecutor(new SkullCommand(this));
+        getCommand("spawn").setExecutor(new SpawnCommand(this));
+        getCommand("tpaccept").setExecutor(new TPAcceptCommand(this));
+        getCommand("tpa").setExecutor(new TPACommand(this));
+        getCommand("tpcancel").setExecutor(new TPCancelCommand(this));
+        getCommand("tp").setExecutor(new TPCommand(this));
+        getCommand("tpdeny").setExecutor(new TPDenyCommand(this));
+        getCommand("tphere").setExecutor(new TPHereCommand(this));
+        getCommand("unban").setExecutor(new UnBanCommand(this));
+        getCommand("uuid").setExecutor(new UUIDCommand(this));
+        getCommand("vanish").setExecutor(new VanishCommand(this));
+        getCommand("walkspeed").setExecutor(new WalkSpeedCommand(this));
+        getCommand("warp").setExecutor(new WarpCommand(this));
+        getCommand("whisper").setExecutor(new WhisperCommand(this));
+        getCommand("workbench").setExecutor(new WorkbenchCommand(this));
+        getCommand("worth").setExecutor(new WorthCommand(this));
     }
-    private void events() {
-        new AsyncPlayerChat(this);
-        new BlockBreak(this);
-        new BlockFertilize(this);
-        new BlockPlace(this);
-        new EntityDamageByEntity(this);
-        new EntityMount(this);
-        new PlayerBucketEmpty(this);
-        new PlayerBucketEntity(this);
-        new PlayerBucketFill(this);
-        new PlayerCommandPreprocess(this);
-        new PlayerDeath(this);
-        new PlayerHarvestBlock(this);
-        new PlayerInteractPhysical(this);
-        new PlayerJoin(this);
-        new PlayerLeashEntity(this);
-        new PlayerLogin(this);
-        new PlayerMove(this);
-        new PlayerQuit(this);
-        new PlayerRespawn(this);
-        new PlayerShearEntity(this);
-        new PlayerSpawnLocation(this);
-        new PlayerTeleport(this);
-        new PrepareAnvil(this);
-        new SignChange(this);
+    private void registerEvents() {
+        getManager().registerEvents(new AsyncPlayerChat(this), this);
+        getManager().registerEvents(new BlockBreak(this), this);
+        getManager().registerEvents(new BlockFertilize(this), this);
+        getManager().registerEvents(new BlockPlace(this), this);
+        getManager().registerEvents(new BlockReceiveGame(this), this);
+        getManager().registerEvents(new EntityDamageByEntity(this), this);
+        getManager().registerEvents(new PlayerBucketEmpty(this), this);
+        getManager().registerEvents(new PlayerBucketEntity(this), this);
+        getManager().registerEvents(new PlayerBucketFill(this), this);
+        getManager().registerEvents(new PlayerCommandPreprocess(this), this);
+        getManager().registerEvents(new PlayerDeath(this), this);
+        getManager().registerEvents(new PlayerHarvestBlock(this), this);
+        getManager().registerEvents(new PlayerInteractPhysical(this), this);
+        getManager().registerEvents(new PlayerJoin(this), this);
+        getManager().registerEvents(new PlayerLeashEntity(this), this);
+        getManager().registerEvents(new PlayerLogin(this), this);
+        getManager().registerEvents(new PlayerMount(this), this);
+        getManager().registerEvents(new PlayerMove(this), this);
+        getManager().registerEvents(new PlayerQuit(this), this);
+        getManager().registerEvents(new PlayerRespawn(this), this);
+        getManager().registerEvents(new PlayerShearEntity(this), this);
+        getManager().registerEvents(new PlayerSpawnLocation(this), this);
+        getManager().registerEvents(new PlayerTeleport(this), this);
+        getManager().registerEvents(new PrepareAnvil(this), this);
+        getManager().registerEvents(new SignChange(this), this);
     }
-    public void getUpdate(Player player) {
-        if (notifyUpdate()) {
-            getLatest((latest) -> {
-                if (!getDescription().getVersion().equals(latest)) {
-                    getMessage().send(player,"&6" + getInstance().getName() + " Update:&f " + latest);
-                    getMessage().send(player,"&6Current Version: &f" + getDescription().getVersion());
-                }
-            });
+    public void reload() {
+        File file = new File(getDataFolder(), "config.yml");
+        if (file.exists()) {
+            try {
+                getConfig().load(file);
+            } catch (IOException | InvalidConfigurationException e) {
+                getMessage().sendLog(Level.WARNING, e.getMessage());
+            }
+        } else {
+            getConfig().options().copyDefaults(true);
+            try {
+                getConfig().save(file);
+            } catch (IOException e) {
+                getMessage().sendLog(Level.WARNING, e.getMessage());
+            }
         }
+        getJail().reload();
+        getKits().reload();
+        getSpawn().reload();
+        getWarps().reload();
+        getWorth().reload();
+        getUserdata().reload(getServer().getOfflinePlayers());
+        getUserdata().resetTabList();
     }
-    public void getUpdate() {
-        if (notifyUpdate()) {
-            getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
-                @Override
-                public void run() {
+    public void sendUpdate() {
+        getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
+            @Override
+            public void run() {
+                if (notifyUpdate()) {
                     getLatest((latest) -> {
-                        getMessage().sendLog(Level.INFO, "Checking latest release");
                         if (getDescription().getVersion().equals(latest)) {
                             getMessage().sendLog(Level.INFO, "You are using the latest version");
                         } else {
-                            getMessage().sendLog(Level.INFO, "New Update: " + latest);
-                            getMessage().sendLog(Level.INFO, "Current Version: " + getDescription().getVersion());
+                            getMessage().sendLog(Level.INFO, getDescription().getName() + " has new update:");
+                            getMessage().sendLog(Level.INFO, "- https://www.spigotmc.org/resources/110266/");
                         }
                     });
                 }
-            });
+            }
+        });
+    }
+    public void sendUpdate(Player player) {
+        if (notifyUpdate()) {
+            if (player.hasPermission("players.event.join.update")) {
+                getLatest((latest) -> {
+                    if (!getDescription().getVersion().equals(latest)) {
+                        getMessage().send(player,"&f" + getDescription().getName() + "&6 has new update:");
+                        getMessage().send(player,"- &a" + "https://www.spigotmc.org/resources/110266/");
+                    }
+                });
+            }
         }
     }
     public void getLatest(Consumer<String> consumer) {
@@ -188,53 +221,44 @@ public final class Players extends JavaPlugin {
             getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
-    private boolean notifyUpdate() {
+    public boolean notifyUpdate() {
         return getConfig().getBoolean("notify-update");
     }
-    public void reload() {
-        File file = new File(getDataFolder(), "config.yml");
-        if (file.exists()) {
-            try {
-                getConfig().load(file);
-                getConfig().save(file);
-            } catch (IOException | InvalidConfigurationException e) {
-                getMessage().sendLog(Level.WARNING, e.getMessage());
-            }
-        } else {
-            getConfig().options().copyDefaults(true);
-            try {
-                getConfig().save(file);
-            } catch (IOException e) {
-                getMessage().sendLog(Level.WARNING, e.getMessage());
-            }
-        }
-        getJail().reload();
-        getKits().reload();
-        getSpawn().reload();
-        getWarps().reload();
-        getDatabase().reload(getServer().getOfflinePlayers());
-        getDatabase().resetTabList();
+    public PluginManager getManager() {
+        return manager;
     }
-    public Database getDatabase() {
-        return database;
+    public HashMap<String, Long> getKitCooldown() {
+        return kitCooldown;
     }
-    public EconomyProvider getEconomyProvider() {
-        return economyProvider;
+    public HashMap<String, Long> getCommandCooldown() {
+        return commandCooldown;
     }
-    public Jail getJail() {
-        return jail;
+    public List<Player> getVanished() {
+        return vanished;
     }
-    public Kits getKits() {
-        return kits;
+    public Worth getWorth() {
+        return worth;
     }
-    public Message getMessage() {
-        return message;
+    public Warps getWarps() {
+        return warps;
     }
     public Spawn getSpawn() {
         return spawn;
     }
-    public Warps getWarps() {
-        return warps;
+    public Kits getKits() {
+        return kits;
+    }
+    public Jail getJail() {
+        return jail;
+    }
+    public Economy getEconomy() {
+        return economy;
+    }
+    public Userdata getUserdata() {
+        return userdata;
+    }
+    public Message getMessage() {
+        return message;
     }
     public static Players getInstance() {
         return instance;

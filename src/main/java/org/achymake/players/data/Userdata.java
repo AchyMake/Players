@@ -1,4 +1,4 @@
-package org.achymake.players.files;
+package org.achymake.players.data;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.achymake.players.Players;
@@ -13,35 +13,31 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 
-public class Database {
-    private final Players plugin;
-    private final List<Player> vanished = new ArrayList<>();
-    private final HashMap<String, Long> commandCooldown = new HashMap<>();
-    private FileConfiguration getConfig() {
-        return plugin.getConfig();
-    }
+public record Userdata(Players plugin) {
     private File getDataFolder() {
         return plugin.getDataFolder();
     }
-    private Server getHost() {
-        return plugin.getServer();
+    private FileConfiguration getConfig() {
+        return plugin.getConfig();
     }
     private Message getMessage() {
         return plugin.getMessage();
     }
-    public Database(Players plugin) {
-        this.plugin = plugin;
+    private Server getServer() {
+        return plugin.getServer();
+    }
+    private BukkitScheduler getScheduler() {
+        return getServer().getScheduler();
     }
     public boolean exist(OfflinePlayer offlinePlayer) {
         return new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml").exists();
@@ -68,11 +64,11 @@ public class Database {
             playerConfig.set("name", offlinePlayer.getName());
             playerConfig.set("display-name", offlinePlayer.getName());
             playerConfig.set("account", getConfig().getDouble("economy.starting-balance"));
-            playerConfig.createSection("homes");
             playerConfig.set("settings.pvp", true);
             playerConfig.set("settings.frozen", false);
             playerConfig.set("settings.jailed", false);
-            playerConfig.set("settings.dead", false);
+            playerConfig.createSection("homes");
+            playerConfig.createSection("locations");
             try {
                 playerConfig.save(file);
                 getMessage().sendLog(Level.INFO, offlinePlayer.getName() + ".yml has been created");
@@ -121,7 +117,7 @@ public class Database {
             getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
-    public void setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
+    public void setStringList(OfflinePlayer offlinePlayer, String path, List<Object> value) {
         File file = new File(getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
@@ -141,23 +137,70 @@ public class Database {
             getMessage().sendLog(Level.WARNING, e.getMessage());
         }
     }
-    public double getEconomy(OfflinePlayer offlinePlayer) {
-        return getConfig(offlinePlayer).getDouble("account");
+    public void addTaskID(Player player, String path, int value) {
+        setInt(player, "tasks." + path, value);
     }
-    public void addEconomy(OfflinePlayer offlinePlayer, double amount) {
-        setDouble(offlinePlayer, "account", amount + getEconomy(offlinePlayer));
+    public boolean hasTaskID(Player player, String path) {
+        return getConfig(player).isInt("tasks." + path);
     }
-    public void removeEconomy(OfflinePlayer offlinePlayer, double amount) {
-        setDouble(offlinePlayer, "account", getEconomy(offlinePlayer) - amount);
+    public int getTaskID(Player player, String path) {
+        return getConfig(player).getInt("tasks." + path);
     }
-    public void setEconomy(OfflinePlayer offlinePlayer, double value) {
-        setDouble(offlinePlayer, "account", value);
+    public void removeTaskID(Player player, String path) {
+        setString(player, "tasks." + path, null);
     }
-    public void resetEconomy(OfflinePlayer offlinePlayer) {
-        setDouble(offlinePlayer, "account", getConfig().getDouble("economy.starting-balance"));
+    public void teleport(Player player, String string, Location location) {
+        if (getConfig(player).isInt("tasks.teleport")) {
+            getMessage().sendActionBar(player, "&cYou cannot teleport twice you have to wait");
+        } else {
+            location.getChunk().load();
+            getMessage().sendActionBar(player, "&6Teleporting in&f " + getConfig().getInt("teleport.delay") + "&6 seconds");
+            int taskID = getScheduler().runTaskLater(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    getMessage().sendActionBar(player, "&6Teleporting to&f " + string);
+                    player.teleport(location);
+                    setString(player, "tasks.teleport", null);
+                }
+            },getConfig().getInt("teleport.delay") * 20L).getTaskId();
+            setInt(player, "tasks.teleport", taskID);
+        }
     }
-    public String getEconomyFormat(double amount) {
-        return getConfig().getString("economy.currency") + new DecimalFormat(getConfig().getString("economy.format")).format(amount);
+    public boolean hasCooldown(Player player, String command) {
+        if (plugin.getCommandCooldown().containsKey(command + "-" + player.getUniqueId())) {
+            Long timeElapsed = System.currentTimeMillis() - plugin.getCommandCooldown().get(command + "-" + player.getUniqueId());
+            String cooldownTimer = getConfig().getString("commands.cooldown." + command);
+            Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
+            return timeElapsed < integer;
+        } else {
+            return false;
+        }
+    }
+    public void addCooldown(Player player, String command) {
+        if (plugin.getCommandCooldown().containsKey(command + "-" + player.getUniqueId())) {
+            Long timeElapsed = System.currentTimeMillis() - plugin.getCommandCooldown().get(command + "-" + player.getUniqueId());
+            String cooldownTimer = getConfig().getString("commands.cooldown." + command);
+            Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
+            if (timeElapsed > integer) {
+                plugin.getCommandCooldown().put(command + "-" + player.getUniqueId(), System.currentTimeMillis());
+            }
+        } else {
+            plugin.getCommandCooldown().put(command + "-" + player.getUniqueId(), System.currentTimeMillis());
+        }
+    }
+    public String getCooldown(Player player, String command) {
+        if (plugin.getCommandCooldown().containsKey(command + "-" + player.getUniqueId())) {
+            Long timeElapsed = System.currentTimeMillis() - plugin.getCommandCooldown().get(command + "-" + player.getUniqueId());
+            String cooldownTimer = getConfig().getString("commands.cooldown." + command);
+            Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
+            if (timeElapsed < integer) {
+                long timer = (integer-timeElapsed);
+                return String.valueOf(timer).substring(0, String.valueOf(timer).length() - 3);
+            }
+        } else {
+            return "0";
+        }
+        return "0";
     }
     public boolean homeExist(OfflinePlayer offlinePlayer, String homeName) {
         return getConfig(offlinePlayer).getConfigurationSection("homes").contains(homeName);
@@ -186,6 +229,8 @@ public class Database {
                         setFloat(player, "homes." + homeName + ".pitch", player.getLocation().getPitch());
                         return true;
                     }
+                } else {
+                    return false;
                 }
             }
         }
@@ -198,7 +243,7 @@ public class Database {
         double z = getConfig(offlinePlayer).getDouble("homes." + homeName + ".z");
         float yaw = getConfig(offlinePlayer).getLong("homes." + homeName + ".yaw");
         float pitch = getConfig(offlinePlayer).getLong("homes." + homeName + ".pitch");
-        return new Location(getHost().getWorld(worldName), x, y, z, yaw, pitch);
+        return new Location(getServer().getWorld(worldName), x, y, z, yaw, pitch);
     }
     public boolean locationExist(OfflinePlayer offlinePlayer, String locationName) {
         return getConfig(offlinePlayer).getConfigurationSection("locations").contains(locationName);
@@ -226,13 +271,11 @@ public class Database {
         double z = getConfig(offlinePlayer).getDouble("locations." + locationName + ".z");
         float yaw = getConfig(offlinePlayer).getLong("locations." + locationName + ".yaw");
         float pitch = getConfig(offlinePlayer).getLong("locations." + locationName + ".pitch");
-        return new Location(getHost().getWorld(worldName), x, y, z, yaw, pitch);
+        return new Location(getServer().getWorld(worldName), x, y, z, yaw, pitch);
     }
     public void hideVanished(Player player) {
-        if (!getVanished().isEmpty()) {
-            for (Player vanishedPlayers : getVanished()) {
-                player.hidePlayer(plugin, vanishedPlayers);
-            }
+        for (Player vanished : plugin.getVanished()) {
+            player.hidePlayer(plugin, vanished);
         }
     }
     public void setVanish(OfflinePlayer offlinePlayer, boolean value) {
@@ -240,8 +283,11 @@ public class Database {
             setBoolean(offlinePlayer,"settings.vanished", true);
             if (offlinePlayer.isOnline()) {
                 Player player = offlinePlayer.getPlayer();
-                getVanished().add(player);
-                for (Player onlinePlayers : getHost().getOnlinePlayers()) {
+                plugin.getVanished().add(player);
+                if (getConfig(player).getBoolean("settings.coordinates")) {
+                    setBoolean(player, "settings.coordinates", false);
+                }
+                for (Player onlinePlayers : getServer().getOnlinePlayers()) {
                     onlinePlayers.hidePlayer(plugin, player);
                 }
                 player.setAllowFlight(true);
@@ -250,19 +296,20 @@ public class Database {
                 player.setCollidable(false);
                 player.setSilent(true);
                 player.setCanPickupItems(false);
-                for (Player vanishedPlayers : getVanished()) {
+                for (Player vanishedPlayers : plugin.getVanished()) {
                     vanishedPlayers.showPlayer(plugin, player);
                     player.showPlayer(plugin, vanishedPlayers);
                 }
                 resetTabList();
+                addVanishTask(player);
                 getMessage().sendActionBar(player, "&6&lVanish:&a Enabled");
             }
         } else {
             setBoolean(offlinePlayer,"settings.vanished", false);
             if (offlinePlayer.isOnline()) {
                 Player player = offlinePlayer.getPlayer();
-                getVanished().remove(player);
-                for (Player onlinePlayers : getHost().getOnlinePlayers()) {
+                plugin.getVanished().remove(player);
+                for (Player onlinePlayers : getServer().getOnlinePlayers()) {
                     onlinePlayers.showPlayer(plugin, player);
                 }
                 if (!player.hasPermission("players.command.fly")) {
@@ -273,13 +320,26 @@ public class Database {
                 player.setCollidable(true);
                 player.setSilent(false);
                 player.setCanPickupItems(true);
-                for (Player vanishedPlayers : getVanished()) {
+                for (Player vanishedPlayers : plugin.getVanished()) {
                     player.hidePlayer(plugin, vanishedPlayers);
                 }
+                getServer().getScheduler().cancelTask(getTaskID(player, "vanish"));
                 resetTabList();
+                removeTaskID(player, "vanish");
                 getMessage().sendActionBar(player, "&6&lVanish:&c Disabled");
             }
         }
+    }
+    private void addVanishTask(Player player) {
+        int taskID = getScheduler().runTaskLater(plugin, new Runnable() {
+            @Override
+            public void run() {
+                getMessage().sendActionBar(player, "&6&lVanish:&a Enabled");
+                removeTaskID(player, "vanish");
+                addVanishTask(player);
+            }
+        }, 45).getTaskId();
+        addTaskID(player, "vanish", taskID);
     }
     public String prefix(Player player) {
         if (PlaceholderAPI.isRegistered("vault")) {
@@ -289,7 +349,7 @@ public class Database {
         }
     }
     public String getDisplayName(Player player) {
-        return getConfig(player).getString("display-name");
+        return getMessage().addColor(getConfig(player).getString("display-name"));
     }
     public String suffix(Player player) {
         if (PlaceholderAPI.isRegistered("vault")) {
@@ -300,29 +360,18 @@ public class Database {
     }
     public void resetTabList() {
         if (getConfig().getBoolean("tablist.enable")) {
-            for (Player players : getHost().getOnlinePlayers()) {
+            for (Player players : getServer().getOnlinePlayers()) {
                 players.setPlayerListHeader(getMessage().addColor(getConfig().getString("tablist.header")));
                 players.setPlayerListName(prefix(players) + getDisplayName(players) + suffix(players));
-                players.setPlayerListFooter(getMessage().addColor(MessageFormat.format(getConfig().getString("tablist.footer"), players.getServer().getOnlinePlayers().size() - getVanished().size(), players.getServer().getMaxPlayers())));
+                players.setPlayerListFooter(getMessage().addColor(MessageFormat.format(getConfig().getString("tablist.footer"), getServer().getOnlinePlayers().size() - plugin.getVanished().size(), getServer().getMaxPlayers())));
             }
         }
     }
-    public void teleportBack(Player player) {
-        if (locationExist(player, "death")) {
-            getLocation(player, "death").getChunk().load();
-            getMessage().sendActionBar(player, "&6Teleporting to&f death location");
-            player.teleport(getLocation(player, "death"));
-            setString(player, "locations.death", null);
-        } else if (locationExist(player, "recent")) {
-            getLocation(player, "recent").getChunk().load();
-            getMessage().sendActionBar(player, "&6Teleporting to&f recent location");
-            player.teleport(getLocation(player, "recent"));
-        } else {
-            getMessage().send(player, "&cRecent location either removed or has never been set");
-        }
-    }
     public Block highestRandomBlock() {
-        return getHost().getWorld(getConfig().getString("commands.rtp.world")).getHighestBlockAt(new Random().nextInt(0, getConfig().getInt("commands.rtp.spread")), new Random().nextInt(0, getConfig().getInt("commands.rtp.spread")));
+        String worldName = getConfig().getString("commands.rtp.world");
+        int x = new Random().nextInt(0, getConfig().getInt("commands.rtp.spread"));
+        int z = new Random().nextInt(0, getConfig().getInt("commands.rtp.spread"));
+        return getServer().getWorld(worldName).getHighestBlockAt(x, z);
     }
     public Location randomLocation() {
         Block block = highestRandomBlock();
@@ -339,9 +388,6 @@ public class Database {
             return false;
         }
     }
-    public boolean isDead(OfflinePlayer offlinePlayer) {
-        return getConfig(offlinePlayer).getBoolean("settings.dead");
-    }
     public boolean isPVP(OfflinePlayer offlinePlayer) {
         return getConfig(offlinePlayer).getBoolean("settings.pvp");
     }
@@ -357,63 +403,11 @@ public class Database {
     public boolean isVanished(OfflinePlayer offlinePlayer) {
         return getConfig(offlinePlayer).getBoolean("settings.vanished");
     }
-    public boolean isVanished(Player player) {
-        return getConfig(player).getBoolean("settings.vanished");
+    public boolean isBanned(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getBoolean("settings.banned");
     }
-    public boolean isBanned(Player player) {
-        return getConfig(player).getBoolean("settings.banned");
-    }
-    public String getBanReason(Player player) {
-        return getConfig(player).getString("settings.ban-reason");
-    }
-    public void sendUpdate(Player player) {
-        if (player.hasPermission("players.event.join.update")) {
-            plugin.getUpdate(player);
-        }
-    }
-    public void sendMotd(Player player, String motd) {
-        if (getConfig().isList("message-of-the-day." + motd)) {
-            for (String message : getConfig().getStringList("message-of-the-day." + motd)) {
-                getMessage().send(player, message.replaceAll("%player%", player.getName()));
-            }
-        } else if (getConfig().isString("message-of-the-day." + motd)) {
-            getMessage().send(player, getConfig().getString("message-of-the-day." + motd).replaceAll("%player%", player.getName()));
-        }
-    }
-    public boolean hasCooldown(Player player, String command) {
-        if (getCommandCooldown().containsKey(command + "-" + player.getUniqueId())) {
-            Long timeElapsed = System.currentTimeMillis() - getCommandCooldown().get(command + "-" + player.getUniqueId());
-            String cooldownTimer = getConfig().getString("commands.cooldown." + command);
-            Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
-            return timeElapsed < integer;
-        }
-        return false;
-    }
-    public void addCooldown(Player player, String command) {
-        if (getCommandCooldown().containsKey(command + "-" + player.getUniqueId())) {
-            Long timeElapsed = System.currentTimeMillis() - getCommandCooldown().get(command + "-" + player.getUniqueId());
-            String cooldownTimer = getConfig().getString("commands.cooldown." + command);
-            Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
-            if (timeElapsed > integer) {
-                getCommandCooldown().put(command + "-" + player.getUniqueId(), System.currentTimeMillis());
-            }
-        } else {
-            getCommandCooldown().put(command + "-" + player.getUniqueId(), System.currentTimeMillis());
-        }
-    }
-    public String getCooldown(Player player, String command) {
-        if (getCommandCooldown().containsKey(command + "-" + player.getUniqueId())) {
-            Long timeElapsed = System.currentTimeMillis() - getCommandCooldown().get(command + "-" + player.getUniqueId());
-            String cooldownTimer = getConfig().getString("commands.cooldown." + command);
-            Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
-            if (timeElapsed < integer) {
-                long timer = (integer-timeElapsed);
-                return String.valueOf(timer).substring(0, String.valueOf(timer).length() - 3);
-            }
-        } else {
-            return "0";
-        }
-        return "0";
+    public String getBanReason(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getString("settings.ban-reason");
     }
     public ItemStack getOfflinePlayerHead(OfflinePlayer offlinePlayer, int amount) {
         if (offlinePlayer == null) {
@@ -439,10 +433,7 @@ public class Database {
             }
         }
     }
-    public HashMap<String, Long> getCommandCooldown() {
-        return commandCooldown;
-    }
-    public List<Player> getVanished() {
-        return vanished;
+    public void sendUpdate(Player player) {
+        plugin.sendUpdate(player);
     }
 }

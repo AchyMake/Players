@@ -1,8 +1,9 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Message;
 import org.bukkit.GameMode;
+import org.bukkit.Server;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -10,18 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameModeCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
+    private final Players plugin;
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    private Server getServer() {
+        return plugin.getServer();
+    }
+    public GameModeCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (args.length == 0) {
-                getMessage().send(player, "&cUsage:&f /gamemode gamemodeName");
-            }
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("adventure")) {
                     if (player.getGameMode().equals(GameMode.ADVENTURE)) {
@@ -58,7 +60,7 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 2) {
                 if (player.hasPermission("players.command.gamemode.others")) {
-                    Player target = player.getServer().getPlayerExact(args[1]);
+                    Player target = getServer().getPlayerExact(args[1]);
                     if (target == sender) {
                         if (args[0].equalsIgnoreCase("adventure")) {
                             if (target.getGameMode().equals(GameMode.ADVENTURE)) {
@@ -140,11 +142,8 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
             }
         }
         if (sender instanceof ConsoleCommandSender consoleCommandSender) {
-            if (args.length == 0) {
-                getMessage().send(consoleCommandSender, "Usage: /gamemode gamemodeName");
-            }
             if (args.length == 2) {
-                Player target = consoleCommandSender.getServer().getPlayerExact(args[1]);
+                Player target = getServer().getPlayerExact(args[1]);
                 if (target != null) {
                     if (args[0].equalsIgnoreCase("adventure")) {
                         if (target.getGameMode().equals(GameMode.ADVENTURE)) {
@@ -209,7 +208,7 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 2) {
                 if (player.hasPermission("players.command.gamemode.others")) {
-                    for (Player players : player.getServer().getOnlinePlayers()) {
+                    for (Player players : getServer().getOnlinePlayers()) {
                         if (!players.hasPermission("players.command.gamemode.exempt")) {
                             commands.add(players.getName());
                         }

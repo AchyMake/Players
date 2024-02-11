@@ -1,7 +1,7 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,19 +13,20 @@ import java.util.Collections;
 import java.util.List;
 
 public class HatCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
+    private final Players plugin;
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    public HatCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                if (!player.getInventory().getItemInMainHand().getType().isAir()) {
+                ItemStack heldItem = player.getInventory().getItemInMainHand();
+                if (!heldItem.getType().isAir()) {
                     if (player.getInventory().getHelmet() == null) {
-                        ItemStack heldItem = player.getInventory().getItemInMainHand();
                         getMessage().send(player, "&6You are now wearing&f " + heldItem.getType());
                         ItemStack itemStack = new ItemStack(heldItem.getType(), 1);
                         player.getInventory().setHelmet(itemStack);

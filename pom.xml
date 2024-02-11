@@ -6,7 +6,7 @@
 
   <groupId>org.achymake</groupId>
   <artifactId>Players</artifactId>
-  <version>1.10.0</version>
+  <version>42</version>
   <packaging>jar</packaging>
 
   <name>Players</name>
@@ -60,6 +60,10 @@
           <url>https://oss.sonatype.org/content/groups/public/</url>
       </repository>
       <repository>
+          <id>dmulloy2-repo</id>
+          <url>https://repo.dmulloy2.net/repository/public/</url>
+      </repository>
+      <repository>
           <id>jitpack.io</id>
           <url>https://jitpack.io</url>
       </repository>
@@ -74,6 +78,12 @@
           <groupId>org.spigotmc</groupId>
           <artifactId>spigot-api</artifactId>
           <version>1.20.4-R0.1-SNAPSHOT</version>
+          <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>com.comphenix.protocol</groupId>
+          <artifactId>ProtocolLib</artifactId>
+          <version>5.1.0</version>
           <scope>provided</scope>
       </dependency>
       <dependency>

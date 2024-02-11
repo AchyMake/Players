@@ -1,7 +1,8 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Message;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,11 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnderChestCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
+    private final Players plugin;
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    private Server getServer() {
+        return plugin.getServer();
+    }
+    public EnderChestCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -26,7 +31,7 @@ public class EnderChestCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 1) {
                 if (player.hasPermission("players.command.enderchest.others")) {
-                    Player target = player.getServer().getPlayerExact(args[0]);
+                    Player target = getServer().getPlayerExact(args[0]);
                     if (target == player) {
                         player.openInventory(target.getEnderChest());
                     } else {
@@ -48,7 +53,7 @@ public class EnderChestCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("players.command.enderchest.others")) {
-                    for (Player players : player.getServer().getOnlinePlayers()) {
+                    for (Player players : getServer().getOnlinePlayers()) {
                         if (!players.hasPermission("players.command.enderchest.exempt")) {
                             commands.add(players.getName());
                         }

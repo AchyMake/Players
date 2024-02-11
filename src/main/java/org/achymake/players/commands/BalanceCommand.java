@@ -1,10 +1,12 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Database;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Economy;
+import org.achymake.players.data.Message;
+import org.achymake.players.data.Userdata;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -12,26 +14,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BalanceCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
+    private final Players plugin;
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
+    private Economy getEconomy() {
+        return plugin.getEconomy();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    private Server getServer() {
+        return plugin.getServer();
+    }
+    public BalanceCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                getMessage().send(player, "&6Balance:&a " + getDatabase().getEconomyFormat(getDatabase().getEconomy(player)));
+                getMessage().send(player, "&6Balance:&a " + getEconomy().currency() + getEconomy().format(getEconomy().get(player)));
             }
             if (args.length == 1) {
                 if (player.hasPermission("players.command.balance.others")) {
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                    if (getDatabase().exist(offlinePlayer)) {
-                        getMessage().send(player, offlinePlayer.getName() + "&6's balance:&a " + getDatabase().getEconomyFormat(getDatabase().getEconomy(player)));
+                    if (getUserdata().exist(offlinePlayer)) {
+                        getMessage().send(player, offlinePlayer.getName() + "&6's balance:&a " + getEconomy().currency() + getEconomy().format(getEconomy().get(offlinePlayer)));
                     } else {
                         getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
                     }
@@ -41,8 +50,8 @@ public class BalanceCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                if (getDatabase().exist(offlinePlayer)) {
-                    getMessage().send(consoleCommandSender, offlinePlayer.getName() + "'s balance" + getDatabase().getEconomyFormat(getDatabase().getEconomy(offlinePlayer)));
+                if (getUserdata().exist(offlinePlayer)) {
+                    getMessage().send(consoleCommandSender, offlinePlayer.getName() + "'s " + getEconomy().currency() + getEconomy().format(getEconomy().get(offlinePlayer)));
                 } else {
                     getMessage().send(consoleCommandSender, offlinePlayer.getName() + " has never joined");
                 }
@@ -56,8 +65,8 @@ public class BalanceCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("players.command.balance.others")) {
-                    for (OfflinePlayer offlinePlayer : player.getServer().getOfflinePlayers()) {
-                        if (getDatabase().exist(offlinePlayer)) {
+                    for (OfflinePlayer offlinePlayer : getServer().getOfflinePlayers()) {
+                        if (getUserdata().exist(offlinePlayer)) {
                             commands.add(offlinePlayer.getName());
                         }
                     }

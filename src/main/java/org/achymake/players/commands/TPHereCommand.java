@@ -1,7 +1,8 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Message;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,20 +13,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TPHereCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
+    private final Players plugin;
+    private Server getServer() {
+        return plugin.getServer();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    public TPHereCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (args.length == 0) {
-                getMessage().send(player, "&cUsage:&f /tphere target");
-            }
             if (args.length == 1) {
-                Player target = sender.getServer().getPlayerExact(args[0]);
+                Player target = getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     getMessage().sendActionBar(target, "&6Teleporting to&f " + player.getName());
                     getMessage().sendActionBar(player, "&6Teleporting&f " + target.getName() + "&6 to you");
@@ -38,9 +40,9 @@ public class TPHereCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> commands = new ArrayList<>();
-        if (sender instanceof Player player) {
+        if (sender instanceof Player) {
             if (args.length == 1) {
-                for (Player players : player.getServer().getOnlinePlayers()) {
+                for (Player players : getServer().getOnlinePlayers()) {
                     commands.add(players.getName());
                 }
             }

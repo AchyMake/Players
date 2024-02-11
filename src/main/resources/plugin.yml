@@ -4,7 +4,7 @@ main: org.achymake.players.Players
 api-version: '1.20'
 prefix: '${project.name}'
 load: STARTUP
-softdepend:
+depend:
   - Vault
   - PlaceholderAPI
 author: AchyMake
@@ -14,6 +14,11 @@ commands:
     usage: /announcement message
     description: announce the server
     permission: players.command.announcement
+    permission-message: You do not have the permission to execute the command
+  anvil:
+    usage: /anvil
+    description: opens anvil by command
+    permission: players.command.anvil
     permission-message: You do not have the permission to execute the command
   back:
     usage: /back
@@ -27,6 +32,11 @@ commands:
     permission-message: You do not have the permission to execute the command
     aliases:
       - bal
+  ban:
+    usage: /ban target days reason
+    description: ban players
+    permission: players.command.ban
+    permission-message: You do not have the permission to execute the command
   color:
     usage: /color
     description: check minecraft colors
@@ -66,6 +76,11 @@ commands:
     usage: /fly
     description: fly around the world
     permission: players.command.fly
+    permission-message: You do not have the permission to execute the command
+  flyspeed:
+    usage: /flyspeed 0.1
+    description: change fly speed
+    permission: players.command.flyspeed
     permission-message: You do not have the permission to execute the command
   freeze:
     usage: /freeze target
@@ -122,6 +137,11 @@ commands:
     description: check homes
     permission: players.command.homes
     permission-message: You do not have the permission to execute the command
+  information:
+    usage: /information target
+    description: check player info
+    permission: players.command.information
+    permission-message: You do not have the permission to execute the command
   inventory:
     usage: /inventory target
     description: check player inventory
@@ -177,6 +197,8 @@ commands:
     description: responds to latest whisper
     permission: players.command.respond
     permission-message: You do not have the permission to execute the command
+    aliases:
+      - r
   rtp:
     usage: /rtp
     description: teleport random location
@@ -186,6 +208,11 @@ commands:
     usage: /rules
     description: check rules
     permission: players.command.rules
+    permission-message: You do not have the permission to execute the command
+  sell:
+    usage: /sell
+    description: sell items from worth
+    permission: players.command.sell
     permission-message: You do not have the permission to execute the command
   sethome:
     usage: /sethome homeName
@@ -206,6 +233,11 @@ commands:
     usage: /setwarp
     description: sets warp
     permission: players.command.setwarp
+    permission-message: You do not have the permission to execute the command
+  setworth:
+    usage: /setworth
+    description: sets worth of an item
+    permission: players.command.setworth
     permission-message: You do not have the permission to execute the command
   skull:
     usage: /skull offlinePlayer
@@ -247,10 +279,25 @@ commands:
     description: teleports target to sender
     permission: players.command.tphere
     permission-message: You do not have the permission to execute the command
+  uuid:
+    usage: /uuid
+    description: gets uuid
+    permission: players.command.uuid
+    permission-message: You do not have the permission to execute the command
+  unban:
+    usage: /unban target
+    description: gets unbanned
+    permission: players.command.unban
+    permission-message: You do not have the permission to execute the command
   vanish:
     usage: /vanish
     description: toggle vanish
     permission: players.command.vanish
+    permission-message: You do not have the permission to execute the command
+  walkspeed:
+    usage: /walkspeed 0.2
+    description: change walk speed
+    permission: players.command.walkspeed
     permission-message: You do not have the permission to execute the command
   warp:
     usage: /warp
@@ -267,9 +314,17 @@ commands:
     description: opens crafting table by command
     permission: players.command.workbench
     permission-message: You do not have the permission to execute the command
+  worth:
+    usage: /worth item
+    description: check worth
+    permission: players.command.worth
+    permission-message: You do not have the permission to execute the command
 permissions:
   players.command.announcement:
     description: announce the server
+    default: op
+  players.command.anvil:
+    description: opens anvil by command
     default: op
   players.command.back:
     description: message
@@ -280,10 +335,22 @@ permissions:
   players.command.back.others:
     description: message
     default: op
+  players.command.back.world.world:
+    description: message
+    default: op
+  players.command.back.world.world_nether:
+    description: message
+    default: op
+  players.command.back.world.world_the_end:
+    description: message
+    default: op
   players.command.balance:
     description: message
     default: op
   players.command.balance.others:
+    description: message
+    default: op
+  players.command.ban:
     description: message
     default: op
   players.command.color:
@@ -337,6 +404,15 @@ permissions:
   players.command.fly.exempt:
     description: message
     default: op
+  players.command.flyspeed:
+    description: message
+    default: op
+  players.command.flyspeed.others:
+    description: message
+    default: op
+  players.command.flyspeed.exempt:
+    description: message
+    default: op
   players.command.freeze:
     description: message
     default: op
@@ -344,9 +420,6 @@ permissions:
     description: message
     default: op
   players.command.gamemode:
-    description: message
-    default: op
-  players.command.gamemode.others:
     description: message
     default: op
   players.command.gamemode.adventure:
@@ -359,6 +432,9 @@ permissions:
     description: message
     default: op
   players.command.gamemode.spectator:
+    description: message
+    default: op
+  players.command.gamemode.others:
     description: message
     default: op
   players.command.gamemode.exempt:
@@ -397,6 +473,9 @@ permissions:
   players.command.homes.teleport:
     description: message
     default: op
+  players.command.information:
+    description: message
+    default: op
   players.command.inventory:
     description: message
     default: op
@@ -412,7 +491,7 @@ permissions:
   players.command.kit:
     description: message
     default: op
-  players.command.kit.[kitName]:
+  players.command.kit.starter:
     description: message
     default: op
   players.command.kit.others:
@@ -469,15 +548,15 @@ permissions:
   players.command.rules.others:
     description: message
     default: op
+  players.command.sell:
+    description: message
+    default: op
   players.command.sethome:
     description: message
     default: op
   players.command.sethome.multiple.default:
     description: message
     default: op
-  players.command.sethome.multiple.[rank]:
-    description: message
-    default: false
   players.command.setjail:
     description: message
     default: op
@@ -485,6 +564,9 @@ permissions:
     description: message
     default: op
   players.command.setwarp:
+    description: message
+    default: op
+  players.command.setworth:
     description: message
     default: op
   players.command.skull:
@@ -514,6 +596,12 @@ permissions:
   players.command.tphere:
     description: message
     default: op
+  players.command.unban:
+    description: message
+    default: op
+  players.command.uuid:
+    description: message
+    default: op
   players.command.vanish:
     description: message
     default: op
@@ -521,6 +609,15 @@ permissions:
     description: message
     default: op
   players.command.vanish.exempt:
+    description: message
+    default: op
+  players.command.walkspeed:
+    description: message
+    default: op
+  players.command.walkspeed.others:
+    description: message
+    default: op
+  players.command.walkspeed.exempt:
     description: message
     default: op
   players.command.warp:
@@ -541,13 +638,16 @@ permissions:
   players.command.workbench.others:
     description: message
     default: op
+  players.command.worth:
+    description: message
+    default: op
   players.event.anvil.color:
     description: message
     default: op
   players.event.chat.color:
     description: message
     default: op
-  players.event.signs.color:
+  players.event.sign.color:
     description: message
     default: op
   players.event.block-break.notify:
@@ -559,19 +659,22 @@ permissions:
   players.event.bucket-empty.notify:
     description: message
     default: op
-  players.event.commands.exempt:
-    description: message
-    default: op
-  players.event.join.message:
-    description: message
-    default: op
-  players.event.join.update:
+  players.event.command.exempt:
     description: message
     default: op
   players.event.login.full-server:
     description: message
     default: op
+  players.event.join.message:
+    description: message
+    default: op
   players.event.quit.message:
+    description: message
+    default: op
+  players.event.join.notify:
+    description: message
+    default: op
+  players.event.quit.notify:
     description: message
     default: op
   players.event.death.location:

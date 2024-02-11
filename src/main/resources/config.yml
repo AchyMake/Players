@@ -1,24 +1,19 @@
 notify-update: true
-# if player has permission: 'players.event.join.update'
-# player will receive plugin updates on join events
+tablist:
+  enable: false
+  header: "&e--&6--&d--&9--&7[&b&lplay.your-server.org&7]&9--&d--&6--&e--"
+  footer: "&e--&6--&d--&9--&7[&6{0}&7/&6{1}&7]&9--&d--&6--&e--"
+message-of-the-day:
+  welcome:
+    - "&6Welcome&f %player%&6 to the server!"
+  welcome-back:
+    - "&6Welcome back&f %player%"
+    - "&6We missed you!"
 economy:
   currency: "$"
   format: "#,##0.00"
   starter-balance: 0.0
   minimum-payment: 0.01
-tablist:
-  enable: false
-  header: "&e--&6--&d--&9--&7[&b&lplay.your-server.org&7]&9--&d--&6--&e--"
-  footer: "&e--&6--&d--&9--&7[&6{0}&7/&6{1}&7]&9--&d--&6--&e--"
-disable-trample:
-  FARMLAND: true
-#  TURTLE_EGG: true
-message-of-the-day:
-  welcome:
-    - "&6Welcome %player% to the server!"
-  welcome-back:
-    - "&6Welcome back&f %player%"
-    - "&6We missed you!"
 rules:
   - "&6Rules:"
   - "&61.&f No server crashing"
@@ -34,7 +29,7 @@ homes:
   staff: 12
 deaths:
   # if false permission: 'players.event.death.location'
-  send-location: false
+  send-location: true
   drop-player-head:
     # enable drop player heads
     enable: true
@@ -48,8 +43,8 @@ connection:
     sound:
       enable: true
       type: ENTITY_FOX_AMBIENT
-      volume: 0.75F
-      pitch: 1.0F
+      volume: 0.75
+      pitch: 1.0
   quit:
     # if false permission: 'players.event.quit.message'
     enable: true
@@ -57,8 +52,10 @@ connection:
     sound:
       enable: true
       type: ENTITY_FOX_AMBIENT
-      volume: 0.75F
-      pitch: 1.0F
+      volume: 0.75
+      pitch: 1.0
+teleport:
+  delay: 3
 commands:
   rtp:
     world: world
@@ -80,8 +77,8 @@ commands:
 notification:
   # Permissions
   # players.event.block-break.notify
-  # players.event.block-place.notify
   # players.event.bucket-empty.notify
+  # players.event.block-place.notify
   #
   # Placeholders
   # {0} Player, {1} Material

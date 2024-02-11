@@ -1,7 +1,8 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Message;
+import org.bukkit.Server;
 import org.bukkit.command.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -10,14 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RulesCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
+    private final Players plugin;
     private FileConfiguration getConfig() {
-        return getPlugin().getConfig();
+        return plugin.getConfig();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    private Server getServer() {
+        return plugin.getServer();
+    }
+    public RulesCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -26,7 +31,7 @@ public class RulesCommand implements CommandExecutor, TabCompleter {
         }
         if (args.length == 1) {
             if (sender.hasPermission("players.command.rules.others")) {
-                Player target = sender.getServer().getPlayerExact(args[0]);
+                Player target = getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     sendRules(target);
                 }
@@ -41,7 +46,9 @@ public class RulesCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 if (sender.hasPermission("players.command.rules.others")) {
                     for (Player players : sender.getServer().getOnlinePlayers()) {
-                        commands.add(players.getName());
+                        if (!plugin.getVanished().contains(players)) {
+                            commands.add(players.getName());
+                        }
                     }
                 }
             }
@@ -51,8 +58,8 @@ public class RulesCommand implements CommandExecutor, TabCompleter {
     private void sendRules(CommandSender sender) {
         if (sender instanceof Player player) {
             if (getConfig().isList("rules")) {
-                for (String message : getConfig().getStringList("rules")) {
-                    getMessage().send(player, message.replaceAll("%player%", player.getName()));
+                for (String messages : getConfig().getStringList("rules")) {
+                    getMessage().send(player, messages.replaceAll("%player%", player.getName()));
                 }
             } else if (getConfig().isString("rules")) {
                 getMessage().send(player, getConfig().getString("rules").replaceAll("%player%", player.getName()));
@@ -60,8 +67,8 @@ public class RulesCommand implements CommandExecutor, TabCompleter {
         }
         if (sender instanceof ConsoleCommandSender commandSender) {
             if (getConfig().isList("rules")) {
-                for (String message : getConfig().getStringList("rules")) {
-                    getMessage().send(commandSender, message.replaceAll("%player%", commandSender.getName()));
+                for (String messages : getConfig().getStringList("rules")) {
+                    getMessage().send(commandSender, messages.replaceAll("%player%", commandSender.getName()));
                 }
             } else if (getConfig().isString("rules")) {
                 getMessage().send(commandSender, getConfig().getString("rules").replaceAll("%player%", commandSender.getName()));

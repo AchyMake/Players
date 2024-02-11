@@ -1,31 +1,36 @@
 package org.achymake.players.listeners;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Database;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Message;
+import org.achymake.players.data.Userdata;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scheduler.BukkitScheduler;
 
-public class PlayerMove implements Listener {
-    private final Players plugin;
-    private Database getDatabase() {
-        return plugin.getDatabase();
+public record PlayerMove(Players plugin) implements Listener {
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
     private Message getMessage() {
         return plugin.getMessage();
     }
-    public PlayerMove(Players plugin) {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        this.plugin = plugin;
+    private BukkitScheduler getScheduler() {
+        return Bukkit.getScheduler();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (getDatabase().isFrozen(event.getPlayer())) {
+        if (!event.hasChangedPosition())return;
+        Player player = event.getPlayer();
+        if (getUserdata().isFrozen(player)) {
             event.setCancelled(true);
-        } else if (getDatabase().isVanished(event.getPlayer())) {
-            getMessage().sendActionBar(event.getPlayer(), "&6&lVanish:&a Enabled");
+        } else if (getUserdata().hasTaskID(player, "teleport")) {
+            getMessage().sendActionBar(player, "&cYou moved before teleporting!");
+            getScheduler().cancelTask(getUserdata().getTaskID(player, "teleport"));
+            getUserdata().removeTaskID(player, "teleport");
         }
     }
 }

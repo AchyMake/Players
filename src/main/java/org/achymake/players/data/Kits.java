@@ -1,4 +1,4 @@
-package org.achymake.players.files;
+package org.achymake.players.data;
 
 import org.achymake.players.Players;
 import org.bukkit.Material;
@@ -17,53 +17,24 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
-public class Kits {
-    private final Players plugin;
+public record Kits(Players plugin) {
     private File getDataFolder() {
         return plugin.getDataFolder();
-    }
-    private Database getDatabase() {
-        return plugin.getDatabase();
     }
     private Message getMessage() {
         return plugin.getMessage();
     }
-    public Kits(Players plugin) {
-        this.plugin = plugin;
-    }
-    public File getFile() {
-        return new File(getDataFolder(), "kits.yml");
-    }
     public boolean exist() {
         return getFile().exists();
+    }
+    public File getFile() {
+        return new File(getDataFolder(),"kits.yml");
     }
     public FileConfiguration getConfig() {
         return YamlConfiguration.loadConfiguration(getFile());
     }
     public List<String> getKits() {
         return new ArrayList<>(getConfig().getKeys(false));
-    }
-    public void giveKitWithCooldown(Player player, String kitName) {
-        if (player.hasPermission("players.command.kit.cooldown-exempt")) {
-            giveKit(player, kitName);
-            getMessage().send(player, "&6You received &f" + kitName + "&6 kit");
-        } else if (!getDatabase().getCommandCooldown().containsKey(kitName + "-" + player.getUniqueId())) {
-            getDatabase().getCommandCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
-            giveKit(player, kitName);
-            getMessage().send(player, "&6You received &f" + kitName + "&6 kit");
-        } else {
-            Long timeElapsed = System.currentTimeMillis() - getDatabase().getCommandCooldown().get(kitName + "-" + player.getUniqueId());
-            String cooldownTimer = getConfig().getString(kitName + ".cooldown");
-            Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
-            if (timeElapsed > integer) {
-                getDatabase().getCommandCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
-                giveKit(player, kitName);
-                getMessage().send(player, "&6You received &f" + kitName + "&6 kit");
-            } else {
-                long timer = (integer-timeElapsed);
-                getMessage().sendActionBar(player, "&cYou have to wait&f " + String.valueOf(timer).substring(0, String.valueOf(timer).length()-3) + "&c seconds");
-            }
-        }
     }
     public List<ItemStack> getKit(String kitName) {
         List<ItemStack> giveItems = new ArrayList<>();
@@ -99,18 +70,52 @@ public class Kits {
             }
         }
     }
+    public boolean hasCooldown(Player player, String kitName) {
+        if (plugin.getKitCooldown().containsKey(kitName + "-" + player.getUniqueId())) {
+            Long timeElapsed = System.currentTimeMillis() - plugin.getKitCooldown().get(kitName + "-" + player.getUniqueId());
+            String cooldownTimer = getConfig().getString(kitName + ".cooldown");
+            Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
+            return timeElapsed < integer;
+        } else {
+            return false;
+        }
+    }
+    public void addCooldown(Player player, String kitName) {
+        if (plugin.getKitCooldown().containsKey(kitName + "-" + player.getUniqueId())) {
+            Long timeElapsed = System.currentTimeMillis() - plugin.getKitCooldown().get(kitName + "-" + player.getUniqueId());
+            String cooldownTimer = getConfig().getString(kitName + ".cooldown");
+            Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
+            if (timeElapsed > integer) {
+                plugin.getKitCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
+            }
+        } else {
+            plugin.getKitCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
+        }
+    }
+    public String getCooldown(Player player, String kitName) {
+        if (plugin.getKitCooldown().containsKey(kitName + "-" + player.getUniqueId())) {
+            Long timeElapsed = System.currentTimeMillis() - plugin.getKitCooldown().get(kitName + "-" + player.getUniqueId());
+            String cooldownTimer = getConfig().getString(kitName + ".cooldown");
+            Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
+            if (timeElapsed < integer) {
+                long timer = (integer-timeElapsed);
+                return String.valueOf(timer).substring(0, String.valueOf(timer).length() - 3);
+            }
+        } else {
+            return "0";
+        }
+        return "0";
+    }
     public void reload() {
+        File file = getFile();
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         if (exist()) {
-            File file = getFile();
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
             } catch (IOException | InvalidConfigurationException e) {
                 getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         } else {
-            File file = getFile();
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             List<String> lore = new ArrayList<>();
             lore.add("&9from");
             lore.add("&7-&6 Starter");

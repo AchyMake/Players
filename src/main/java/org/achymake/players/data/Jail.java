@@ -1,4 +1,4 @@
-package org.achymake.players.files;
+package org.achymake.players.data;
 
 import org.achymake.players.Players;
 import org.bukkit.Location;
@@ -11,25 +11,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
-public class Jail {
-    private final Players plugin;
+public record Jail(Players plugin) {
     private File getDataFolder() {
         return plugin.getDataFolder();
-    }
-    private Server getHost() {
-        return plugin.getServer();
     }
     private Message getMessage() {
         return plugin.getMessage();
     }
-    public Jail(Players plugin) {
-        this.plugin = plugin;
-    }
-    public File getFile() {
-        return new File(getDataFolder(), "jail.yml");
+    private Server getServer() {
+        return plugin.getServer();
     }
     public boolean exist() {
         return getFile().exists();
+    }
+    public File getFile() {
+        return new File(getDataFolder(), "jail.yml");
     }
     public FileConfiguration getConfig() {
         return YamlConfiguration.loadConfiguration(getFile());
@@ -60,23 +56,21 @@ public class Jail {
             double z = getConfig().getDouble("jail.z");
             float yaw = getConfig().getLong("jail.yaw");
             float pitch = getConfig().getLong("jail.pitch");
-            return new Location(getHost().getWorld(world), x, y, z, yaw, pitch);
+            return new Location(getServer().getWorld(world), x, y, z, yaw, pitch);
         } else {
             return null;
         }
     }
     public void reload() {
+        File file = getFile();
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         if (exist()) {
-            File file = getFile();
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
             } catch (IOException | InvalidConfigurationException e) {
                 getMessage().sendLog(Level.WARNING, e.getMessage());
             }
         } else {
-            File file = getFile();
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             config.options().copyDefaults(true);
             try {
                 config.save(file);

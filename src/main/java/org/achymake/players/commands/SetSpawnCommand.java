@@ -1,10 +1,11 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Database;
-import org.achymake.players.files.Message;
-import org.achymake.players.files.Spawn;
+import org.achymake.players.data.Message;
+import org.achymake.players.data.Spawn;
+import org.achymake.players.data.Userdata;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,17 +16,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SetSpawnCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
+    private final Players plugin;
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
     private Spawn getSpawn() {
-        return getPlugin().getSpawn();
+        return plugin.getSpawn();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    private Server getServer() {
+        return plugin.getServer();
+    }
+    public SetSpawnCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -40,13 +45,13 @@ public class SetSpawnCommand implements CommandExecutor, TabCompleter {
                 }
             }
             if (args.length == 1) {
-                OfflinePlayer offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
-                if (getDatabase().exist(offlinePlayer)) {
-                    if (getDatabase().locationExist(offlinePlayer, "spawn")) {
-                        getDatabase().setLocation(offlinePlayer, "spawn", player.getLocation());
+                OfflinePlayer offlinePlayer = getServer().getOfflinePlayer(args[0]);
+                if (getUserdata().exist(offlinePlayer)) {
+                    if (getUserdata().locationExist(offlinePlayer, "spawn")) {
+                        getUserdata().setLocation(offlinePlayer, "spawn", player.getLocation());
                         getMessage().send(player, offlinePlayer.getName() + "&6's spawn relocated");
                     } else {
-                        getDatabase().setLocation(offlinePlayer, "spawn", player.getLocation());
+                        getUserdata().setLocation(offlinePlayer, "spawn", player.getLocation());
                         getMessage().send(player, offlinePlayer.getName() + "&6's spawn set");
                     }
                 } else {
@@ -62,7 +67,7 @@ public class SetSpawnCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("players.command.setspawn.others")) {
-                    for (OfflinePlayer offlinePlayer : player.getServer().getOfflinePlayers()) {
+                    for (OfflinePlayer offlinePlayer : getServer().getOfflinePlayers()) {
                         commands.add(offlinePlayer.getName());
                     }
                 }

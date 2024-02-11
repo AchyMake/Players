@@ -1,7 +1,8 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Message;
+import org.bukkit.Server;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -9,11 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkbenchCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
+    private final Players plugin;
+    private Server getServer() {
+        return plugin.getServer();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    public WorkbenchCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -23,7 +28,7 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 1) {
                 if (player.hasPermission("players.command.workbench.others")) {
-                    Player target = player.getServer().getPlayerExact(args[0]);
+                    Player target = getServer().getPlayerExact(args[0]);
                     if (target == player) {
                         target.openWorkbench(target.getLocation(), true);
                     } else {
@@ -36,12 +41,12 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        if (sender instanceof ConsoleCommandSender consoleCommandSender) {
+        if (sender instanceof ConsoleCommandSender commandSender) {
             if (args.length == 1) {
-                Player target = consoleCommandSender.getServer().getPlayerExact(args[0]);
+                Player target = getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     target.openWorkbench(target.getLocation(), true);
-                    getMessage().send(consoleCommandSender, "You opened crafting table for " + target.getName());
+                    getMessage().send(commandSender, "You opened crafting table for " + target.getName());
                 }
             }
         }
@@ -53,7 +58,7 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("players.command.workbench.others")) {
-                    for (Player players : player.getServer().getOnlinePlayers()) {
+                    for (Player players : getServer().getOnlinePlayers()) {
                         commands.add(players.getName());
                     }
                 }

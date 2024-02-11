@@ -1,28 +1,30 @@
 package org.achymake.players.listeners;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Database;
+import org.achymake.players.data.Message;
+import org.achymake.players.data.Userdata;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 
-public class PlayerLeashEntity implements Listener {
-    private final Players plugin;
-    private Database getDatabase() {
-        return plugin.getDatabase();
+public record PlayerLeashEntity(Players plugin) implements Listener {
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
-    public PlayerLeashEntity(Players plugin) {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        this.plugin = plugin;
+    private Message getMessage() {
+        return plugin.getMessage();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerLeashEntity(PlayerLeashEntityEvent event) {
-        if (!isFrozenOrJailed(event.getPlayer()))return;
-        event.setCancelled(true);
-    }
-    private boolean isFrozenOrJailed(Player player) {
-        return getDatabase().isFrozen(player) || getDatabase().isJailed(player);
+        Player player = event.getPlayer();
+        if (getUserdata().isFrozen(player)) {
+            event.setCancelled(true);
+            getMessage().send(player, "&c&lHey!&7 Sorry, but you are not allowed to do that while frozen");
+        } else if (getUserdata().isJailed(player)) {
+            event.setCancelled(true);
+            getMessage().send(player, "&c&lHey!&7 Sorry, but you are not allowed to do that while jailed");
+        }
     }
 }

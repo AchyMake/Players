@@ -1,9 +1,8 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Database;
-import org.achymake.players.files.Message;
-import org.bukkit.Location;
+import org.achymake.players.data.Message;
+import org.achymake.players.data.Userdata;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,26 +13,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
-    private Database getDatabase() {
-        return getPlugin().getDatabase();
+    private final Players plugin;
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    public HomeCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getDatabase().isFrozen(player) || getDatabase().isJailed(player)) {
+            if (getUserdata().isFrozen(player) || getUserdata().isJailed(player)) {
                 return false;
             } else {
                 if (args.length == 0) {
-                    if (getDatabase().homeExist(player, "home")) {
-                        getDatabase().getHome(player, "home").getChunk().load();
-                        player.teleport(getDatabase().getHome(player, "home"));
-                        getMessage().sendActionBar(player, "&6Teleporting to&f home");
+                    if (getUserdata().homeExist(player, "home")) {
+                        getUserdata().teleport(player, "home", getUserdata().getHome(player, "home"));
                     } else {
                         getMessage().send(player, "home&c does not exist");
                     }
@@ -41,22 +39,15 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
                 if (args.length == 1) {
                     if (args[0].equalsIgnoreCase("bed")) {
                         if (player.hasPermission("players.command.home.bed")) {
-                            if (player.getBedSpawnLocation() != null){
-                                Location location = player.getBedSpawnLocation();
-                                location.setPitch(player.getLocation().getPitch());
-                                location.setYaw(player.getLocation().getYaw());
-                                player.getBedSpawnLocation().getChunk().load();
-                                getMessage().sendActionBar(player, "&6Teleporting to&f " + args[0]);
-                                player.teleport(location);
+                            if (player.getBedSpawnLocation() != null) {
+                                getUserdata().teleport(player, "bed", player.getBedSpawnLocation());
                             } else {
                                 getMessage().send(player, args[0] + "&c does not exist");
                             }
                         }
                     } else {
-                        if (getDatabase().homeExist(player, args[0])) {
-                            getDatabase().getHome(player, args[0]).getChunk().load();
-                            player.teleport(getDatabase().getHome(player, args[0]));
-                            getMessage().sendActionBar(player, "&6Teleporting to&f " + args[0]);
+                        if (getUserdata().homeExist(player, args[0])) {
+                            getUserdata().teleport(player, args[0], getUserdata().getHome(player, args[0]));
                         } else {
                             getMessage().send(player, args[0] + "&c does not exist");
                         }
@@ -74,7 +65,7 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
                 if (player.hasPermission("players.commands.home.bed")) {
                     commands.add("bed");
                 }
-                commands.addAll(getDatabase().getHomes(player));
+                commands.addAll(getUserdata().getHomes(player));
             }
         }
         return commands;

@@ -1,35 +1,41 @@
 package org.achymake.players.listeners;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Database;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Message;
+import org.achymake.players.data.Userdata;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-public class AsyncPlayerChat implements Listener {
-    private final Players plugin;
-    private Database getDatabase() {
-        return plugin.getDatabase();
+public record AsyncPlayerChat(Players plugin) implements Listener {
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
     private Message getMessage() {
         return plugin.getMessage();
     }
-    public AsyncPlayerChat(Players plugin) {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        this.plugin = plugin;
-    }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
-        if (getDatabase().isMuted(event.getPlayer())) {
+        Player player = event.getPlayer();
+        if (getUserdata().isMuted(player)) {
             event.setCancelled(true);
         } else {
-            if (event.getPlayer().hasPermission("players.event.chat.color")) {
-                event.setMessage(getMessage().addColor(event.getMessage()));
+            String prefix = getUserdata().prefix(player);
+            String displayName = getUserdata().getDisplayName(player);
+            String suffix = getUserdata().suffix(player);
+            String output = event.getMessage();
+            if (player.isOp()) {
+                event.setFormat(prefix + getMessage().addColor("&c" + player.getName() + "&f") + suffix + ChatColor.WHITE + ": " + getMessage().addColor(output));
+            } else {
+                if (player.hasPermission("players.event.chat.color")) {
+                    event.setFormat(prefix + displayName + suffix + ChatColor.WHITE + ": " + getMessage().addColor(output));
+                } else {
+                    event.setFormat(prefix + displayName + suffix + ChatColor.WHITE + ": " + output);
+                }
             }
-            event.setFormat(getDatabase().prefix(event.getPlayer()) + getDatabase().getDisplayName(event.getPlayer()) + ChatColor.WHITE + getDatabase().suffix(event.getPlayer()) + ChatColor.WHITE + ": " + event.getMessage());
         }
     }
 }

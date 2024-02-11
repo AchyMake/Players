@@ -1,8 +1,8 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Message;
-import org.achymake.players.files.Warps;
+import org.achymake.players.data.Message;
+import org.achymake.players.data.Warps;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -10,21 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DelWarpCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
+    private final Players plugin;
     private Warps getWarps() {
-        return getPlugin().getWarps();
+        return plugin.getWarps();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    public DelWarpCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (args.length == 0) {
-                getMessage().send(player, "&cUsage:&f /delwarp warpName");
-            }
             if (args.length == 1) {
                 if (getWarps().locationExist(args[0])) {
                     getWarps().delWarp(args[0]);

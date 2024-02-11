@@ -1,8 +1,9 @@
 package org.achymake.players.commands;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Kits;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Kits;
+import org.achymake.players.data.Message;
+import org.bukkit.Server;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -10,14 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KitCommand implements CommandExecutor, TabCompleter {
-    private Players getPlugin() {
-        return Players.getInstance();
-    }
+    private final Players plugin;
     private Kits getKits() {
-        return getPlugin().getKits();
+        return plugin.getKits();
     }
     private Message getMessage() {
-        return getPlugin().getMessage();
+        return plugin.getMessage();
+    }
+    private Server getServer() {
+        return plugin.getServer();
+    }
+    public KitCommand(Players plugin) {
+        this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -31,17 +36,20 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                 }
             }
             if (args.length == 1) {
-                if (player.hasPermission("players.command.kit." + args[0])) {
-                    for (String kitNames : getKits().getKits()) {
-                        if (args[0].equals(kitNames)) {
-                            getKits().giveKitWithCooldown(player, args[0]);
-                        }
+                String kitName = args[0].toLowerCase();
+                if (player.hasPermission("players.command.kit." + kitName)) {
+                    if (getKits().hasCooldown(player, kitName)) {
+                        getMessage().sendActionBar(player, "&cYou have to wait&f " + getKits().getCooldown(player, kitName) + "&c seconds");
+                    } else {
+                        getKits().addCooldown(player, kitName);
+                        getMessage().send(player, "&6You received&f " + kitName);
+                        getKits().giveKit(player, kitName);
                     }
                 }
             }
             if (args.length == 2) {
                 if (player.hasPermission("players.command.kit.others")) {
-                    Player target = player.getServer().getPlayerExact(args[1]);
+                    Player target = getServer().getPlayerExact(args[1]);
                     if (target != null) {
                         getKits().giveKit(target, args[0]);
                         getMessage().send(target, "&6You received&f " + args[0] + "&6 kit");
@@ -58,7 +66,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                 }
             }
             if (args.length == 2) {
-                Player target = consoleCommandSender.getServer().getPlayerExact(args[1]);
+                Player target = getServer().getPlayerExact(args[1]);
                 if (target != null) {
                     getKits().giveKit(target, args[0]);
                     getMessage().send(target, "&6You received&f " + args[0] + "&6 kit");
@@ -81,7 +89,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 2) {
                 if (player.hasPermission("players.command.kit.others")) {
-                    for (Player players : player.getServer().getOnlinePlayers()) {
+                    for (Player players : getServer().getOnlinePlayers()) {
                         commands.add(players.getName());
                     }
                 }

@@ -1,8 +1,8 @@
 package org.achymake.players.listeners;
 
 import org.achymake.players.Players;
-import org.achymake.players.files.Database;
-import org.achymake.players.files.Message;
+import org.achymake.players.data.Message;
+import org.achymake.players.data.Userdata;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,61 +14,73 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.text.MessageFormat;
 
-public class PlayerJoin implements Listener {
-    private final Players plugin;
+public record PlayerJoin(Players plugin) implements Listener {
     private FileConfiguration getConfig() {
         return plugin.getConfig();
     }
-    private Database getDatabase() {
-        return plugin.getDatabase();
-    }
-    private Server getHost() {
-        return plugin.getServer();
+    private Userdata getUserdata() {
+        return plugin.getUserdata();
     }
     private Message getMessage() {
         return plugin.getMessage();
     }
-    public PlayerJoin(Players plugin) {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        this.plugin = plugin;
+    private Server getServer() {
+        return plugin.getServer();
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if (getDatabase().isVanished(player)) {
-            getDatabase().setVanish(player, true);
+        if (getUserdata().isVanished(player)) {
+            getUserdata().setVanish(player, true);
             getMessage().send(player, "&6You joined back vanished");
-            getDatabase().sendUpdate(player);
             event.setJoinMessage(null);
         } else {
-            getDatabase().hideVanished(player);
-            sendMotd(player);
+            getUserdata().hideVanished(player);
             if (getConfig().getBoolean("connection.join.enable")) {
-                event.setJoinMessage(getMessage().addColor(MessageFormat.format(getConfig().getString("connection.join.message"), player.getName())));
-                for (Player players : getHost().getOnlinePlayers()) {
-                    players.playSound(players, Sound.valueOf(getConfig().getString("connection.join.sound.type")), Float.valueOf(getConfig().getString("connection.join.sound.volume")), Float.valueOf(getConfig().getString("connection.join.sound.pitch")));
-                }
+                sendSound();
+                event.setJoinMessage(joinMessage(player));
             } else {
                 if (player.hasPermission("players.event.join.message")) {
-                    event.setJoinMessage(getMessage().addColor(MessageFormat.format(getConfig().getString("connection.join.message"), player.getName())));
-                    if (getConfig().getBoolean("connection.join.sound.enable")) {
-                        for (Player players : getHost().getOnlinePlayers()) {
-                            players.playSound(players, Sound.valueOf(getConfig().getString("connection.join.sound.type")), Float.valueOf(getConfig().getString("connection.join.sound.volume")), Float.valueOf(getConfig().getString("connection.join.sound.pitch")));
-                        }
-                    }
+                    sendSound();
+                    event.setJoinMessage(joinMessage(player));
                 } else {
                     event.setJoinMessage(null);
+                    for (Player players : getServer().getOnlinePlayers()) {
+                        if (players.hasPermission("players.event.join.notify")) {
+                            getMessage().send(players, player.getName() + "&7 joined the Server");
+                        }
+                    }
                 }
             }
+            if (getUserdata().hasJoined(player)) {
+                sendMotd(player, "welcome-back");
+            } else {
+                sendMotd(player, "welcome");
+            }
+            getUserdata().resetTabList();
         }
-        getDatabase().resetTabList();
-        getDatabase().sendUpdate(player);
+        getUserdata().sendUpdate(player);
     }
-    private void sendMotd(Player player) {
-        if (getDatabase().hasJoined(player)) {
-            getDatabase().sendMotd(player, "welcome-back");
-        } else {
-            getDatabase().sendMotd(player, "welcome");
+    private String joinMessage(Player player) {
+        return getMessage().addColor(MessageFormat.format(getConfig().getString("connection.join.message"), player.getName()));
+    }
+    private void sendSound() {
+        if (getConfig().getBoolean("connection.join.sound.enable")) {
+            String soundType = getConfig().getString("connection.join.sound.type");
+            float soundVolume = (float) getConfig().getDouble("connection.join.sound.volume");
+            float soundPitch = (float) getConfig().getDouble("connection.join.sound.pitch");
+            for (Player players : getServer().getOnlinePlayers()) {
+                players.playSound(players, Sound.valueOf(soundType), soundVolume, soundPitch);
+            }
+        }
+    }
+    private void sendMotd(Player player, String motd) {
+        if (getConfig().isList("message-of-the-day." + motd)) {
+            for (String messages : getConfig().getStringList("message-of-the-day." + motd)) {
+                getMessage().send(player, messages.replaceAll("%player%", player.getName()));
+            }
+        } else if (getConfig().isString("message-of-the-day." + motd)) {
+            getMessage().send(player, getConfig().getString("message-of-the-day." + motd).replaceAll("%player%", player.getName()));
         }
     }
 }
