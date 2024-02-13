@@ -83,6 +83,42 @@ public record Kits(Players plugin) {
             }
         }
     }
+    public boolean hasCooldown(Player player, String kitName) {
+        if (plugin.getKitCooldown().containsKey(kitName + "-" + player.getUniqueId())) {
+            long timeElapsed = System.currentTimeMillis() - plugin.getKitCooldown().get(kitName + "-" + player.getUniqueId());
+            String cooldownTimer = getConfig().getString(kitName + ".cooldown");
+            int integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
+            return timeElapsed < integer;
+        } else {
+            return false;
+        }
+    }
+    public void addCooldown(Player player, String kitName) {
+        if (plugin.getKitCooldown().containsKey(kitName + "-" + player.getUniqueId())) {
+            long timeElapsed = System.currentTimeMillis() - plugin.getKitCooldown().get(kitName + "-" + player.getUniqueId());
+            String cooldownTimer = getConfig().getString(kitName + ".cooldown");
+            int integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
+            if (timeElapsed > integer) {
+                plugin.getKitCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
+            }
+        } else {
+            plugin.getKitCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
+        }
+    }
+    public String getCooldown(Player player, String kitName) {
+        if (plugin.getKitCooldown().containsKey(kitName + "-" + player.getUniqueId())) {
+            long timeElapsed = System.currentTimeMillis() - plugin.getKitCooldown().get(kitName + "-" + player.getUniqueId());
+            String cooldownTimer = getConfig().getString(kitName + ".cooldown");
+            int integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
+            if (timeElapsed < integer) {
+                long timer = (integer-timeElapsed);
+                return String.valueOf(timer).substring(0, String.valueOf(timer).length() - 3);
+            }
+        } else {
+            return "0";
+        }
+        return "0";
+    }
     public void reload() {
         File file = getFile();
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);

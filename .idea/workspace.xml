@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5076afce-b320-4939-9319-373f8fab1f00" name="Changes" comment="clean up">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/api/PlaceholderProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/api/PlaceholderProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/api/VaultEconomyProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/api/VaultEconomyProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/commands/HomesCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/commands/HomesCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/commands/InformationCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/commands/InformationCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/commands/KitCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/commands/KitCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/commands/PlayersCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/commands/PlayersCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/data/Kits.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/data/Kits.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/data/Userdata.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/data/Userdata.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/listeners/PlayerLogin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/kits.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/kits.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
-    </list>
+    <list default="true" id="5076afce-b320-4939-9319-373f8fab1f00" name="Changes" comment="clean up" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -317,7 +303,31 @@
       <option name="project" value="LOCAL" />
       <updated>1707671891945</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1707835922579</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1707835922579</updated>
+    </task>
+    <task id="LOCAL-00025" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1707836078762</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1707836078762</updated>
+    </task>
+    <task id="LOCAL-00026" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1707836114090</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1707836114090</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

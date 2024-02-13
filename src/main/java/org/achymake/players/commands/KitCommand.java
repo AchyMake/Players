@@ -17,9 +17,6 @@ public class KitCommand implements CommandExecutor, TabCompleter {
     private Kits getKits() {
         return plugin.getKits();
     }
-    private Userdata getUserdata() {
-        return plugin.getUserdata();
-    }
     private Economy getEconomy() {
         return plugin.getEconomy();
     }
@@ -46,21 +43,21 @@ public class KitCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 String kitName = args[0].toLowerCase();
                 if (player.hasPermission("players.command.kit." + kitName)) {
-                    if (getUserdata().hasCooldown(player, "kit-" + kitName)) {
-                        getMessage().sendActionBar(player, "&cYou have to wait&f " + getUserdata().getCooldown(player, "kit-" + kitName) + "&c seconds");
+                    if (getKits().hasCooldown(player, kitName)) {
+                        getMessage().sendActionBar(player, "&cYou have to wait&f " + getKits().getCooldown(player, kitName) + "&c seconds");
                     } else {
                         if (getKits().hasPrice(kitName)) {
                             if (getEconomy().has(player, getKits().cost(kitName))) {
                                 getKits().giveKit(player, kitName);
                                 getEconomy().remove(player, getKits().cost(kitName));
-                                getUserdata().addCooldown(player, "kit-" + kitName);
+                                getKits().addCooldown(player, kitName);
                                 getMessage().send(player, "&6You received&f " + kitName);
                             } else {
                                 getMessage().send(player, "&cYou do not have&a " + getEconomy().currency() + getEconomy().format(getKits().cost(kitName)) + "&c for&f " + kitName);
                             }
                         } else {
                             getKits().giveKit(player, kitName);
-                            getUserdata().addCooldown(player, "kit-" + kitName);
+                            getKits().addCooldown(player, kitName);
                             getMessage().send(player, "&6You received&f " + kitName);
                         }
                     }

@@ -33,7 +33,8 @@ public final class Players extends JavaPlugin {
     private static Message message;
     private static PluginManager manager;
     private final List<Player> vanished = new ArrayList<>();
-    private final HashMap<String, Long> cooldown = new HashMap<>();
+    private final HashMap<String, Long> commandCooldown = new HashMap<>();
+    private final HashMap<String, Long> kitCooldown = new HashMap<>();
     @Override
     public void onEnable() {
         instance = this;
@@ -225,8 +226,11 @@ public final class Players extends JavaPlugin {
     public PluginManager getManager() {
         return manager;
     }
-    public HashMap<String, Long> getCooldown() {
-        return cooldown;
+    public HashMap<String, Long> getCommandCooldown() {
+        return commandCooldown;
+    }
+    public HashMap<String, Long> getKitCooldown() {
+        return kitCooldown;
     }
     public List<Player> getVanished() {
         return vanished;

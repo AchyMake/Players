@@ -167,8 +167,8 @@ public record Userdata(Players plugin) {
         }
     }
     public boolean hasCooldown(Player player, String path) {
-        if (plugin.getCooldown().containsKey(path + "-" + player.getUniqueId())) {
-            Long timeElapsed = System.currentTimeMillis() - plugin.getCooldown().get(path + "-" + player.getUniqueId());
+        if (plugin.getCommandCooldown().containsKey(path + "-" + player.getUniqueId())) {
+            Long timeElapsed = System.currentTimeMillis() - plugin.getCommandCooldown().get(path + "-" + player.getUniqueId());
             String cooldownTimer = getConfig().getString("commands.cooldown." + path);
             Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
             return timeElapsed < integer;
@@ -177,20 +177,20 @@ public record Userdata(Players plugin) {
         }
     }
     public void addCooldown(Player player, String path) {
-        if (plugin.getCooldown().containsKey(path + "-" + player.getUniqueId())) {
-            Long timeElapsed = System.currentTimeMillis() - plugin.getCooldown().get(path + "-" + player.getUniqueId());
+        if (plugin.getCommandCooldown().containsKey(path + "-" + player.getUniqueId())) {
+            Long timeElapsed = System.currentTimeMillis() - plugin.getCommandCooldown().get(path + "-" + player.getUniqueId());
             String cooldownTimer = getConfig().getString("commands.cooldown." + path);
             Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
             if (timeElapsed > integer) {
-                plugin.getCooldown().put(path + "-" + player.getUniqueId(), System.currentTimeMillis());
+                plugin.getCommandCooldown().put(path + "-" + player.getUniqueId(), System.currentTimeMillis());
             }
         } else {
-            plugin.getCooldown().put(path + "-" + player.getUniqueId(), System.currentTimeMillis());
+            plugin.getCommandCooldown().put(path + "-" + player.getUniqueId(), System.currentTimeMillis());
         }
     }
     public String getCooldown(Player player, String path) {
-        if (plugin.getCooldown().containsKey(path + "-" + player.getUniqueId())) {
-            Long timeElapsed = System.currentTimeMillis() - plugin.getCooldown().get(path + "-" + player.getUniqueId());
+        if (plugin.getCommandCooldown().containsKey(path + "-" + player.getUniqueId())) {
+            Long timeElapsed = System.currentTimeMillis() - plugin.getCommandCooldown().get(path + "-" + player.getUniqueId());
             String cooldownTimer = getConfig().getString("commands.cooldown." + path);
             Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
             if (timeElapsed < integer) {
