@@ -60,7 +60,6 @@ public final class Players extends JavaPlugin {
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
         getVanished().clear();
-        getCooldown().clear();
         getMessage().sendLog(Level.INFO, "Disabled " + getDescription().getName() + " " + getDescription().getVersion());
     }
     private void registerCommands() {
