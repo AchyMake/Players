@@ -69,6 +69,8 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                                 if (offlinePlayer.getBedSpawnLocation() != null) {
                                     player.teleport(offlinePlayer.getBedSpawnLocation());
                                     getMessage().send(player, "&6Teleporting&f " + targetHome + "&6 of&f " + target);
+                                } else {
+                                    getMessage().send(player, target + "&c do not have a bed");
                                 }
                             } else {
                                 if (getUserdata().getHomes(offlinePlayer).contains(targetHome)) {

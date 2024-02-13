@@ -23,13 +23,13 @@ public record VaultEconomyProvider(Players plugin) implements Economy {
         return -1;
     }
     public String format(double amount) {
-        return new DecimalFormat(plugin.getConfig().getString("economy.format")).format(amount);
+        return plugin.getEconomy().format(amount);
     }
     public String currencyNamePlural() {
         return currencyNameSingular();
     }
     public String currencyNameSingular() {
-        return plugin.getConfig().getString("economy.currency");
+        return plugin.getEconomy().currency();
     }
     public boolean hasAccount(OfflinePlayer offlinePlayer) {
         return plugin.getUserdata().exist(offlinePlayer);

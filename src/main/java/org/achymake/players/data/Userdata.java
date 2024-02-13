@@ -150,7 +150,7 @@ public record Userdata(Players plugin) {
         setString(player, "tasks." + path, null);
     }
     public void teleport(Player player, String string, Location location) {
-        if (getConfig(player).isInt("tasks.teleport")) {
+        if (hasTaskID(player, "teleport")) {
             getMessage().sendActionBar(player, "&cYou cannot teleport twice you have to wait");
         } else {
             location.getChunk().load();
@@ -163,35 +163,35 @@ public record Userdata(Players plugin) {
                     setString(player, "tasks.teleport", null);
                 }
             },getConfig().getInt("teleport.delay") * 20L).getTaskId();
-            setInt(player, "tasks.teleport", taskID);
+            addTaskID(player, "teleport", taskID);
         }
     }
-    public boolean hasCooldown(Player player, String command) {
-        if (plugin.getCommandCooldown().containsKey(command + "-" + player.getUniqueId())) {
-            Long timeElapsed = System.currentTimeMillis() - plugin.getCommandCooldown().get(command + "-" + player.getUniqueId());
-            String cooldownTimer = getConfig().getString("commands.cooldown." + command);
+    public boolean hasCooldown(Player player, String path) {
+        if (plugin.getCommandCooldown().containsKey(path + "-" + player.getUniqueId())) {
+            Long timeElapsed = System.currentTimeMillis() - plugin.getCommandCooldown().get(path + "-" + player.getUniqueId());
+            String cooldownTimer = getConfig().getString("commands.cooldown." + path);
             Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
             return timeElapsed < integer;
         } else {
             return false;
         }
     }
-    public void addCooldown(Player player, String command) {
-        if (plugin.getCommandCooldown().containsKey(command + "-" + player.getUniqueId())) {
-            Long timeElapsed = System.currentTimeMillis() - plugin.getCommandCooldown().get(command + "-" + player.getUniqueId());
-            String cooldownTimer = getConfig().getString("commands.cooldown." + command);
+    public void addCooldown(Player player, String path) {
+        if (plugin.getCommandCooldown().containsKey(path + "-" + player.getUniqueId())) {
+            Long timeElapsed = System.currentTimeMillis() - plugin.getCommandCooldown().get(path + "-" + player.getUniqueId());
+            String cooldownTimer = getConfig().getString("commands.cooldown." + path);
             Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
             if (timeElapsed > integer) {
-                plugin.getCommandCooldown().put(command + "-" + player.getUniqueId(), System.currentTimeMillis());
+                plugin.getCommandCooldown().put(path + "-" + player.getUniqueId(), System.currentTimeMillis());
             }
         } else {
-            plugin.getCommandCooldown().put(command + "-" + player.getUniqueId(), System.currentTimeMillis());
+            plugin.getCommandCooldown().put(path + "-" + player.getUniqueId(), System.currentTimeMillis());
         }
     }
-    public String getCooldown(Player player, String command) {
-        if (plugin.getCommandCooldown().containsKey(command + "-" + player.getUniqueId())) {
-            Long timeElapsed = System.currentTimeMillis() - plugin.getCommandCooldown().get(command + "-" + player.getUniqueId());
-            String cooldownTimer = getConfig().getString("commands.cooldown." + command);
+    public String getCooldown(Player player, String path) {
+        if (plugin.getCommandCooldown().containsKey(path + "-" + player.getUniqueId())) {
+            Long timeElapsed = System.currentTimeMillis() - plugin.getCommandCooldown().get(path + "-" + player.getUniqueId());
+            String cooldownTimer = getConfig().getString("commands.cooldown." + path);
             Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
             if (timeElapsed < integer) {
                 long timer = (integer-timeElapsed);
@@ -338,7 +338,7 @@ public record Userdata(Players plugin) {
                 removeTaskID(player, "vanish");
                 addVanishTask(player);
             }
-        }, 45).getTaskId();
+        }, 50).getTaskId();
         addTaskID(player, "vanish", taskID);
     }
     public String prefix(Player player) {

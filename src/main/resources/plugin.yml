@@ -15,11 +15,6 @@ commands:
     description: announce the server
     permission: players.command.announcement
     permission-message: You do not have the permission to execute the command
-  anvil:
-    usage: /anvil
-    description: opens anvil by command
-    permission: players.command.anvil
-    permission-message: You do not have the permission to execute the command
   back:
     usage: /back
     description: teleport back to recent or death location
@@ -323,9 +318,6 @@ permissions:
   players.command.announcement:
     description: announce the server
     default: op
-  players.command.anvil:
-    description: opens anvil by command
-    default: op
   players.command.back:
     description: message
     default: op
@@ -351,6 +343,9 @@ permissions:
     description: message
     default: op
   players.command.ban:
+    description: message
+    default: op
+  players.command.ban.exempt:
     description: message
     default: op
   players.command.color:

@@ -20,7 +20,7 @@ public record PlayerLogin(Players plugin) implements Listener {
     private Message getMessage() {
         return plugin.getMessage();
     }
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
         if (getServer().getOnlinePlayers().size() >= getServer().getMaxPlayers()) {

@@ -1,5 +1,6 @@
 starter:
   cooldown: 3600
+  cost: 75.00
   materials:
     sword:
       type: STONE_SWORD

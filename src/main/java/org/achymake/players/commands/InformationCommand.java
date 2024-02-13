@@ -37,16 +37,18 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
                 if (getUserdata().exist(offlinePlayer)) {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
-                    getMessage().send(player, "&6Information:&f " + offlinePlayer.getName());
-                    getMessage().send(player, "&6last online:&f " + simpleDateFormat.format(offlinePlayer.getLastPlayed()));
-                    getMessage().send(player, "&6homes:&f " + getUserdata().getHomes(offlinePlayer).size());
-                    getMessage().send(player, "&6muted:&f " + getUserdata().isMuted(offlinePlayer));
-                    getMessage().send(player, "&6frozen:&f " + getUserdata().isFrozen(offlinePlayer));
-                    getMessage().send(player, "&6jailed:&f " + getUserdata().isJailed(offlinePlayer));
-                    getMessage().send(player, "&6pvp:&f " + getUserdata().isPVP(offlinePlayer));
-                    getMessage().send(player, "&6banned:&f " + getUserdata().isBanned(offlinePlayer));
-                    getMessage().send(player, "&6ban-reason:&f " + getUserdata().getBanReason(offlinePlayer));
-                    getMessage().send(player, "&6vanished:&f " + getUserdata().isVanished(offlinePlayer));
+                    getMessage().send(player, "&m&7----------------------");
+                    getMessage().send(player, "&6Name:&f " + offlinePlayer.getName());
+                    getMessage().send(player, "&6Last online:&f " + simpleDateFormat.format(offlinePlayer.getLastPlayed()));
+                    getMessage().send(player, "&6Homes:&f " + getUserdata().getHomes(offlinePlayer).size());
+                    getMessage().send(player, "&6Muted:&f " + getUserdata().isMuted(offlinePlayer));
+                    getMessage().send(player, "&6Frozen:&f " + getUserdata().isFrozen(offlinePlayer));
+                    getMessage().send(player, "&6Jailed:&f " + getUserdata().isJailed(offlinePlayer));
+                    getMessage().send(player, "&6PvP:&f " + getUserdata().isPVP(offlinePlayer));
+                    getMessage().send(player, "&6Banned:&f " + getUserdata().isBanned(offlinePlayer));
+                    getMessage().send(player, "&6Ban-reason:&f " + getUserdata().getBanReason(offlinePlayer));
+                    getMessage().send(player, "&6Vanished:&f " + getUserdata().isVanished(offlinePlayer));
+                    getMessage().send(player, "&m&7----------------------");
                 } else {
                     getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
                 }

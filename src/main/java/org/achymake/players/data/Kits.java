@@ -36,15 +36,25 @@ public record Kits(Players plugin) {
     public List<String> getKits() {
         return new ArrayList<>(getConfig().getKeys(false));
     }
+    public boolean hasPrice(String kitName) {
+        return getConfig().isDouble(kitName + ".cost");
+    }
+    public double cost(String kitName) {
+        return getConfig().getDouble(kitName + ".cost");
+    }
     public List<ItemStack> getKit(String kitName) {
         List<ItemStack> giveItems = new ArrayList<>();
         for (String items : getConfig().getConfigurationSection(kitName + ".materials").getKeys(false)) {
-            ItemStack item = new ItemStack(Material.valueOf(getConfig().getString(kitName + ".materials." + items + ".type")), getConfig().getInt(kitName + ".materials." + items + ".amount"));
+            String materialString = getConfig().getString(kitName + ".materials." + items + ".type");
+            Material material = Material.valueOf(materialString);
+            int amount = getConfig().getInt(kitName + ".materials." + items + ".amount");
+            ItemStack item = new ItemStack(material, amount);
             ItemMeta itemMeta = item.getItemMeta();
-            if (getConfig().getKeys(true).contains(kitName+".materials." + items + ".name")) {
-                itemMeta.setDisplayName(getMessage().addColor(getConfig().getString(kitName + ".materials." + items + ".name")));
+            if (getConfig().getKeys(true).contains(kitName + ".materials." + items + ".name")) {
+                String displayName = getConfig().getString(kitName + ".materials." + items + ".name");
+                itemMeta.setDisplayName(getMessage().addColor(displayName));
             }
-            if (getConfig().getKeys(true).contains(kitName+".materials." + items + ".lore")) {
+            if (getConfig().getKeys(true).contains(kitName + ".materials." + items + ".lore")) {
                 List<String> lore = new ArrayList<>();
                 for (String listedLore : getConfig().getStringList(kitName + ".materials." + items + ".lore")) {
                     lore.add(getMessage().addColor(listedLore));
@@ -52,8 +62,11 @@ public record Kits(Players plugin) {
                 itemMeta.setLore(lore);
             }
             if (getConfig().getKeys(true).contains(kitName+".materials." + items + ".enchantments")) {
-                for (String enchantList : getConfig().getConfigurationSection(kitName + ".materials." + items + ".enchantments").getKeys(false)){
-                    itemMeta.addEnchant(Enchantment.getByName(getConfig().getString(kitName + ".materials." + items + ".enchantments." + enchantList + ".type")), getConfig().getInt(kitName+".materials."+items+".enchantments."+enchantList+".amount"),true);
+                for (String enchantList : getConfig().getConfigurationSection(kitName + ".materials." + items + ".enchantments").getKeys(false)) {
+                    String enchantmentString = getConfig().getString(kitName + ".materials." + items + ".enchantments." + enchantList + ".type");
+                    Enchantment enchantment = Enchantment.getByName(enchantmentString);
+                    int enchantmentLevel = getConfig().getInt(kitName + ".materials." + items + ".enchantments." + enchantList + ".amount");
+                    itemMeta.addEnchant(enchantment, enchantmentLevel, true);
                 }
             }
             item.setItemMeta(itemMeta);
@@ -70,42 +83,6 @@ public record Kits(Players plugin) {
             }
         }
     }
-    public boolean hasCooldown(Player player, String kitName) {
-        if (plugin.getKitCooldown().containsKey(kitName + "-" + player.getUniqueId())) {
-            Long timeElapsed = System.currentTimeMillis() - plugin.getKitCooldown().get(kitName + "-" + player.getUniqueId());
-            String cooldownTimer = getConfig().getString(kitName + ".cooldown");
-            Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
-            return timeElapsed < integer;
-        } else {
-            return false;
-        }
-    }
-    public void addCooldown(Player player, String kitName) {
-        if (plugin.getKitCooldown().containsKey(kitName + "-" + player.getUniqueId())) {
-            Long timeElapsed = System.currentTimeMillis() - plugin.getKitCooldown().get(kitName + "-" + player.getUniqueId());
-            String cooldownTimer = getConfig().getString(kitName + ".cooldown");
-            Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
-            if (timeElapsed > integer) {
-                plugin.getKitCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
-            }
-        } else {
-            plugin.getKitCooldown().put(kitName + "-" + player.getUniqueId(), System.currentTimeMillis());
-        }
-    }
-    public String getCooldown(Player player, String kitName) {
-        if (plugin.getKitCooldown().containsKey(kitName + "-" + player.getUniqueId())) {
-            Long timeElapsed = System.currentTimeMillis() - plugin.getKitCooldown().get(kitName + "-" + player.getUniqueId());
-            String cooldownTimer = getConfig().getString(kitName + ".cooldown");
-            Integer integer = Integer.valueOf(cooldownTimer.replace(cooldownTimer, cooldownTimer + "000"));
-            if (timeElapsed < integer) {
-                long timer = (integer-timeElapsed);
-                return String.valueOf(timer).substring(0, String.valueOf(timer).length() - 3);
-            }
-        } else {
-            return "0";
-        }
-        return "0";
-    }
     public void reload() {
         File file = getFile();
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -119,21 +96,22 @@ public record Kits(Players plugin) {
             List<String> lore = new ArrayList<>();
             lore.add("&9from");
             lore.add("&7-&6 Starter");
-            config.addDefault("starter.cooldown",3600);
-            config.addDefault("starter.materials.sword.type","STONE_SWORD");
-            config.addDefault("starter.materials.sword.amount",1);
-            config.addDefault("starter.materials.sword.name","&6Stone Sword");
-            config.addDefault("starter.materials.sword.lore",lore);
-            config.addDefault("starter.materials.sword.enchantments.unbreaking.type","DURABILITY");
-            config.addDefault("starter.materials.sword.enchantments.unbreaking.amount",1);
-            config.addDefault("starter.materials.pickaxe.type","STONE_PICKAXE");
-            config.addDefault("starter.materials.pickaxe.amount",1);
-            config.addDefault("starter.materials.pickaxe.name","&6Stone Pickaxe");
-            config.addDefault("starter.materials.pickaxe.lore",lore);
-            config.addDefault("starter.materials.pickaxe.enchantments.unbreaking.type","DURABILITY");
-            config.addDefault("starter.materials.pickaxe.enchantments.unbreaking.amount",1);
-            config.addDefault("starter.materials.axe.type","STONE_AXE");
-            config.addDefault("starter.materials.axe.amount",1);
+            config.addDefault("starter.cooldown", 3600);
+            config.addDefault("starter.cost", 75.00);
+            config.addDefault("starter.materials.sword.type", "STONE_SWORD");
+            config.addDefault("starter.materials.sword.amount", 1);
+            config.addDefault("starter.materials.sword.name", "&6Stone Sword");
+            config.addDefault("starter.materials.sword.lore", lore);
+            config.addDefault("starter.materials.sword.enchantments.unbreaking.type", "DURABILITY");
+            config.addDefault("starter.materials.sword.enchantments.unbreaking.amount", 1);
+            config.addDefault("starter.materials.pickaxe.type", "STONE_PICKAXE");
+            config.addDefault("starter.materials.pickaxe.amount", 1);
+            config.addDefault("starter.materials.pickaxe.name", "&6Stone Pickaxe");
+            config.addDefault("starter.materials.pickaxe.lore", lore);
+            config.addDefault("starter.materials.pickaxe.enchantments.unbreaking.type", "DURABILITY");
+            config.addDefault("starter.materials.pickaxe.enchantments.unbreaking.amount", 1);
+            config.addDefault("starter.materials.axe.type", "STONE_AXE");
+            config.addDefault("starter.materials.axe.amount", 1);
             config.addDefault("starter.materials.axe.name", "&6Stone Axe");
             config.addDefault("starter.materials.axe.lore", lore);
             config.addDefault("starter.materials.axe.enchantments.unbreaking.type", "DURABILITY");
