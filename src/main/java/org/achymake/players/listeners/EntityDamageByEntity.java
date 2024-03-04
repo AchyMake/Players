@@ -24,6 +24,7 @@ public record EntityDamageByEntity(Players plugin) implements Listener {
                 event.setCancelled(true);
             } else {
                 if (event.getEntity() instanceof Player target) {
+                    if (player == target)return;
                     if (!getUserdata().isPVP(player)) {
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, "&c&lHey!&7 Sorry, but you're PVP is Disabled");
@@ -38,6 +39,7 @@ public record EntityDamageByEntity(Players plugin) implements Listener {
                 event.setCancelled(true);
             } else {
                 if (event.getEntity() instanceof Player target) {
+                    if (player == target)return;
                     if (!getUserdata().isPVP(player)) {
                         event.setCancelled(true);
                         getMessage().sendActionBar(player,"&c&lHey!&7 Sorry, but you're PVP is Disabled");
@@ -53,6 +55,7 @@ public record EntityDamageByEntity(Players plugin) implements Listener {
                 event.setCancelled(true);
             } else {
                 if (event.getEntity() instanceof Player target) {
+                    if (player == target)return;
                     if (!getUserdata().isPVP(player)) {
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, "&c&lHey!&7 Sorry, but you're PVP is Disabled");
@@ -68,6 +71,7 @@ public record EntityDamageByEntity(Players plugin) implements Listener {
                 event.setCancelled(true);
             } else {
                 if (event.getEntity() instanceof Player target) {
+                    if (player == target)return;
                     if (!getUserdata().isPVP(player)) {
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, "&c&lHey!&7 Sorry, but you're PVP is Disabled");
@@ -83,6 +87,7 @@ public record EntityDamageByEntity(Players plugin) implements Listener {
                 event.setCancelled(true);
             } else {
                 if (event.getEntity() instanceof Player target) {
+                    if (player == target)return;
                     if (!getUserdata().isPVP(player)) {
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, "&c&lHey!&7 Sorry, but you're PVP is Disabled");
@@ -98,6 +103,7 @@ public record EntityDamageByEntity(Players plugin) implements Listener {
                 event.setCancelled(true);
             } else {
                 if (event.getEntity() instanceof Player target) {
+                    if (player == target)return;
                     if (!getUserdata().isPVP(player)) {
                         event.setCancelled(true);
                         getMessage().sendActionBar(player, "&c&lHey!&7 Sorry, but you're PVP is Disabled");
