@@ -244,6 +244,11 @@ commands:
     description: teleport to spawn
     permission: players.command.spawn
     permission-message: You do not have the permission to execute the command
+  store:
+    usage: /store
+    description: sends store link
+    permission: players.command.store
+    permission-message: You do not have the permission to execute the command
   tpaccept:
     usage: /tpaccept
     description: accepts tpa request
@@ -568,6 +573,9 @@ permissions:
     description: message
     default: op
   players.command.spawn:
+    description: message
+    default: op
+  players.command.store:
     description: message
     default: op
   players.command.spawn.others:

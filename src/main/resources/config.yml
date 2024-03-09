@@ -22,6 +22,9 @@ rules:
 help:
   - "&6Help:"
   - "- https://store.your-server.org/help"
+store:
+  - "&6Store:"
+  -  "- https://store.your-server.org"
 homes:
   # if player has permission: 'players.command.sethome.multiple.default'
   default: 3

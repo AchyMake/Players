@@ -6,7 +6,7 @@
 
     <groupId>org.achymake</groupId>
     <artifactId>Players</artifactId>
-    <version>44</version>
+    <version>45</version>
     <packaging>jar</packaging>
 
     <name>Players</name>

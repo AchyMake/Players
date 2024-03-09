@@ -31,7 +31,6 @@ public final class Players extends JavaPlugin {
     private static Warps warps;
     private static Worth worth;
     private static Message message;
-    private static PluginManager manager;
     private final List<Player> vanished = new ArrayList<>();
     private final HashMap<String, Long> commandCooldown = new HashMap<>();
     private final HashMap<String, Long> kitCooldown = new HashMap<>();
@@ -47,7 +46,6 @@ public final class Players extends JavaPlugin {
         warps = new Warps(this);
         worth = new Worth(this);
         reload();
-        manager = getServer().getPluginManager();
         if (getManager().isPluginEnabled("Vault")) {
             getServer().getServicesManager().register(net.milkbowl.vault.economy.Economy.class, new VaultEconomyProvider(this), this, ServicePriority.Normal);
         }
@@ -110,6 +108,7 @@ public final class Players extends JavaPlugin {
         getCommand("setworth").setExecutor(new SetWorthCommand(this));
         getCommand("skull").setExecutor(new SkullCommand(this));
         getCommand("spawn").setExecutor(new SpawnCommand(this));
+        getCommand("store").setExecutor(new StoreCommand(this));
         getCommand("tpaccept").setExecutor(new TPAcceptCommand(this));
         getCommand("tpa").setExecutor(new TPACommand(this));
         getCommand("tpcancel").setExecutor(new TPCancelCommand(this));
@@ -224,7 +223,7 @@ public final class Players extends JavaPlugin {
         return getConfig().getBoolean("notify-update");
     }
     public PluginManager getManager() {
-        return manager;
+        return getServer().getPluginManager();
     }
     public HashMap<String, Long> getCommandCooldown() {
         return commandCooldown;
