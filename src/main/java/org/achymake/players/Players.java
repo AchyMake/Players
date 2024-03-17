@@ -4,6 +4,7 @@ import org.achymake.players.api.*;
 import org.achymake.players.commands.*;
 import org.achymake.players.data.*;
 import org.achymake.players.listeners.*;
+import org.achymake.players.net.UpdateChecker;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -12,28 +13,25 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 
 public final class Players extends JavaPlugin {
-    private static Players instance;
-    private static Userdata userdata;
-    private static Economy economy;
-    private static Jail jail;
-    private static Kits kits;
-    private static Spawn spawn;
-    private static Warps warps;
-    private static Worth worth;
-    private static Message message;
-    private final List<Player> vanished = new ArrayList<>();
-    private final HashMap<String, Long> commandCooldown = new HashMap<>();
-    private final HashMap<String, Long> kitCooldown = new HashMap<>();
+    public static Players instance;
+    public static Userdata userdata;
+    public static Economy economy;
+    public static Jail jail;
+    public static Kits kits;
+    public static Spawn spawn;
+    public static Warps warps;
+    public static Worth worth;
+    public static Message message;
+    public final List<Player> vanished = new ArrayList<>();
+    public final HashMap<String, Long> commandCooldown = new HashMap<>();
+    public final HashMap<String, Long> kitCooldown = new HashMap<>();
+    public static UpdateChecker updateChecker;
     @Override
     public void onEnable() {
         instance = this;
@@ -45,15 +43,14 @@ public final class Players extends JavaPlugin {
         spawn = new Spawn(this);
         warps = new Warps(this);
         worth = new Worth(this);
+        updateChecker = new UpdateChecker(this);
         reload();
-        if (getManager().isPluginEnabled("Vault")) {
-            getServer().getServicesManager().register(net.milkbowl.vault.economy.Economy.class, new VaultEconomyProvider(this), this, ServicePriority.Normal);
-        }
+        getServer().getServicesManager().register(net.milkbowl.vault.economy.Economy.class, new VaultEconomyProvider(this), this, ServicePriority.Normal);
         new PlaceholderProvider().register();
         registerCommands();
         registerEvents();
         getMessage().sendLog(Level.INFO, "Enabled " + getDescription().getName() + " " + getDescription().getVersion());
-        sendUpdate();
+        getUpdateChecker().sendUpdate();
     }
     @Override
     public void onDisable() {
@@ -175,55 +172,11 @@ public final class Players extends JavaPlugin {
         getUserdata().reload(getServer().getOfflinePlayers());
         getUserdata().resetTabList();
     }
-    public void sendUpdate() {
-        getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
-            @Override
-            public void run() {
-                if (notifyUpdate()) {
-                    getLatest((latest) -> {
-                        if (getDescription().getVersion().equals(latest)) {
-                            getMessage().sendLog(Level.INFO, "You are using the latest version");
-                        } else {
-                            getMessage().sendLog(Level.INFO, getDescription().getName() + " has new update:");
-                            getMessage().sendLog(Level.INFO, "- https://www.spigotmc.org/resources/110266/");
-                        }
-                    });
-                }
-            }
-        });
-    }
-    public void sendUpdate(Player player) {
-        if (notifyUpdate()) {
-            if (player.hasPermission("players.event.join.update")) {
-                getLatest((latest) -> {
-                    if (!getDescription().getVersion().equals(latest)) {
-                        getMessage().send(player,"&f" + getDescription().getName() + "&6 has new update:");
-                        getMessage().send(player,"- &a" + "https://www.spigotmc.org/resources/110266/");
-                    }
-                });
-            }
-        }
-    }
-    public void getLatest(Consumer<String> consumer) {
-        try {
-            InputStream inputStream = (new URL("https://api.spigotmc.org/legacy/update.php?resource=" + 110266)).openStream();
-            Scanner scanner = new Scanner(inputStream);
-            if (scanner.hasNext()) {
-                consumer.accept(scanner.next());
-                scanner.close();
-            }
-            if (inputStream != null) {
-                inputStream.close();
-            }
-        } catch (IOException e) {
-            getMessage().sendLog(Level.WARNING, e.getMessage());
-        }
-    }
-    public boolean notifyUpdate() {
-        return getConfig().getBoolean("notify-update");
-    }
     public PluginManager getManager() {
         return getServer().getPluginManager();
+    }
+    public UpdateChecker getUpdateChecker() {
+        return updateChecker;
     }
     public HashMap<String, Long> getCommandCooldown() {
         return commandCooldown;

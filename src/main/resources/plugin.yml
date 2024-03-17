@@ -668,6 +668,9 @@ permissions:
   players.event.login.full-server:
     description: message
     default: op
+  players.event.join.update:
+    description: message
+    default: op
   players.event.join.message:
     description: message
     default: op

@@ -434,6 +434,6 @@ public record Userdata(Players plugin) {
         }
     }
     public void sendUpdate(Player player) {
-        plugin.sendUpdate(player);
+        plugin.getUpdateChecker().sendUpdate(player);
     }
 }

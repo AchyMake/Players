@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5076afce-b320-4939-9319-373f8fab1f00" name="Changes" comment="clean up">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/commands/StoreCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/net/UpdateChecker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/Players.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/Players.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/api/PlaceholderProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/api/PlaceholderProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/achymake/players/data/Userdata.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/achymake/players/data/Userdata.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -365,7 +366,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709522205731</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="clean up">
+      <option name="closed" value="true" />
+      <created>1709953618529</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1709953618529</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
